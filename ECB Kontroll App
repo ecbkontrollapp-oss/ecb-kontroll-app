@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="de" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ECB Kontroll App / Aplicație Control ECB</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ecb: {
+                            50: '#f4f9ed',
+                            100: '#e6f2d6',
+                            500: '#8bc34a',
+                            600: '#7cb342',
+                            700: '#689f38',
+                            800: '#558b2f',
+                            900: '#33691e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- jsPDF Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .signature-canvas { touch-action: none; background-color: #ffffff; cursor: crosshair; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="h-full flex flex-col text-slate-800 antialiased selection:bg-ecb-500 selection:text-white">
+
+    <!-- App Header -->
+    <header class="bg-gradient-to-r from-ecb-700 via-ecb-600 to-ecb-500 text-white shadow-lg sticky top-0 z-30">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-white p-2 rounded-xl shadow-md flex items-center justify-center w-12 h-12">
+                    <i class="fa-solid fa-clipboard-check text-ecb-600 text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight tracking-wide">ECB Kontroll App</h1>
+                    <p class="text-xs text-ecb-100 font-medium">System Kontroll & Dokumentation / Control & Documentare</p>
+                </div>
+            </div>
+            
+            <div id="online-status" class="hidden sm:flex items-center text-xs bg-black/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse mr-2"></span>
+                <span>Bereit / Pregătit</span>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="bg-black/15 backdrop-blur-sm border-t border-white/10">
+            <div class="max-w-5xl mx-auto px-4 flex space-x-1 sm:space-x-4">
+                <button onclick="switchTab('checks')" id="tab-btn-checks" class="tab-btn active text-white border-b-2 border-white font-semibold py-2.5 px-3 text-sm flex items-center gap-2 transition-all">
+                    <i class="fa-solid fa-list-check text-xs"></i>
+                    <span>Kontrollen <span class="text-xs opacity-75 font-normal">/ Controale</span></span>
+                </button>
+                <button onclick="switchTab('history')" id="tab-btn-history" class="tab-btn text-white/80 hover:text-white border-b-2 border-transparent font-medium py-2.5 px-3 text-sm flex items-center gap-2 transition-all">
+                    <i class="fa-solid fa-clock-rotate-left text-xs"></i>
+                    <span>Protokolle <span class="text-xs opacity-75 font-normal">/ Istoric</span></span>
+                    <span id="history-badge" class="bg-white/20 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold ml-1 hidden">0</span>
+                </button>
+                <button onclick="switchTab('settings')" id="tab-btn-settings" class="tab-btn text-white/80 hover:text-white border-b-2 border-transparent font-medium py-2.5 px-3 text-sm flex items-center gap-2 transition-all">
+                    <i class="fa-solid fa-sliders text-xs"></i>
+                    <span>Einstellungen <span class="text-xs opacity-75 font-normal">/ Setări</span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 max-w-5xl w-full mx-auto p-4 sm:p-6 pb-20">
+        
+        <!-- SECTION 1: Checklist Cards Grid -->
+        <section id="view-checks" class="space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-200">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-800">Kontrollbereiche wählen</h2>
+                    <p class="text-xs text-slate-500">Selectați zona de control pentru a începe verificarea</p>
+                </div>
+                <div class="text-xs bg-slate-100 text-slate-600 px-3 py-1.5 rounded-lg border border-slate-200 flex items-center gap-1.5">
+                    <i class="fa-solid fa-circle-info text-ecb-600"></i>
+                    <span>Datum / Dată: <strong id="current-date-display">--.--.----</strong></span>
+                </div>
+            </div>
+
+            <div id="cards-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Dynamic inspection cards inserted here -->
+            </div>
+        </section>
+
+        <!-- SECTION 2: History & Protocols Log -->
+        <section id="view-history" class="hidden space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-800">Erstellte Protokolle</h2>
+                    <p class="text-xs text-slate-500">Istoric procese verbale generate & salvate</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <input type="text" id="history-search" oninput="filterHistory()" placeholder="Suchen / Căutare..." class="text-xs px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-ecb-500 focus:outline-none w-full sm:w-48">
+                    <button onclick="clearAllHistory()" class="text-xs text-rose-600 hover:text-rose-800 hover:bg-rose-50 px-2.5 py-2 rounded-lg border border-rose-200 transition-all flex items-center gap-1" title="Alle löschen">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="history-container" class="space-y-3">
+                <!-- Dynamic history cards inserted here -->
+            </div>
+        </section>
+
+        <!-- SECTION 3: Settings Panel -->
+        <section id="view-settings" class="hidden space-y-6">
+            <div class="pb-2 border-b border-slate-200">
+                <h2 class="text-xl font-bold text-slate-800">Einstellungen & E-Mail-Versand</h2>
+                <p class="text-xs text-slate-500">Setări aplicație și trimitere e-mail</p>
+            </div>
+
+            <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-5 max-w-2xl">
+                <!-- Recipient Email -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1">
+                        Empfänger E-Mail-Adresse <span class="text-slate-400 font-normal">/ Email destinatar</span>
+                    </label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
+                            <i class="fa-solid fa-envelope"></i>
+                        </span>
+                        <input type="email" id="setting-recipient-email" value="pb@ecb-system.com" class="w-full pl-10 pr-3 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-ecb-500 focus:outline-none text-sm">
+                    </div>
+                </div>
+
+                <!-- Inspector Name -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1">
+                        Standard Prüfer Name <span class="text-slate-400 font-normal">/ Nume inspector prestabilit</span>
+                    </label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
+                            <i class="fa-solid fa-user"></i>
+                        </span>
+                        <input type="text" id="setting-default-inspector" placeholder="Name z.B. Max Mustermann" class="w-full pl-10 pr-3 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-ecb-500 focus:outline-none text-sm">
+                    </div>
+                </div>
+
+                <!-- Dispatch Method Selector -->
+                <div class="border-t border-slate-100 pt-4">
+                    <label class="block text-sm font-semibold text-slate-700 mb-1">
+                        E-Mail Versand-Methode <span class="text-slate-400 font-normal">/ Metodă trimitere e-mail</span>
+                    </label>
+                    <select id="setting-email-method" onchange="toggleEmailMethodFields()" class="w-full px-3 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-ecb-500 focus:outline-none text-sm bg-white">
+                        <option value="mailto">Smartphone Mail-App Öffnen (mailto / Share - pb@ecb-system.com)</option>
+                        <option value="emailjs">EmailJS (Direktverbindung im Hintergrund)</option>
+                        <option value="resend">Resend API (Transaktions-Email Dienst)</option>
+                        <option value="webhook">Custom Webhook (Make / n8n / Zapier)</option>
+                        <option value="none">Kein E-Mail Versand (Nur PDF Download)</option>
+                    </select>
+                </div>
+
+                <!-- EmailJS Fields -->
+                <div id="field-group-emailjs" class="space-y-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">
+                            EmailJS Public Key <span class="text-slate-400 font-normal">(User ID)</span>
+                        </label>
+                        <input type="text" id="setting-emailjs-public-key" placeholder="z.B. user_xxxxxxxxx" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-ecb-500 focus:outline-none text-sm font-mono">
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">
+                                Service ID <span class="text-slate-400 font-normal">(z.B. service_gmail)</span>
+                            </label>
+                            <input type="text" id="setting-emailjs-service-id" placeholder="service_xxxxx" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-ecb-500 focus:outline-none text-sm font-mono">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">
+                                Template ID <span class="text-slate-400 font-normal">(z.B. template_ecb)</span>
+                            </label>
+                            <input type="text" id="setting-emailjs-template-id" placeholder="template_xxxxx" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-ecb-500 focus:outline-none text-sm font-mono">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resend API Fields -->
+                <div id="field-group-resend" class="hidden space-y-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">
+                            Resend API Key <span class="text-slate-400 font-normal">(re_...)</span>
+                        </label>
+                        <input type="password" id="setting-resend-key" value="" placeholder="re_123456789..." class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-ecb-500 focus:outline-none text-sm font-mono">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">
+                            Absender E-Mail / Sender Email <span class="text-slate-400 font-normal">(Standard: onboarding@resend.dev)</span>
+                        </label>
+                        <input type="email" id="setting-resend-from" placeholder="onboarding@resend.dev" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-ecb-500 focus:outline-none text-sm">
+                    </div>
+                </div>
+
+                <!-- Webhook Fields -->
+                <div id="field-group-webhook" class="hidden space-y-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">
+                            Webhook URL <span class="text-slate-400 font-normal">(Make / n8n / Zapier)</span>
+                        </label>
+                        <input type="url" id="setting-webhook-url" placeholder="https://hook.eu1.make.com/..." class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-ecb-500 focus:outline-none text-sm font-mono">
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-slate-100">
+                    <button type="button" onclick="testEmailConfig()" class="w-full sm:w-auto px-4 py-2 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-700 font-medium text-xs flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-vial text-ecb-600"></i>
+                        <span>Test-E-Mail senden / Trimite email de test</span>
+                    </button>
+                    <button type="button" onclick="saveSettings()" class="w-full sm:w-auto bg-ecb-600 hover:bg-ecb-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-md transition-all text-sm flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        <span>Einstellungen speichern / Salvează</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Inspection Form Modal -->
+    <div id="inspection-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+        <div class="bg-white w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden my-auto flex flex-col max-h-[92vh] border border-slate-100">
+            
+            <!-- Modal Header -->
+            <div class="bg-gradient-to-r from-slate-800 to-slate-900 text-white p-4 sm:p-5 flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-3">
+                    <div id="modal-icon-badge" class="w-10 h-10 rounded-xl bg-ecb-500 text-white flex items-center justify-center text-xl shadow">
+                        <i class="fa-solid fa-clipboard"></i>
+                    </div>
+                    <div>
+                        <h3 id="modal-title-de" class="font-bold text-base sm:text-lg leading-tight">Kontrolltitel</h3>
+                        <p id="modal-title-ro" class="text-xs text-slate-300">Titlu Control</p>
+                    </div>
+                </div>
+                <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Modal Scrollable Content Form -->
+            <div class="p-4 sm:p-6 overflow-y-auto space-y-5 flex-1 bg-slate-50/50">
+                
+                <!-- Inspector Info -->
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
+                            Geprüft von <span class="text-ecb-600 font-normal">/ Verificat de</span> <span class="text-rose-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
+                                <i class="fa-solid fa-user-check text-xs"></i>
+                            </span>
+                            <input type="text" id="input-inspector-name" placeholder="Ihr Vor- und Nachname" class="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-ecb-500 focus:outline-none">
+                        </div>
+                    </div>
+                    <div id="location-ref-wrapper" class="hidden">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
+                            Objekt / Kennzeichen <span class="text-ecb-600 font-normal">/ Ref. Obiect</span>
+                        </label>
+                        <input type="text" id="input-location-ref" placeholder="z.B. Fahrzeug-Kennzeichen oder Standort" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-ecb-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <!-- Checklist Items Section -->
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                            <i class="fa-solid fa-list-check text-ecb-600"></i>
+                            Checkliste <span class="text-slate-400 font-normal">/ Listă de verificare</span>
+                        </h4>
+                        <button type="button" onclick="selectAllChecklist(true)" class="text-[11px] text-ecb-700 hover:underline font-medium">Alle abhaken / Bifă toate</button>
+                    </div>
+                    
+                    <div id="modal-checklist-container" class="space-y-2.5">
+                        <!-- Checkboxes inserted dynamically -->
+                    </div>
+                </div>
+
+                <!-- Optional Custom Numeric Inputs -->
+                <div id="modal-optional-fields-container" class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3 hidden">
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5 border-b border-slate-100 pb-2">
+                        <i class="fa-solid fa-gauge-high text-ecb-600"></i>
+                        Messwerte <span class="text-slate-400 font-normal">/ Valori măsurate</span>
+                    </h4>
+                    <div id="modal-optional-inputs" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <!-- Dynamic optional inputs -->
+                    </div>
+                </div>
+
+                <!-- Photo Capture Section -->
+                <div id="modal-photo-section" class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3 hidden">
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5 border-b border-slate-100 pb-2">
+                        <i class="fa-solid fa-camera text-ecb-600"></i>
+                        Nachweisfoto <span class="text-slate-400 font-normal">/ Fotografie doveditoare</span>
+                    </h4>
+                    
+                    <div class="space-y-3">
+                        <label class="flex flex-col items-center justify-center border-2 border-dashed border-slate-300 hover:border-ecb-500 rounded-xl p-4 cursor-pointer bg-slate-50/50 hover:bg-ecb-50/50 transition-all text-center">
+                            <i class="fa-solid fa-cloud-arrow-up text-2xl text-slate-400 mb-1"></i>
+                            <span class="text-xs font-semibold text-slate-700">Foto aufnehmen oder hochladen</span>
+                            <span class="text-[11px] text-slate-400">Faceți o poză sau încărcați din galerie</span>
+                            <input type="file" id="input-photo" accept="image/*" capture="environment" onchange="handlePhotoUpload(event)" class="hidden">
+                        </label>
+
+                        <div id="photo-preview-container" class="relative hidden rounded-xl overflow-hidden border border-slate-200 shadow-inner bg-black/5">
+                            <img id="photo-preview-img" src="" alt="Vorschau" class="w-full h-48 object-contain bg-slate-900">
+                            <button onclick="removePhoto()" type="button" class="absolute top-2 right-2 bg-rose-600 text-white w-7 h-7 rounded-full flex items-center justify-center shadow hover:bg-rose-700 text-xs">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Digital Signature Canvas -->
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                            <i class="fa-solid fa-signature text-ecb-600"></i>
+                            Unterschrift <span class="text-slate-400 font-normal">/ Semnătură</span> <span class="text-rose-500">*</span>
+                        </h4>
+                        <button type="button" onclick="clearSignatureCanvas()" class="text-[11px] text-rose-600 hover:text-rose-800 font-medium flex items-center gap-1">
+                            <i class="fa-solid fa-eraser"></i>
+                            <span>Löschen / Șterge</span>
+                        </button>
+                    </div>
+
+                    <div class="border border-slate-300 rounded-xl overflow-hidden shadow-inner bg-slate-50 relative">
+                        <canvas id="signature-pad" class="signature-canvas w-full h-36 block"></canvas>
+                        <span class="absolute bottom-2 right-2 text-[10px] text-slate-400 pointer-events-none select-none">
+                            Hier unterschreiben / Semnați aici
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="bg-slate-100 p-4 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-end gap-2 shrink-0">
+                <button type="button" onclick="closeModal()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-medium text-sm hover:bg-slate-200 transition-all order-2 sm:order-1">
+                    Abbrechen / Anulați
+                </button>
+                <button type="button" id="submit-btn" onclick="submitForm()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-ecb-600 hover:bg-ecb-700 text-white font-semibold text-sm shadow-md transition-all flex items-center justify-center gap-2 order-1 sm:order-2">
+                    <i class="fa-solid fa-paper-plane text-xs"></i>
+                    <span>Abschließen & Senden</span>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Error / Info Dialog Modal -->
+    <div id="error-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-5 text-center space-y-4 border border-slate-100">
+            <div class="w-12 h-12 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center mx-auto text-xl">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div>
+                <h3 id="error-modal-title" class="font-bold text-slate-800 text-lg">Meldung</h3>
+                <p id="error-modal-msg" class="text-xs text-slate-600 mt-2 text-left bg-slate-50 p-3 rounded-xl border border-slate-200 font-mono leading-relaxed break-words max-h-48 overflow-y-auto"></p>
+            </div>
+            <button onclick="document.getElementById('error-modal').classList.add('hidden')" class="w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold shadow">
+                OK / Schließen
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-md w-full px-4 pointer-events-none"></div>
+
+    <!-- Confirmation Modal Dialog -->
+    <div id="confirm-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-xl max-w-sm w-full p-5 text-center space-y-4 border border-slate-100">
+            <div id="confirm-icon" class="w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto text-xl">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div>
+                <h3 id="confirm-title" class="font-bold text-slate-800 text-lg">Bestätigen</h3>
+                <p id="confirm-msg" class="text-xs text-slate-500 mt-1">Sicherheitsabfrage</p>
+            </div>
+            <div class="flex items-center gap-2 pt-2">
+                <button onclick="closeConfirmModal(false)" class="flex-1 py-2 px-3 rounded-xl border border-slate-300 text-slate-700 text-xs font-semibold hover:bg-slate-100">
+                    Abbrechen / Anulați
+                </button>
+                <button id="confirm-ok-btn" onclick="closeConfirmModal(true)" class="flex-1 py-2 px-3 rounded-xl bg-rose-600 text-white text-xs font-semibold hover:bg-rose-700 shadow">
+                    Ja, Ausführen
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Safe jsPDF instance getter
+        function getJsPDFClass() {
+            if (window.jspdf && window.jspdf.jsPDF) return window.jspdf.jsPDF;
+            if (window.jsPDF) return window.jsPDF;
+            return null;
+        }
+
+        // Base64 Logo
+        const logoBase64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACgCAMAAACow3svAAAASFBMVEX///8AlvIAlvL9//0AmfMAmfMAmPIAlvIAlvL9//0AmPMAmPMAmPIAlvIAlvL///8AmfMCl/IAl/IAlvIAlvMAmPMAmPMAmPL////VXYyXAAAAF3RSTlP/////////////////////////////ALm7I4IAAAJDSURBVHja7d3blpowEAXgG9tN29q2ff+nLKBh2Jg9m0nczG/WJ9F5luRLiOQBAAAAAAAAAAAAAAAAAAAAAAAAAADgP69r29bN2u7b+l62Jass2tZ1y3a9a5f57M52t4aLpWRbstl2tW3nZfPYzjaPzaxXa22L7dY6L9vWXbW9v3Zav89ms9msx+PxfL7p1/fr9Xq/32/a9/3+/f5/3+PzYLLZ3O52t8dms3m8c2271u/LlrW2zdb2vrNt2/o+bNbr9Xq9Pq/b5/P5fD4/n8/n8/l8Pp/P5/P5fD6fz+fz+Xw+n8/n8/l8Pp/P5/P5fD6fz+fz+Xw+n8/n8/l8Pp/P5/P5fD6fz+fz+Xw+n8/n8/l8Pp/P5/P5fD6fz+f/7/X5vN/v9/v9fr8/7fP5bDbL5bLZbDYby3a72+12u9vtbre73e1ut9vtdrfb7Xa32+12t9vtdrfb7Xa32+12t9vtdrfb7Xa32+12t9vtdrfb7Xa32+12t9vtdrfb7Xa32+12t9vtdrfb7Xa32+12t9vtdrfb7Xa32+12t9vtdrfb7Xa32+12t9vtdrfb7Xa32+12t9vtdrfb7Xa32+12t7/d7fe6Xq/X6/V6vb5tPj+fzWaz2Ww2m83msNvtbre7w+bz+Xw+n8/n8/l8Pp/P5/P5fD6fz+fz+Xw+n8/n8/l8Pp/P5/P5fD6fz+fz+Xw+n8/n8/l8Pp/P5/P5fD6fz+fz+Xw+n8/n8/l8Pp/P5/P5fD6fz+fz+Xw+n8/n8/l8Pp/P5/P5fD6fz+f/9/x83u/3+/1+/9+0z+czm81ms9lsNpvNYbfb3W53h81ms9lsNpvNZrfb7Xa32+12t9vtdrfb7Xa32+12t9vtdrfb7Xa32+12t9vtdrfb7Xa32+12t9vtdrfb7Xa32+12t9vtdrfb7Xa32+12t9vtdrfb7Xa32+12t9vtdrfb7Xa32+12t9vtdrfb7Xa32+12t9vtdrfb7Xa32+12t9vtdrfb7Xa32+12t7/d7fe6Xq/X6/V6fdsef3l3fLw+n88eX3VbL7fbbP/40n22Xm8e9rWtbRv/4wMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgH/1B5+zHn3pL+2FAAAAAElFTkSuQmCC";
+
+        // Application Modules Configuration
+        const appConfig = [
+            {
+                id: 'demineral',
+                icon: 'fa-droplet',
+                title_de: 'Entmineralisierungsanlage',
+                title_ro: 'Stație de demineralizare',
+                desc_de: 'Salz, Dichtheit & Wasserwerte prüfen',
+                desc_ro: 'Verificare sare, etanșeitate și parametri apă',
+                checklist: [
+                    { id: 'salz', label_de: 'Salz aufgefüllt', label_ro: 'Sare umplută' },
+                    { id: 'dicht', label_de: 'Dichtheit der Anlage OK', label_ro: 'Etanșeitatea instalației OK' },
+                    { id: 'fehler', label_de: 'Anlage fehlerfrei', label_ro: 'Instalație fără erori' },
+                    { id: 'filter', label_de: 'Filterzustand geprüft', label_ro: 'Starea filtrului verificată' }
+                ],
+                optionalFields: [
+                    { id: 'leitwert', label_de: 'Leitwert (µS/cm)', label_ro: 'Conductivitate (µS/cm)', type: 'number', placeholder: 'z.B. 12' },
+                    { id: 'druck', label_de: 'Druck (bar)', label_ro: 'Presiune (bar)', type: 'number', placeholder: 'z.B. 3.5' }
+                ],
+                needsPhoto: false,
+                needsLocationRef: false
+            },
+            {
+                id: 'aussen',
+                icon: 'fa-tree',
+                title_de: 'Außenbereich',
+                title_ro: 'Zona exterioară',
+                desc_de: 'Sauberkeit, Müll & Ordnung im Außenareal',
+                desc_ro: 'Curățenie, gunoi și ordine în zona exterioară',
+                checklist: [
+                    { id: 'muell', label_de: 'Mülleimer geleert', label_ro: 'Coș de gunoi golit' },
+                    { id: 'kippen', label_de: 'Zigarettenstummel entsorgt', label_ro: 'Mucuri de țigară aruncate' },
+                    { id: 'essen', label_de: 'Keine Getränke/Essensreste', label_ro: 'Fără băuturi/resturi de mâncare' },
+                    { id: 'tore', label_de: 'Zufahrten / Tore frei', label_ro: 'Căi de acces libere' }
+                ],
+                needsPhoto: true,
+                needsLocationRef: false
+            },
+            {
+                id: 'pause',
+                icon: 'fa-mug-hot',
+                title_de: 'Pausenraum',
+                title_ro: 'Sală de pauză',
+                desc_de: 'Tische, Kaffeemaschine & Küchenbereich',
+                desc_ro: 'Mese, aparatul de cafea și zona bucătăriei',
+                checklist: [
+                    { id: 'tische', label_de: 'Kein Essen auf den Tischen', label_ro: 'Fără mâncare pe mese' },
+                    { id: 'kaffee', label_de: 'Kaffeemaschinenplatz sauber', label_ro: 'Locul mașinii de cafea curat' },
+                    { id: 'kuehl', label_de: 'Kühlschrank ordentlich', label_ro: 'Frigider ordonat' },
+                    { id: 'muelltrenn', label_de: 'Müll getrennt & entsorgt', label_ro: 'Gunoi selectat și aruncat' }
+                ],
+                needsPhoto: true,
+                needsLocationRef: false
+            },
+            {
+                id: 'fahrzeuge',
+                icon: 'fa-van-shuttle',
+                title_de: 'Fahrzeuge',
+                title_ro: 'Vehicule',
+                desc_de: 'Innenraumkontrolle & Fahrzeugzustand',
+                desc_ro: 'Inspecție interioară și stare vehicul',
+                checklist: [
+                    { id: 'becher', label_de: 'Leere Becher/Flaschen entsorgt', label_ro: 'Pahare/sticle goale aruncate' },
+                    { id: 'sauber', label_de: 'Sauberkeit im Fahrzeug OK', label_ro: 'Curățenie în vehicul OK' },
+                    { id: 'werkzeug', label_de: 'Ladung & Werkzeug gesichert', label_ro: 'Încărcătura și uneltele asigurate' }
+                ],
+                optionalFields: [
+                    { id: 'km', label_de: 'Kilometerstand (km)', label_ro: 'Rulaj kilometri (km)', type: 'number', placeholder: 'z.B. 145000' }
+                ],
+                needsPhoto: true,
+                needsLocationRef: true
+            }
+        ];
+
+        // State Variables
+        let currentModalConfig = null;
+        let activePhotoDataUrl = null;
+        let isDrawingSignature = false;
+        let signatureCanvas = null;
+        let signatureCtx = null;
+        let hasSigned = false;
+        let confirmResolver = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const today = new Date();
+            document.getElementById('current-date-display').innerText = today.toLocaleDateString('de-DE');
+
+            renderInspectionCards();
+            initSignaturePad();
+            updateHistoryBadge();
+            loadSettings();
+        });
+
+        function switchTab(tabId) {
+            ['checks', 'history', 'settings'].forEach(id => {
+                const view = document.getElementById(`view-${id}`);
+                const btn = document.getElementById(`tab-btn-${id}`);
+                if (id === tabId) {
+                    view.classList.remove('hidden');
+                    btn.classList.add('active', 'border-white', 'text-white', 'font-semibold');
+                    btn.classList.remove('border-transparent', 'text-white/80', 'font-medium');
+                } else {
+                    view.classList.add('hidden');
+                    btn.classList.remove('active', 'border-white', 'text-white', 'font-semibold');
+                    btn.classList.add('border-transparent', 'text-white/80', 'font-medium');
+                }
+            });
+
+            if (tabId === 'history') {
+                renderHistory();
+            }
+        }
+
+        function renderInspectionCards() {
+            const container = document.getElementById('cards-container');
+            container.innerHTML = appConfig.map(config => `
+                <div onclick="openInspectionModal('${config.id}')" 
+                     class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md hover:border-ecb-500 transition-all cursor-pointer group flex flex-col justify-between space-y-4">
+                    <div class="flex items-start justify-between">
+                        <div class="flex items-center space-x-3.5">
+                            <div class="w-12 h-12 rounded-2xl bg-ecb-50 text-ecb-700 group-hover:bg-ecb-600 group-hover:text-white transition-all flex items-center justify-center text-xl shadow-sm">
+                                <i class="fa-solid ${config.icon}"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-800 text-base group-hover:text-ecb-700 transition-colors">${config.title_de}</h3>
+                                <p class="text-xs text-ecb-700 font-medium">${config.title_ro}</p>
+                            </div>
+                        </div>
+                        <span class="text-xs bg-slate-100 text-slate-500 group-hover:bg-ecb-100 group-hover:text-ecb-800 px-2.5 py-1 rounded-full font-medium transition-all">
+                            Start <i class="fa-solid fa-arrow-right text-[10px] ml-1"></i>
+                        </span>
+                    </div>
+
+                    <p class="text-xs text-slate-500 leading-relaxed border-t border-slate-100 pt-3">
+                        ${config.desc_de} <br>
+                        <span class="italic opacity-80">${config.desc_ro}</span>
+                    </p>
+
+                    <div class="flex items-center justify-between text-[11px] text-slate-400 font-medium">
+                        <span><i class="fa-solid fa-list text-ecb-600 mr-1"></i> ${config.checklist.length} Punkte</span>
+                        ${config.needsPhoto ? '<span class="text-amber-600 bg-amber-50 px-2 py-0.5 rounded border border-amber-200"><i class="fa-solid fa-camera mr-1"></i>Foto</span>' : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openInspectionModal(configId) {
+            currentModalConfig = appConfig.find(c => c.id === configId);
+            if (!currentModalConfig) return;
+
+            document.getElementById('modal-title-de').innerText = currentModalConfig.title_de;
+            document.getElementById('modal-title-ro').innerText = currentModalConfig.title_ro;
+            document.getElementById('modal-icon-badge').innerHTML = `<i class="fa-solid ${currentModalConfig.icon}"></i>`;
+
+            const defaultInspector = localStorage.getItem('ecb_default_inspector') || '';
+            document.getElementById('input-inspector-name').value = defaultInspector;
+
+            const locWrapper = document.getElementById('location-ref-wrapper');
+            if (currentModalConfig.needsLocationRef) {
+                locWrapper.classList.remove('hidden');
+                document.getElementById('input-location-ref').value = '';
+            } else {
+                locWrapper.classList.add('hidden');
+            }
+
+            const checklistContainer = document.getElementById('modal-checklist-container');
+            checklistContainer.innerHTML = currentModalConfig.checklist.map(item => `
+                <label class="flex items-start gap-3 p-2.5 rounded-lg border border-slate-200 bg-slate-50/50 hover:bg-white transition-all cursor-pointer select-none">
+                    <input type="checkbox" id="cb-item-${item.id}" class="w-5 h-5 rounded text-ecb-600 focus:ring-ecb-500 border-slate-300 mt-0.5 shrink-0">
+                    <div class="text-xs leading-snug">
+                        <span class="font-semibold text-slate-800">${item.label_de}</span>
+                        <span class="block text-slate-500">${item.label_ro}</span>
+                    </div>
+                </label>
+            `).join('');
+
+            const optContainer = document.getElementById('modal-optional-fields-container');
+            const optInputs = document.getElementById('modal-optional-inputs');
+            if (currentModalConfig.optionalFields && currentModalConfig.optionalFields.length > 0) {
+                optContainer.classList.remove('hidden');
+                optInputs.innerHTML = currentModalConfig.optionalFields.map(field => `
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">
+                            ${field.label_de} <span class="text-slate-400 font-normal">/ ${field.label_ro}</span>
+                        </label>
+                        <input type="${field.type}" id="opt-input-${field.id}" placeholder="${field.placeholder || ''}" class="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-ecb-500 focus:outline-none">
+                    </div>
+                `).join('');
+            } else {
+                optContainer.classList.add('hidden');
+                optInputs.innerHTML = '';
+            }
+
+            const photoSection = document.getElementById('modal-photo-section');
+            if (currentModalConfig.needsPhoto) {
+                photoSection.classList.remove('hidden');
+                removePhoto();
+            } else {
+                photoSection.classList.add('hidden');
+            }
+
+            clearSignatureCanvas();
+            document.getElementById('inspection-modal').classList.remove('hidden');
+            
+            setTimeout(resizeSignatureCanvas, 150);
+        }
+
+        function closeModal() {
+            document.getElementById('inspection-modal').classList.add('hidden');
+            currentModalConfig = null;
+        }
+
+        function selectAllChecklist(status) {
+            if (!currentModalConfig) return;
+            currentModalConfig.checklist.forEach(item => {
+                const cb = document.getElementById(`cb-item-${item.id}`);
+                if (cb) cb.checked = status;
+            });
+        }
+
+        function handlePhotoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+                    const maxDim = 800;
+
+                    if (width > height) {
+                        if (width > maxDim) {
+                            height = Math.round((height * maxDim) / width);
+                            width = maxDim;
+                        }
+                    } else {
+                        if (height > maxDim) {
+                            width = Math.round((width * maxDim) / height);
+                            height = maxDim;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    activePhotoDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                    document.getElementById('photo-preview-img').src = activePhotoDataUrl;
+                    document.getElementById('photo-preview-container').classList.remove('hidden');
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removePhoto() {
+            activePhotoDataUrl = null;
+            document.getElementById('photo-preview-img').src = '';
+            document.getElementById('photo-preview-container').classList.add('hidden');
+            const inputPhoto = document.getElementById('input-photo');
+            if (inputPhoto) inputPhoto.value = '';
+        }
+
+        function initSignaturePad() {
+            signatureCanvas = document.getElementById('signature-pad');
+            if (!signatureCanvas) return;
+            signatureCtx = signatureCanvas.getContext('2d');
+
+            const getPos = (e) => {
+                const rect = signatureCanvas.getBoundingClientRect();
+                const ev = e.touches ? e.touches[0] : e;
+                return {
+                    x: ev.clientX - rect.left,
+                    y: ev.clientY - rect.top
+                };
+            };
+
+            const startDrawing = (e) => {
+                e.preventDefault();
+                isDrawingSignature = true;
+                hasSigned = true;
+                const pos = getPos(e);
+                signatureCtx.beginPath();
+                signatureCtx.moveTo(pos.x, pos.y);
+            };
+
+            const draw = (e) => {
+                if (!isDrawingSignature) return;
+                e.preventDefault();
+                const pos = getPos(e);
+                signatureCtx.lineTo(pos.x, pos.y);
+                signatureCtx.strokeStyle = "#1e293b";
+                signatureCtx.lineWidth = 2.5;
+                signatureCtx.lineCap = "round";
+                signatureCtx.lineJoin = "round";
+                signatureCtx.stroke();
+            };
+
+            const stopDrawing = () => {
+                isDrawingSignature = false;
+            };
+
+            signatureCanvas.addEventListener('mousedown', startDrawing);
+            signatureCanvas.addEventListener('touchstart', startDrawing);
+
+            signatureCanvas.addEventListener('mousemove', draw);
+            signatureCanvas.addEventListener('touchmove', draw);
+
+            signatureCanvas.addEventListener('mouseup', stopDrawing);
+            signatureCanvas.addEventListener('touchend', stopDrawing);
+            signatureCanvas.addEventListener('mouseleave', stopDrawing);
+        }
+
+        function resizeSignatureCanvas() {
+            if (!signatureCanvas || !signatureCtx) return;
+            const ratio = Math.max(window.devicePixelRatio || 1, 1);
+            const rect = signatureCanvas.getBoundingClientRect();
+            if (rect.width === 0 || rect.height === 0) return;
+
+            signatureCanvas.width = rect.width * ratio;
+            signatureCanvas.height = rect.height * ratio;
+            signatureCtx.setTransform(1, 0, 0, 1, 0, 0);
+            signatureCtx.scale(ratio, ratio);
+        }
+
+        function clearSignatureCanvas() {
+            if (!signatureCanvas || !signatureCtx) return;
+            signatureCtx.clearRect(0, 0, signatureCanvas.width, signatureCanvas.height);
+            hasSigned = false;
+        }
+
+        function showErrorModal(title, message) {
+            document.getElementById('error-modal-title').innerText = title;
+            document.getElementById('error-modal-msg').innerText = message;
+            document.getElementById('error-modal').classList.remove('hidden');
+        }
+
+        async function submitForm() {
+            const submitBtn = document.getElementById('submit-btn');
+            const inspectorName = document.getElementById('input-inspector-name').value.trim();
+            const locationRef = document.getElementById('input-location-ref').value.trim();
+
+            if (!inspectorName) {
+                showToast("Bitte geben Sie den Namen des Prüfers ein. / Introduceți numele inspectorului.", "warning");
+                return;
+            }
+
+            if (!hasSigned) {
+                showToast("Bitte erbringen Sie die Unterschrift. / Vă rugăm să semnați.", "warning");
+                return;
+            }
+
+            const jsPDFClass = getJsPDFClass();
+            if (!jsPDFClass) {
+                showErrorModal("Fehler", "PDF-Bibliothek konnte nicht geladen werden. Bitte prüfen Sie Ihre Internetverbindung.");
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<i class="fa-solid fa-spinner animate-spin text-xs"></i> <span>Erstelle PDF...</span>`;
+
+            try {
+                const now = new Date();
+                const timestampStr = now.toLocaleString('de-DE');
+                const isoDate = now.toISOString().split('T')[0];
+
+                const checklistData = currentModalConfig.checklist.map(item => {
+                    const cb = document.getElementById(`cb-item-${item.id}`);
+                    return {
+                        id: item.id,
+                        label_de: item.label_de,
+                        label_ro: item.label_ro,
+                        checked: cb ? cb.checked : false
+                    };
+                });
+
+                const readingsData = [];
+                if (currentModalConfig.optionalFields) {
+                    currentModalConfig.optionalFields.forEach(field => {
+                        const input = document.getElementById(`opt-input-${field.id}`);
+                        if (input && input.value.trim() !== '') {
+                            readingsData.push({
+                                label_de: field.label_de,
+                                label_ro: field.label_ro,
+                                value: input.value.trim()
+                            });
+                        }
+                    });
+                }
+
+                // Create jsPDF Document
+                const doc = new jsPDFClass({ orientation: 'p', unit: 'mm', format: 'a4' });
+                
+                try {
+                    doc.addImage(logoBase64, 'PNG', 15, 12, 45, 15);
+                } catch (imgErr) {
+                    console.warn("Logo overlay warning:", imgErr);
+                }
+
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(16);
+                doc.setTextColor(51, 105, 30);
+                doc.text("ECB KONTROLLPROTOKOLL", 195, 20, { align: 'right' });
+
+                doc.setFontSize(9);
+                doc.setFont("helvetica", "normal");
+                doc.setTextColor(100, 100, 100);
+                doc.text(`Kategorie: ${currentModalConfig.title_de} / ${currentModalConfig.title_ro}`, 195, 26, { align: 'right' });
+
+                doc.setDrawColor(220, 220, 220);
+                doc.setLineWidth(0.5);
+                doc.line(15, 32, 195, 32);
+
+                doc.setFillColor(245, 247, 250);
+                doc.roundedRect(15, 36, 180, locationRef ? 30 : 24, 3, 3, 'F');
+
+                doc.setFontSize(10);
+                doc.setFont("helvetica", "bold");
+                doc.setTextColor(51, 51, 51);
+                doc.text("Geprüft von / Inspector:", 20, 44);
+                doc.setFont("helvetica", "normal");
+                doc.text(inspectorName, 75, 44);
+
+                doc.setFont("helvetica", "bold");
+                doc.text("Datum & Uhrzeit / Data:", 20, 52);
+                doc.setFont("helvetica", "normal");
+                doc.text(timestampStr, 75, 52);
+
+                let nextY = 66;
+                if (locationRef) {
+                    doc.setFont("helvetica", "bold");
+                    doc.text("Objekt / Ref. Obiect:", 20, 60);
+                    doc.setFont("helvetica", "normal");
+                    doc.text(locationRef, 75, 60);
+                    nextY = 72;
+                }
+
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(11);
+                doc.setTextColor(51, 105, 30);
+                doc.text("CHECKLISTE ERGEBNISSE / REZULTATE", 15, nextY);
+                nextY += 6;
+
+                doc.setFontSize(9);
+
+                checklistData.forEach(item => {
+                    const statusText = item.checked ? "[ OK / BIFAT ]" : "[ NICHT OK ]";
+                    doc.setFont("helvetica", item.checked ? "bold" : "normal");
+                    doc.setTextColor(item.checked ? 46 : 225, item.checked ? 125 : 29, item.checked ? 50 : 72);
+                    doc.text(statusText, 15, nextY);
+
+                    doc.setFont("helvetica", "normal");
+                    doc.setTextColor(50, 50, 50);
+                    doc.text(`${item.label_de} / ${item.label_ro}`, 55, nextY);
+
+                    nextY += 6;
+                });
+
+                nextY += 4;
+
+                if (readingsData.length > 0) {
+                    doc.setFont("helvetica", "bold");
+                    doc.setFontSize(11);
+                    doc.setTextColor(51, 105, 30);
+                    doc.text("MESSWERTE / VALORI", 15, nextY);
+                    nextY += 6;
+
+                    doc.setFontSize(9);
+                    readingsData.forEach(rd => {
+                        doc.setFont("helvetica", "bold");
+                        doc.setTextColor(60, 60, 60);
+                        doc.text(`${rd.label_de} / ${rd.label_ro}:`, 15, nextY);
+                        doc.setFont("helvetica", "normal");
+                        doc.text(`${rd.value}`, 85, nextY);
+                        nextY += 6;
+                    });
+                    nextY += 4;
+                }
+
+                if (activePhotoDataUrl) {
+                    doc.setFont("helvetica", "bold");
+                    doc.setFontSize(11);
+                    doc.setTextColor(51, 105, 30);
+                    doc.text("NACHWEISFOTO / FOTOGRAFIE", 15, nextY);
+                    nextY += 6;
+
+                    try {
+                        doc.addImage(activePhotoDataUrl, 'JPEG', 15, nextY, 65, 45);
+                        nextY += 50;
+                    } catch (e) {
+                        console.warn("Photo insert warning", e);
+                    }
+                }
+
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(11);
+                doc.setTextColor(51, 105, 30);
+                doc.text("UNTERSCHRIFT / SEMNĂTURĂ", 15, nextY);
+                nextY += 6;
+
+                try {
+                    const sigDataUrl = signatureCanvas.toDataURL("image/png");
+                    doc.addImage(sigDataUrl, 'PNG', 15, nextY, 60, 22);
+                } catch (sigErr) {
+                    console.warn("Signature overlay warning:", sigErr);
+                }
+
+                doc.setFontSize(8);
+                doc.setFont("helvetica", "italic");
+                doc.setTextColor(150, 150, 150);
+                doc.text("Dieses Protokoll wurde digital mit der ECB Kontroll App generiert.", 15, 285);
+
+                const pdfBase64 = doc.output('datauristring').split('base64,')[1];
+                const pdfFileName = `Protokoll_${currentModalConfig.id}_${isoDate}.pdf`;
+
+                // Safe local storage
+                const reportRecord = {
+                    id: Date.now().toString(),
+                    typeId: currentModalConfig.id,
+                    title_de: currentModalConfig.title_de,
+                    title_ro: currentModalConfig.title_ro,
+                    inspector: inspectorName,
+                    locationRef: locationRef,
+                    dateStr: timestampStr,
+                    pdfBase64: pdfBase64,
+                    fileName: pdfFileName
+                };
+                saveReportToHistory(reportRecord);
+
+                // Download PDF directly
+                try {
+                    doc.save(pdfFileName);
+                } catch (saveErr) {
+                    console.warn("PDF local download warning:", saveErr);
+                }
+
+                showToast("PDF lokal gespeichert!", "info");
+
+                // Execute Email Dispatch
+                const pdfBlob = doc.output('blob');
+
+                submitBtn.innerHTML = `<i class="fa-solid fa-spinner animate-spin text-xs"></i> <span>Öffne E-Mail-App...</span>`;
+                
+                await dispatchEmail({
+                    title_de: currentModalConfig.title_de,
+                    title_ro: currentModalConfig.title_ro,
+                    inspectorName: inspectorName,
+                    locationRef: locationRef,
+                    timestampStr: timestampStr,
+                    pdfFileName: pdfFileName,
+                    pdfBase64: pdfBase64,
+                    pdfBlob: pdfBlob,
+                    checklistData: checklistData,
+                    readingsData: readingsData
+                });
+
+                closeModal();
+
+            } catch (err) {
+                console.error("Submission error:", err);
+                showErrorModal("Fehler bei der Protokollerstellung", err.message || "Unbekannter Fehler beim Generieren des Protokolls.");
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `<i class="fa-solid fa-paper-plane text-xs"></i> <span>Abschließen & Senden</span>`;
+            }
+        }
+
+        // Email Dispatch Engine
+        async function dispatchEmail(data) {
+            const method = localStorage.getItem('ecb_email_method') || 'mailto';
+            const recipient = localStorage.getItem('ecb_recipient_email') || 'pb@ecb-system.com';
+
+            if (method === 'none') {
+                showToast("Protokoll erstellt (E-Mail-Versand deaktiviert).", "success");
+                return true;
+            }
+
+            let bodyText = `ECB KONTROLLPROTOKOLL / PROCES VERBAL\n`;
+            bodyText += `===============================================\n\n`;
+            bodyText += `• Kategorie: ${data.title_de} / ${data.title_ro}\n`;
+            bodyText += `• Prüfer / Inspector: ${data.inspectorName}\n`;
+            bodyText += `• Datum & Uhrzeit: ${data.timestampStr}\n`;
+            if (data.locationRef) {
+                bodyText += `• Objekt / Kennzeichen: ${data.locationRef}\n`;
+            }
+            bodyText += `\nCHECKLISTE ERGEBNISSE / REZULTATE:\n`;
+            bodyText += `-----------------------------------------------\n`;
+            
+            if (data.checklistData && data.checklistData.length > 0) {
+                data.checklistData.forEach(item => {
+                    const status = item.checked ? '[ OK ]' : '[ NICHT OK ]';
+                    bodyText += `${status} ${item.label_de} (${item.label_ro})\n`;
+                });
+            }
+
+            if (data.readingsData && data.readingsData.length > 0) {
+                bodyText += `\nMESSWERTE / VALORI:\n`;
+                bodyText += `-----------------------------------------------\n`;
+                data.readingsData.forEach(rd => {
+                    bodyText += `• ${rd.label_de} / ${rd.label_ro}: ${rd.value}\n`;
+                });
+            }
+
+            bodyText += `\n===============================================\n`;
+            bodyText += `Das PDF-Protokoll wurde generiert (${data.pdfFileName}).\n`;
+
+            const subject = `ECB Protokoll: ${data.title_de} - ${data.inspectorName}`;
+
+            // Native Mobile Mail App Dispatch
+            if (method === 'mailto') {
+                let sharedViaWebShare = false;
+
+                // Try Web Share API safely
+                if (navigator.share && navigator.canShare && data.pdfBlob) {
+                    try {
+                        const pdfFile = new File([data.pdfBlob], data.pdfFileName, { type: 'application/pdf' });
+                        if (navigator.canShare({ files: [pdfFile] })) {
+                            await navigator.share({
+                                title: subject,
+                                text: bodyText,
+                                files: [pdfFile]
+                            });
+                            sharedViaWebShare = true;
+                            showToast("Mail-App mit PDF-Anhang geöffnet!", "success");
+                            return true;
+                        }
+                    } catch (shareErr) {
+                        if (shareErr.name === 'AbortError') {
+                            showToast("Versand abgebrochen.", "info");
+                            return false;
+                        }
+                        console.warn("Web Share API not used, falling back to mailto:", shareErr);
+                    }
+                }
+
+                // Fallback to mailto link
+                if (!sharedViaWebShare) {
+                    const mailtoUrl = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyText)}`;
+                    const a = document.createElement('a');
+                    a.href = mailtoUrl;
+                    a.target = '_blank';
+                    a.click();
+                    showToast("Mail-App geöffnet! (pb@ecb-system.com vorausgefüllt)", "success");
+                    return true;
+                }
+            }
+
+            // EmailJS Engine
+            if (method === 'emailjs') {
+                const publicKey = localStorage.getItem('ecb_emailjs_public_key') || '';
+                const serviceId = localStorage.getItem('ecb_emailjs_service_id') || '';
+                const templateId = localStorage.getItem('ecb_emailjs_template_id') || '';
+
+                if (!publicKey || !serviceId || !templateId) {
+                    showToast("Bitte EmailJS Zugangsdaten in den Einstellungen konfigurieren!", "warning");
+                    return false;
+                }
+
+                try {
+                    if (window.emailjs) {
+                        emailjs.init(publicKey);
+
+                        const templateParams = {
+                            to_email: recipient,
+                            category_de: data.title_de,
+                            category_ro: data.title_ro,
+                            inspector: data.inspectorName,
+                            location_ref: data.locationRef || 'N/A',
+                            timestamp: data.timestampStr,
+                            filename: data.pdfFileName
+                        };
+
+                        await emailjs.send(serviceId, templateId, templateParams);
+                        showToast("Protokoll im Hintergrund gesendet!", "success");
+                        return true;
+                    } else {
+                        throw new Error("EmailJS SDK nicht geladen.");
+                    }
+                } catch (err) {
+                    showToast(`EmailJS Fehler: ${err.text || err.message}`, "error");
+                    return false;
+                }
+            }
+
+            // Custom Webhook Engine
+            if (method === 'webhook') {
+                const webhookUrl = localStorage.getItem('ecb_webhook_url') || '';
+                if (!webhookUrl) {
+                    showToast("Fehler: Keine Webhook-URL konfiguriert!", "error");
+                    return false;
+                }
+
+                try {
+                    const response = await fetch(webhookUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            recipient: recipient,
+                            title_de: data.title_de,
+                            title_ro: data.title_ro,
+                            inspector: data.inspectorName,
+                            locationRef: data.locationRef,
+                            timestamp: data.timestampStr,
+                            fileName: data.pdfFileName,
+                            pdfBase64: data.pdfBase64
+                        })
+                    });
+
+                    if (response.ok) {
+                        showToast("E-Mail via Webhook gesendet!", "success");
+                        return true;
+                    } else {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+                } catch (err) {
+                    showToast(`Webhook Fehler: ${err.message}`, "error");
+                    return false;
+                }
+            }
+
+            // Resend API Engine
+            if (method === 'resend') {
+                const resendKey = localStorage.getItem('ecb_resend_key') || '';
+                const fromEmail = localStorage.getItem('ecb_resend_from') || 'onboarding@resend.dev';
+
+                if (!resendKey) {
+                    showToast("Fehler: Kein Resend API-Key hinterlegt!", "error");
+                    return false;
+                }
+
+                try {
+                    const payload = {
+                        from: `ECB App <${fromEmail}>`,
+                        to: [recipient],
+                        subject: subject,
+                        html: `
+                            <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
+                                <h2 style="color: #689f38;">ECB Kontrollprotokoll</h2>
+                                <p><strong>Kategorie:</strong> ${data.title_de} / ${data.title_ro}</p>
+                                <p><strong>Geprüft von:</strong> ${data.inspectorName}</p>
+                                <p><strong>Datum:</strong> ${data.timestampStr}</p>
+                                ${data.locationRef ? `<p><strong>Objekt / Ref:</strong> ${data.locationRef}</p>` : ''}
+                                <hr style="border: 0; border-top: 1px solid #ccc; margin: 20px 0;">
+                                <p>Das erstellte Protokoll befindet sich als PDF-Anhang in dieser E-Mail.</p>
+                            </div>
+                        `,
+                        attachments: [
+                            {
+                                filename: data.pdfFileName,
+                                content: data.pdfBase64
+                            }
+                        ]
+                    };
+
+                    const response = await fetch('https://api.resend.com/emails', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${resendKey}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (response.ok) {
+                        showToast("E-Mail erfolgreich via Resend versendet!", "success");
+                        return true;
+                    } else {
+                        const resData = await response.json().catch(() => ({}));
+                        showToast(`Resend Fehler: ${resData.message || response.status}`, "error");
+                        return false;
+                    }
+                } catch (err) {
+                    showToast(`Netzwerk Fehler bei Resend: ${err.message}`, "error");
+                    return false;
+                }
+            }
+
+            return false;
+        }
+
+        async function testEmailConfig() {
+            const recipient = document.getElementById('setting-recipient-email').value.trim();
+
+            if (!recipient) {
+                showToast("Bitte Empfänger-E-Mail eingeben.", "warning");
+                return;
+            }
+
+            showToast("Sende Test-E-Mail...", "info");
+
+            await dispatchEmail({
+                title_de: 'Test-Protokoll',
+                title_ro: 'Proces Verbal Test',
+                inspectorName: 'System Test',
+                locationRef: 'Test-Objekt',
+                timestampStr: new Date().toLocaleString('de-DE'),
+                pdfFileName: 'Test_Protokoll.pdf',
+                pdfBase64: 'JVBERi0xLjQKJS...'
+            });
+        }
+
+        function getHistoryRecords() {
+            try {
+                return JSON.parse(localStorage.getItem('ecb_inspection_history') || '[]');
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveReportToHistory(record) {
+            try {
+                let records = getHistoryRecords();
+                records.unshift(record);
+                
+                if (records.length > 15) records = records.slice(0, 15);
+
+                let saved = false;
+                while (records.length > 0 && !saved) {
+                    try {
+                        localStorage.setItem('ecb_inspection_history', JSON.stringify(records));
+                        saved = true;
+                    } catch (quotaError) {
+                        records.pop();
+                    }
+                }
+                updateHistoryBadge();
+            } catch (e) {
+                console.warn("History save quota bypassed:", e);
+            }
+        }
+
+        function updateHistoryBadge() {
+            const records = getHistoryRecords();
+            const badge = document.getElementById('history-badge');
+            if (records.length > 0) {
+                badge.innerText = records.length;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        function renderHistory(filterText = '') {
+            const container = document.getElementById('history-container');
+            const records = getHistoryRecords();
+
+            const filtered = records.filter(r => 
+                r.title_de.toLowerCase().includes(filterText.toLowerCase()) ||
+                (r.title_ro && r.title_ro.toLowerCase().includes(filterText.toLowerCase())) ||
+                r.inspector.toLowerCase().includes(filterText.toLowerCase()) ||
+                r.dateStr.toLowerCase().includes(filterText.toLowerCase())
+            );
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 bg-white rounded-2xl border border-slate-200">
+                        <i class="fa-solid fa-folder-open text-4xl text-slate-300 mb-2"></i>
+                        <p class="text-sm font-semibold text-slate-600">Keine Protokolle gefunden</p>
+                        <p class="text-xs text-slate-400">Nu au fost găsite procese verbale</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(r => `
+                <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-slate-300 transition-all">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-ecb-100 text-ecb-800 flex items-center justify-center text-lg shrink-0">
+                            <i class="fa-solid fa-file-pdf"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-sm">${r.title_de} <span class="text-xs text-slate-400 font-normal">/ ${r.title_ro || ''}</span></h4>
+                            <div class="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-slate-500">
+                                <span><i class="fa-solid fa-user text-[10px] text-slate-400 mr-1"></i>${r.inspector}</span>
+                                <span><i class="fa-solid fa-calendar text-[10px] text-slate-400 mr-1"></i>${r.dateStr}</span>
+                                ${r.locationRef ? `<span class="text-ecb-700"><i class="fa-solid fa-tag text-[10px] mr-1"></i>${r.locationRef}</span>` : ''}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 pt-2 sm:pt-0 border-t sm:border-0 border-slate-100 justify-end">
+                        <button onclick="downloadPdfFromHistory('${r.id}')" class="px-3 py-1.5 rounded-lg bg-ecb-50 hover:bg-ecb-100 text-ecb-800 font-semibold text-xs transition-all flex items-center gap-1.5 border border-ecb-200">
+                            <i class="fa-solid fa-download"></i>
+                            <span>PDF Download</span>
+                        </button>
+                        <button onclick="deleteHistoryItem('${r.id}')" class="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all" title="Löschen">
+                            <i class="fa-solid fa-trash-can text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterHistory() {
+            const query = document.getElementById('history-search').value;
+            renderHistory(query);
+        }
+
+        function downloadPdfFromHistory(id) {
+            const records = getHistoryRecords();
+            const record = records.find(r => r.id === id);
+            if (!record) return;
+
+            const link = document.createElement('a');
+            link.href = `data:application/pdf;base64,${record.pdfBase64}`;
+            link.download = record.fileName;
+            link.click();
+            showToast("PDF heruntergeladen!", "info");
+        }
+
+        async function deleteHistoryItem(id) {
+            const confirmed = await showConfirmModal("Protokoll löschen", "Möchten Sie dieses Protokoll wirklich aus dem Verlauf löschen?");
+            if (!confirmed) return;
+
+            let records = getHistoryRecords();
+            records = records.filter(r => r.id !== id);
+            localStorage.setItem('ecb_inspection_history', JSON.stringify(records));
+            updateHistoryBadge();
+            renderHistory();
+            showToast("Protokoll gelöscht", "info");
+        }
+
+        async function clearAllHistory() {
+            const confirmed = await showConfirmModal("Alle Protokolle löschen", "Möchten Sie den gesamten Verlauf unwiderruflich löschen?");
+            if (!confirmed) return;
+
+            localStorage.removeItem('ecb_inspection_history');
+            updateHistoryBadge();
+            renderHistory();
+            showToast("Verlauf wurde geleert.", "info");
+        }
+
+        function loadSettings() {
+            const recipient = localStorage.getItem('ecb_recipient_email') || 'pb@ecb-system.com';
+            const defaultInspector = localStorage.getItem('ecb_default_inspector') || '';
+            const emailMethod = localStorage.getItem('ecb_email_method') || 'mailto';
+            
+            const emailjsKey = localStorage.getItem('ecb_emailjs_public_key') || '';
+            const emailjsService = localStorage.getItem('ecb_emailjs_service_id') || '';
+            const emailjsTemplate = localStorage.getItem('ecb_emailjs_template_id') || '';
+
+            const resendKey = localStorage.getItem('ecb_resend_key') || '';
+            const resendFrom = localStorage.getItem('ecb_resend_from') || 'onboarding@resend.dev';
+            const webhookUrl = localStorage.getItem('ecb_webhook_url') || '';
+
+            document.getElementById('setting-recipient-email').value = recipient;
+            document.getElementById('setting-default-inspector').value = defaultInspector;
+            document.getElementById('setting-email-method').value = emailMethod;
+            
+            document.getElementById('setting-emailjs-public-key').value = emailjsKey;
+            document.getElementById('setting-emailjs-service-id').value = emailjsService;
+            document.getElementById('setting-emailjs-template-id').value = emailjsTemplate;
+
+            document.getElementById('setting-resend-key').value = resendKey;
+            document.getElementById('setting-resend-from').value = resendFrom;
+            document.getElementById('setting-webhook-url').value = webhookUrl;
+
+            toggleEmailMethodFields();
+        }
+
+        function toggleEmailMethodFields() {
+            const method = document.getElementById('setting-email-method').value;
+            const groupEmailjs = document.getElementById('field-group-emailjs');
+            const groupResend = document.getElementById('field-group-resend');
+            const groupWebhook = document.getElementById('field-group-webhook');
+
+            groupEmailjs.classList.add('hidden');
+            groupResend.classList.add('hidden');
+            groupWebhook.classList.add('hidden');
+
+            if (method === 'emailjs') groupEmailjs.classList.remove('hidden');
+            if (method === 'resend') groupResend.classList.remove('hidden');
+            if (method === 'webhook') groupWebhook.classList.remove('hidden');
+        }
+
+        function saveSettings() {
+            const recipient = document.getElementById('setting-recipient-email').value.trim();
+            const defaultInspector = document.getElementById('setting-default-inspector').value.trim();
+            const emailMethod = document.getElementById('setting-email-method').value;
+            
+            const emailjsKey = document.getElementById('setting-emailjs-public-key').value.trim();
+            const emailjsService = document.getElementById('setting-emailjs-service-id').value.trim();
+            const emailjsTemplate = document.getElementById('setting-emailjs-template-id').value.trim();
+
+            const resendKey = document.getElementById('setting-resend-key').value.trim();
+            const resendFrom = document.getElementById('setting-resend-from').value.trim();
+            const webhookUrl = document.getElementById('setting-webhook-url').value.trim();
+
+            localStorage.setItem('ecb_recipient_email', recipient);
+            localStorage.setItem('ecb_default_inspector', defaultInspector);
+            localStorage.setItem('ecb_email_method', emailMethod);
+            
+            localStorage.setItem('ecb_emailjs_public_key', emailjsKey);
+            localStorage.setItem('ecb_emailjs_service_id', emailjsService);
+            localStorage.setItem('ecb_emailjs_template_id', emailjsTemplate);
+
+            localStorage.setItem('ecb_resend_key', resendKey);
+            localStorage.setItem('ecb_resend_from', resendFrom);
+            localStorage.setItem('ecb_webhook_url', webhookUrl);
+
+            showToast("Einstellungen gespeichert!", "success");
+        }
+
+        function showToast(message, type = "info") {
+            const toastContainer = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+
+            const bgColors = {
+                success: 'bg-slate-900 border-emerald-500 text-white',
+                warning: 'bg-slate-900 border-amber-500 text-white',
+                error: 'bg-slate-900 border-rose-500 text-white',
+                info: 'bg-slate-900 border-ecb-500 text-white'
+            };
+
+            const icons = {
+                success: '<i class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>',
+                warning: '<i class="fa-solid fa-triangle-exclamation text-amber-400 text-lg"></i>',
+                error: '<i class="fa-solid fa-circle-xmark text-rose-400 text-lg"></i>',
+                info: '<i class="fa-solid fa-circle-info text-ecb-400 text-lg"></i>'
+            };
+
+            toast.className = `flex items-center gap-3 p-3.5 rounded-xl border shadow-xl ${bgColors[type] || bgColors.info} transition-all transform translate-y-4 opacity-0 pointer-events-auto`;
+            toast.innerHTML = `
+                ${icons[type] || icons.info}
+                <div class="text-xs font-medium">${message}</div>
+            `;
+
+            toastContainer.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-4', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 4500);
+        }
+
+        function showConfirmModal(title, msg) {
+            return new Promise((resolve) => {
+                document.getElementById('confirm-title').innerText = title;
+                document.getElementById('confirm-msg').innerText = msg;
+                document.getElementById('confirm-modal').classList.remove('hidden');
+                confirmResolver = resolve;
+            });
+        }
+
+        function closeConfirmModal(result) {
+            document.getElementById('confirm-modal').classList.add('hidden');
+            if (confirmResolver) {
+                confirmResolver(result);
+                confirmResolver = null;
+            }
+        }
+    </script>
+</body>
+</html>
