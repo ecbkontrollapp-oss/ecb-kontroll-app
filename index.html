@@ -11,13 +11,13 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#5ea63b">
     
-    <!-- App Icons mit originalem ECB Logo (Grün mit geschwungenem Schriftzug und Welle) -->
+    <!-- App Icons mit originalem ECB Logo -->
     <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' rx='44' fill='%235ea63b'/%3E%3Ctext x='50%25' y='48%25' dominant-baseline='central' text-anchor='middle' font-family='sans-serif' font-style='italic' font-weight='bold' font-size='68' fill='white'%3Eecb%3C/text%3E%3Cpath d='M25 145 C65 118, 120 152, 175 118 C152 154, 98 162, 25 145 Z' fill='white'/%3E%3C/svg%3E">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' rx='44' fill='%235ea63b'/%3E%3Ctext x='50%25' y='48%25' dominant-baseline='central' text-anchor='middle' font-family='sans-serif' font-style='italic' font-weight='bold' font-size='68' fill='white'%3Eecb%3C/text%3E%3Cpath d='M25 145 C65 118, 120 152, 175 118 C152 154, 98 162, 25 145 Z' fill='white'/%3E%3C/svg%3E">
 
     <title>ECB Kontroll App</title>
     
-    <!-- Tailwind CSS & FontAwesome & jsPDF -->
+    <!-- Tailwind CSS, FontAwesome, jsPDF -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -37,6 +37,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
+    <!-- Google Firebase SDK (Echtzeit Cloud-Datenbank) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
     <style>
         canvas.sig-canvas {
             touch-action: none;
@@ -49,15 +53,21 @@
         .status-btn {
             transition: all 0.15s ease-in-out;
         }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
     </style>
 </head>
 <body class="h-full bg-slate-50 text-slate-800 flex flex-col font-sans select-none antialiased">
 
-    <!-- Kopfzeile mit originalem ECB Logo & Sprachumschalter DE / RO -->
+    <!-- Kopfzeile mit Logo, Cloud-Status & Sprachumschalter DE / RO -->
     <header class="sticky top-0 z-30 bg-white border-b border-slate-200/80 px-4 py-2 shadow-xs">
         <div class="max-w-md mx-auto flex items-center justify-between">
             <div class="flex items-center gap-2.5">
-                <!-- ECB Logo mit Welle -->
                 <div class="w-9 h-9 rounded-xl bg-ecb flex flex-col items-center justify-center text-white shadow-xs p-1 cursor-pointer" onclick="switchView('start')">
                     <span class="font-black italic text-sm leading-none tracking-tight">ecb</span>
                     <svg class="w-6 h-1.5 mt-0.5" viewBox="0 0 100 24" fill="white">
@@ -65,7 +75,12 @@
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-xs font-bold text-slate-900 tracking-tight leading-none" data-i18n="app_title">ECB Kontroll App</h1>
+                    <div class="flex items-center gap-1.5">
+                        <h1 class="text-xs font-bold text-slate-900 tracking-tight leading-none" data-i18n="app_title">ECB Kontroll App</h1>
+                        <span id="cloud-indicator" class="flex items-center text-[9px] text-emerald-600 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded-full" title="Google Firebase Live-Sync aktiv">
+                            <i class="fa-solid fa-cloud text-[8px] mr-1"></i> Cloud
+                        </span>
+                    </div>
                     <span class="text-[9px] text-slate-400" data-i18n="app_sub">Reinigungssysteme</span>
                 </div>
             </div>
@@ -94,7 +109,7 @@
             <div class="pt-0.5">
                 <h2 class="text-xl font-black text-slate-900 tracking-tight" data-i18n="overview_title">Übersicht</h2>
                 <p class="text-xs text-slate-500 font-normal leading-relaxed mt-0.5" data-i18n="overview_desc">
-                    Tägliche Kontrollen erfassen, unterschreiben und melden.
+                    Tägliche Kontrollen einzeln erfassen, unterschreiben und sofort melden.
                 </p>
             </div>
 
@@ -105,8 +120,8 @@
                     <span class="text-xs font-semibold text-slate-600" data-i18n="daily_status_label">Tagesstatus:</span>
                     <span id="daily-status-text" class="text-xs font-bold text-slate-900">0 / 4 erledigt</span>
                 </div>
-                <button onclick="openDispatchToday()" class="text-[11px] font-bold text-ecb hover:text-ecb-dark flex items-center gap-1">
-                    <i class="fa-solid fa-file-pdf"></i> <span data-i18n="send_protocol_btn">Protokoll senden</span>
+                <button onclick="openDispatchDaySummary()" class="text-[11px] font-bold text-ecb hover:text-ecb-dark flex items-center gap-1">
+                    <i class="fa-solid fa-file-pdf"></i> <span data-i18n="send_all_btn">Gesamt-PDF</span>
                 </button>
             </div>
 
@@ -125,7 +140,7 @@
                     </div>
                     
                     <h3 class="text-sm font-bold text-slate-900 group-hover:text-sky-600 transition-colors" data-i18n="card_demin_title">1. Entmineralisierungsanlage</h3>
-                    <p class="text-[11px] text-slate-500 mt-0.5 font-normal" data-i18n="card_demin_desc">Tägliche Kontrolle & Messwerte</p>
+                    <p class="text-[11px] text-slate-500 mt-0.5 font-normal" data-i18n="card_demin_desc">Tägliche Kontrolle & Messwerte (Einzelversand)</p>
 
                     <div class="mt-2.5 flex items-center text-[11px] font-semibold text-slate-700 group-hover:text-sky-600 transition-colors">
                         <span data-i18n="start_control">Kontrolle starten</span>
@@ -145,7 +160,7 @@
                     </div>
                     
                     <h3 class="text-sm font-bold text-slate-900 group-hover:text-emerald-700 transition-colors" data-i18n="card_outdoor_title">2. Außenbereich</h3>
-                    <p class="text-[11px] text-slate-500 mt-0.5 font-normal" data-i18n="card_outdoor_desc">Sauberkeit, Mülleimer & Tische mit Foto</p>
+                    <p class="text-[11px] text-slate-500 mt-0.5 font-normal" data-i18n="card_outdoor_desc">Mülleimer, Tische & Sauberkeit mit Foto</p>
 
                     <div class="mt-2.5 flex items-center text-[11px] font-semibold text-slate-700 group-hover:text-emerald-700 transition-colors">
                         <span data-i18n="start_control">Kontrolle starten</span>
@@ -198,9 +213,9 @@
             <!-- Letzte Kontrollen Box -->
             <div class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-xs space-y-2.5">
                 <div class="flex items-center justify-between">
-                    <h3 class="text-xs font-bold text-slate-900" data-i18n="latest_controls_title">Letzte Kontrollen</h3>
+                    <h3 class="text-xs font-bold text-slate-900" data-i18n="latest_controls_title">Letzte Kontrollen (Cloud-Live)</h3>
                     <button onclick="switchView('history')" class="text-xs font-semibold text-sky-600 hover:text-sky-700 flex items-center gap-1">
-                        <i class="fa-solid fa-clock-rotate-left text-[11px]"></i> <span data-i18n="btn_all">Alle</span>
+                        <i class="fa-solid fa-folder-open text-[11px]"></i> <span data-i18n="btn_folders">Zu den Ordnern</span>
                     </button>
                 </div>
 
@@ -221,7 +236,7 @@
                     <i class="fa-solid fa-arrow-left text-sm"></i> <span data-i18n="back_btn">Zurück</span>
                 </button>
                 <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-100" data-i18n="step1_of_4">
-                    1 von 4
+                    Bereich 1
                 </span>
             </div>
 
@@ -267,7 +282,6 @@
                             Sicht- & Funktionsprüfung
                         </label>
 
-                        <!-- Prüfpunkt 1 -->
                         <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
                             <div class="text-xs font-semibold text-slate-800" data-i18n="check_leak">
                                 Dichtheit der Anlage & Schläuche
@@ -284,7 +298,6 @@
                             </div>
                         </div>
 
-                        <!-- Prüfpunkt 2 -->
                         <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
                             <div class="text-xs font-semibold text-slate-800" data-i18n="check_filter">
                                 Vorfilter & Patronenzustand
@@ -301,7 +314,6 @@
                             </div>
                         </div>
 
-                        <!-- Prüfpunkt 3 -->
                         <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
                             <div class="text-xs font-semibold text-slate-800" data-i18n="check_resin">
                                 Harzkapazität
@@ -323,11 +335,10 @@
                         <label class="block text-[11px] font-bold text-slate-700 mb-1" data-i18n="label_demin_notes">
                             Bemerkungen / Mängelhinweise
                         </label>
-                        <textarea id="demin-notes" rows="2" placeholder="Optional: Filterwechsel fällig, Auffälligkeiten..." data-i18n-ph="ph_demin_notes"
+                        <textarea id="demin-notes" rows="2" placeholder="Optional: Filterwechsel fällig..." data-i18n-ph="ph_demin_notes"
                                   class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-sky-500 outline-none"></textarea>
                     </div>
 
-                    <!-- Digitale Signatur -->
                     <div>
                         <div class="flex items-center justify-between mb-1">
                             <label class="text-[11px] font-bold text-slate-700 uppercase tracking-wider" data-i18n="label_sig">
@@ -342,16 +353,16 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="w-full py-2.5 px-4 bg-slate-900 hover:bg-black text-white font-bold rounded-xl shadow-xs text-xs flex items-center justify-center gap-2 transition-all active:scale-[0.99]">
-                        <i class="fa-solid fa-check"></i>
-                        <span data-i18n="btn_save_demin">Entmineralisierung speichern & weiter</span>
+                    <button type="submit" class="w-full py-2.5 px-4 bg-sky-600 hover:bg-sky-700 text-white font-bold rounded-xl shadow-xs text-xs flex items-center justify-center gap-2 transition-all active:scale-[0.99]">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span data-i18n="btn_save_send_demin">Entmineralisierung speichern & Protokoll versenden</span>
                     </button>
                 </form>
             </div>
         </section>
 
         <!-- ==================================================== -->
-        <!-- REITER 3: AUSSENBEREICH FORMULAR MIT NEUEN KRITERIEN -->
+        <!-- REITER 3: AUSSENBEREICH FORMULAR -->
         <!-- ==================================================== -->
         <section id="view-outdoor" class="view-panel hidden space-y-3.5">
             <div class="flex items-center justify-between">
@@ -359,7 +370,7 @@
                     <i class="fa-solid fa-arrow-left text-sm"></i> <span data-i18n="back_btn">Zurück</span>
                 </button>
                 <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100" data-i18n="step2_of_4">
-                    2 von 4
+                    Bereich 2
                 </span>
             </div>
 
@@ -383,7 +394,6 @@
                                class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-emerald-500 outline-none">
                     </div>
 
-                    <!-- FOTO: Direkte Live-Kamera -->
                     <div>
                         <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1" data-i18n="label_photo">
                             Aktuelles Live-Foto des Außenbereichs *
@@ -411,13 +421,11 @@
                         </div>
                     </div>
 
-                    <!-- Aktualisierte Zustandskriterien für Außenbereich -->
                     <div class="space-y-2 pt-1">
                         <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider" data-i18n="label_outdoor_checks">
                             Zustandskriterien
                         </label>
 
-                        <!-- Punkt 1: Mülleimer geleert und Zigarettenstummel entsorgt -->
                         <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
                             <div class="text-xs font-semibold text-slate-800" data-i18n="check_trash_cigs">
                                 Mülleimer geleert und Zigarettenstummel entsorgt
@@ -434,7 +442,6 @@
                             </div>
                         </div>
 
-                        <!-- Punkt 2: Kein Essen auf den Tischen, leere Dosen entsorgt -->
                         <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
                             <div class="text-xs font-semibold text-slate-800" data-i18n="check_tables_cans">
                                 Kein Essen auf den Tischen, leere Dosen entsorgt
@@ -451,7 +458,6 @@
                             </div>
                         </div>
 
-                        <!-- Punkt 3: Sauberkeit, Abläufe & Zufahrtswege -->
                         <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
                             <div class="text-xs font-semibold text-slate-800" data-i18n="check_outdoor_grounds">
                                 Sauberkeit der Flächen, Abläufe & Zufahrtswege frei
@@ -492,8 +498,8 @@
                     </div>
 
                     <button type="submit" class="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-xs text-xs flex items-center justify-center gap-2 transition-all active:scale-[0.99]">
-                        <i class="fa-solid fa-check"></i>
-                        <span data-i18n="btn_save_outdoor">Außenbereich speichern & weiter</span>
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span data-i18n="btn_save_send_outdoor">Außenbereich speichern & Protokoll versenden</span>
                     </button>
                 </form>
             </div>
@@ -508,7 +514,7 @@
                     <i class="fa-solid fa-arrow-left text-sm"></i> <span data-i18n="back_btn">Zurück</span>
                 </button>
                 <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-100" data-i18n="step3_of_4">
-                    3 von 4
+                    Bereich 3
                 </span>
             </div>
 
@@ -532,7 +538,6 @@
                                class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-amber-500 outline-none">
                     </div>
 
-                    <!-- FOTO: Pausenraum -->
                     <div>
                         <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1" data-i18n="label_photo_breakroom">
                             Foto des Pausenraums (Zustand / Spüle / Müll)
@@ -560,7 +565,6 @@
                         </div>
                     </div>
 
-                    <!-- Prüfpunkte Pausenraum -->
                     <div class="space-y-2 pt-1">
                         <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider" data-i18n="label_breakroom_checks">
                             Hygiene & Ordnung
@@ -635,7 +639,7 @@
                         <label class="block text-[11px] font-bold text-slate-700 mb-1" data-i18n="label_breakroom_notes">
                             Bemerkungen / Reinigungsbedarf
                         </label>
-                        <textarea id="breakroom-notes" rows="2" placeholder="Optional: Verbrauchsmaterial fehlt, Schäden..." data-i18n-ph="ph_breakroom_notes"
+                        <textarea id="breakroom-notes" rows="2" placeholder="Optional: Verbrauchsmaterial fehlt..." data-i18n-ph="ph_breakroom_notes"
                                   class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-amber-500 outline-none"></textarea>
                     </div>
 
@@ -654,15 +658,15 @@
                     </div>
 
                     <button type="submit" class="w-full py-2.5 px-4 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl shadow-xs text-xs flex items-center justify-center gap-2 transition-all active:scale-[0.99]">
-                        <i class="fa-solid fa-check"></i>
-                        <span data-i18n="btn_save_breakroom">Pausenraum speichern & weiter</span>
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span data-i18n="btn_save_send_breakroom">Pausenraum speichern & Protokoll versenden</span>
                     </button>
                 </form>
             </div>
         </section>
 
         <!-- ==================================================== -->
-        <!-- REITER 5: FAHRZEUGE FORMULAR MIT NEUEN KRITERIEN -->
+        <!-- REITER 5: FAHRZEUGE FORMULAR -->
         <!-- ==================================================== -->
         <section id="view-vehicle" class="view-panel hidden space-y-3.5">
             <div class="flex items-center justify-between">
@@ -670,7 +674,7 @@
                     <i class="fa-solid fa-arrow-left text-sm"></i> <span data-i18n="back_btn">Zurück</span>
                 </button>
                 <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100" data-i18n="step4_of_4">
-                    4 von 4
+                    Bereich 4
                 </span>
             </div>
 
@@ -711,7 +715,6 @@
                         </div>
                     </div>
 
-                    <!-- FOTO: Fahrzeug / Tacho / Zustand -->
                     <div>
                         <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1" data-i18n="label_photo_vehicle">
                             Foto des Fahrzeugs (Zustand / Tacho / Schäden)
@@ -739,13 +742,11 @@
                         </div>
                     </div>
 
-                    <!-- Prüfpunkte Fahrzeug: Ladung/Werkzeug entfällt, dafür Zustand, Reifendruck, Sauberkeit -->
                     <div class="space-y-2 pt-1">
                         <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider" data-i18n="label_vehicle_checks">
                             Fahrzeugzustand & Verkehrssicherheit
                         </label>
 
-                        <!-- Punkt 1: Fahrzeug sauber -->
                         <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
                             <div class="text-xs font-semibold text-slate-800" data-i18n="check_veh_clean">
                                 Fahrzeug sauber (Fahrerkabine & Außen sauber)
@@ -762,7 +763,6 @@
                             </div>
                         </div>
 
-                        <!-- Punkt 2: Fahrzeugzustand & Beleuchtung -->
                         <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
                             <div class="text-xs font-semibold text-slate-800" data-i18n="check_veh_condition">
                                 Fahrzeugzustand & Beleuchtung / Blinker in Ordnung
@@ -779,7 +779,6 @@
                             </div>
                         </div>
 
-                        <!-- Punkt 3: Reifendruck prüfen und korrigieren -->
                         <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
                             <div class="text-xs font-semibold text-slate-800" data-i18n="check_veh_tire_pressure">
                                 Reifendruck prüfen und korrigieren
@@ -796,7 +795,6 @@
                             </div>
                         </div>
 
-                        <!-- Punkt 4: Keine Warnleuchten & keine Neuschäden -->
                         <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
                             <div class="text-xs font-semibold text-slate-800" data-i18n="check_veh_warnings">
                                 Keine Warnleuchten / Keine neuen Kratzer oder Dellen
@@ -818,7 +816,7 @@
                         <label class="block text-[11px] font-bold text-slate-700 mb-1" data-i18n="label_vehicle_notes">
                             Mängel / Schäden / Werkstattbedarf
                         </label>
-                        <textarea id="vehicle-notes" rows="2" placeholder="Optional: Steinschlag, Kratzer, Service fällig..." data-i18n-ph="ph_vehicle_notes"
+                        <textarea id="vehicle-notes" rows="2" placeholder="Optional: Steinschlag, Kratzer..." data-i18n-ph="ph_vehicle_notes"
                                   class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-indigo-500 outline-none"></textarea>
                     </div>
 
@@ -838,40 +836,51 @@
 
                     <button type="submit" class="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-xs text-xs flex items-center justify-center gap-2 transition-all active:scale-[0.99]">
                         <i class="fa-solid fa-paper-plane"></i>
-                        <span data-i18n="btn_save_vehicle">Fahrzeuge speichern & Bericht öffnen</span>
+                        <span data-i18n="btn_save_send_vehicle">Fahrzeuge speichern & Protokoll versenden</span>
                     </button>
                 </form>
             </div>
         </section>
 
         <!-- ==================================================== -->
-        <!-- REITER 6: HISTORIE & PROTOKOLLE -->
+        <!-- REITER 6: HISTORIE & KATEGORIE-ORDNER -->
         <!-- ==================================================== -->
         <section id="view-history" class="view-panel hidden space-y-3.5">
             <div class="flex items-center justify-between">
                 <div>
-                    <h2 class="text-xl font-black text-slate-900 tracking-tight" data-i18n="history_title">Historie & Protokolle</h2>
-                    <p class="text-xs text-slate-500" data-i18n="history_sub">Archiv aller Kontrollberichte</p>
+                    <h2 class="text-xl font-black text-slate-900 tracking-tight" data-i18n="history_title">Historie & Ordner</h2>
+                    <p class="text-xs text-slate-500 flex items-center gap-1">
+                        <i class="fa-solid fa-cloud text-emerald-600"></i>
+                        <span data-i18n="history_sub">Google Firebase Cloud-Archiv</span>
+                    </p>
                 </div>
-                <button onclick="previewActivePdf()" class="px-2.5 py-1.5 bg-slate-900 text-white rounded-xl text-xs font-bold flex items-center gap-1 shadow-xs">
+                <button onclick="previewActivePdf(true)" class="px-2.5 py-1.5 bg-slate-900 text-white rounded-xl text-xs font-bold flex items-center gap-1 shadow-xs">
                     <i class="fa-solid fa-file-pdf text-rose-400"></i> <span data-i18n="btn_daily_pdf">Tages-PDF</span>
                 </button>
             </div>
 
-            <!-- Schnellversand des Tagesberichts -->
-            <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-3 flex items-center justify-between">
-                <div>
-                    <h4 class="text-xs font-bold text-slate-900" data-i18n="dispatch_box_title">Tagesbericht versenden</h4>
-                    <p class="text-[10px] text-slate-600" data-i18n="dispatch_box_sub">Alle erfassten Kontrollen an pb@ecb-system.de</p>
-                </div>
-                <button onclick="openDispatchToday()" class="py-2 px-3 bg-ecb hover:bg-ecb-dark text-white rounded-xl text-xs font-bold shadow-xs flex items-center gap-1">
-                    <i class="fa-solid fa-envelope"></i> <span data-i18n="btn_send">Senden</span>
+            <!-- KATEGORIE ORDNER FILTER (TABS) -->
+            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 pt-0.5">
+                <button onclick="setHistoryFilter('all')" id="hist-filter-all" class="hist-filter-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-white shadow-xs">
+                    📁 <span data-i18n="filter_all">Alle</span> (<span id="count-all">0</span>)
+                </button>
+                <button onclick="setHistoryFilter('Entmineralisierung')" id="hist-filter-demin" class="hist-filter-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-white border border-slate-200 text-slate-600 hover:bg-slate-100">
+                    💧 <span data-i18n="filter_demin">Entmineral.</span> (<span id="count-demin">0</span>)
+                </button>
+                <button onclick="setHistoryFilter('Außenbereich')" id="hist-filter-outdoor" class="hist-filter-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-white border border-slate-200 text-slate-600 hover:bg-slate-100">
+                    🌳 <span data-i18n="filter_outdoor">Außen</span> (<span id="count-outdoor">0</span>)
+                </button>
+                <button onclick="setHistoryFilter('Pausenraum')" id="hist-filter-breakroom" class="hist-filter-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-white border border-slate-200 text-slate-600 hover:bg-slate-100">
+                    ☕ <span data-i18n="filter_breakroom">Pause</span> (<span id="count-breakroom">0</span>)
+                </button>
+                <button onclick="setHistoryFilter('Fahrzeuge')" id="hist-filter-vehicle" class="hist-filter-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-white border border-slate-200 text-slate-600 hover:bg-slate-100">
+                    🚚 <span data-i18n="filter_vehicle">KFZ</span> (<span id="count-vehicle">0</span>)
                 </button>
             </div>
 
             <div id="history-items-container" class="space-y-2.5">
                 <div class="p-6 text-center text-xs text-slate-400 border-2 border-dashed border-slate-200 rounded-2xl" data-i18n="no_history">
-                    Noch keine Kontrollberichte gespeichert.
+                    Lade Kontrollberichte aus der Cloud...
                 </div>
             </div>
 
@@ -887,7 +896,7 @@
 
     </main>
 
-    <!-- UNTERE NAVIGATION (BOTTOM TAB BAR - 6 TABS) -->
+    <!-- UNTERE NAVIGATION -->
     <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 safe-bottom shadow-lg">
         <div class="max-w-md mx-auto grid grid-cols-6 px-1 pt-1.5 text-center">
             <button onclick="switchView('start')" id="nav-btn-start" class="nav-item flex flex-col items-center justify-center py-1 text-sky-600 transition-colors">
@@ -916,22 +925,22 @@
             </button>
 
             <button onclick="switchView('history')" id="nav-btn-history" class="nav-item flex flex-col items-center justify-center py-1 text-slate-400 hover:text-slate-700 transition-colors">
-                <i class="fa-solid fa-clock-rotate-left text-base mb-0.5"></i>
-                <span class="text-[9px] font-medium" data-i18n="nav_history">Archiv</span>
+                <i class="fa-solid fa-folder-tree text-base mb-0.5"></i>
+                <span class="text-[9px] font-medium" data-i18n="nav_history">Ordner</span>
             </button>
         </div>
     </nav>
 
-    <!-- VERSAND MODAL MIT PDF, DROPBOX & MAIL-APP -->
+    <!-- VERSAND MODAL (FÜR EINZELPROTOKOLLE & GESAMTBERICHTE) -->
     <div id="modal-dispatch" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-3">
         <div class="bg-white rounded-2xl max-w-sm w-full p-4 shadow-2xl space-y-3 max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between pb-2 border-b border-slate-100">
                 <div class="flex items-center gap-2">
                     <div class="w-8 h-8 rounded-xl bg-ecb text-white flex items-center justify-center text-xs shadow-xs">
-                        <i class="fa-solid fa-file-pdf"></i>
+                        <i class="fa-solid fa-paper-plane"></i>
                     </div>
                     <div>
-                        <h3 class="font-bold text-slate-900 text-xs" id="dispatch-title">PDF-Protokoll versenden</h3>
+                        <h3 class="font-bold text-slate-900 text-xs" id="dispatch-title">Einzelprotokoll versenden</h3>
                         <p class="text-[10px] text-slate-400 font-mono">Empfänger: pb@ecb-system.de</p>
                     </div>
                 </div>
@@ -945,24 +954,24 @@
             <div class="p-3 bg-emerald-50/80 border-2 border-ecb/40 rounded-2xl space-y-2.5 shadow-xs">
                 <div class="flex items-center justify-between">
                     <span class="text-xs font-black text-emerald-950 flex items-center gap-1.5">
-                        <i class="fa-solid fa-paper-plane text-ecb"></i> <span data-i18n="direct_send_title">Direktversand per Web-Dienst</span>
+                        <i class="fa-solid fa-cloud-arrow-up text-ecb"></i> <span data-i18n="direct_send_title">Sofort an pb@ecb-system.de</span>
                     </span>
                     <span class="text-[9px] bg-ecb text-white px-2 py-0.5 rounded-full font-bold" data-i18n="badge_recommended">
                         Empfohlen
                     </span>
                 </div>
                 <p class="text-[11px] text-slate-600 leading-snug" data-i18n="direct_send_desc">
-                    Sendet das <strong>deutsche 2-seitige PDF-Wartungsprotokoll mit Messwerten, Fotos & Unterschriften</strong> an <strong>pb@ecb-system.de</strong> und archiviert es in Dropbox.
+                    Sendet das <strong>offizielle deutsche PDF-Wartungsprotokoll mit Prüfwerten, Fotos & Unterschrift</strong> direkt per Mail und archiviert es im passenden Dropbox-Ordner.
                 </p>
                 <button id="btn-send-pdf-direct" onclick="executeWebServiceSend()" class="w-full py-3 bg-ecb hover:bg-ecb-dark active:scale-[0.99] text-white rounded-xl text-xs font-black shadow-md flex items-center justify-center gap-2 transition-all">
                     <i class="fa-solid fa-file-pdf text-sm"></i>
-                    <span data-i18n="btn_send_now">PDF-Protokoll jetzt versenden</span>
+                    <span data-i18n="btn_send_now">Protokoll jetzt versenden</span>
                 </button>
             </div>
 
             <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5">
                 <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                    <i class="fa-solid fa-paperclip text-sky-600"></i> <span data-i18n="mail_app_title">In Smartphone Mail-App mit PDF-Anhang</span>
+                    <i class="fa-solid fa-paperclip text-sky-600"></i> <span data-i18n="mail_app_title">In Smartphone Mail-App mit PDF</span>
                 </span>
                 <p class="text-[10px] text-slate-500 leading-snug" data-i18n="mail_app_desc">
                     Übergibt das PDF an Apple Mail oder Gmail.
@@ -974,7 +983,7 @@
             </div>
 
             <div class="flex gap-2 pt-1">
-                <button onclick="previewActivePdf()" class="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold flex items-center justify-center gap-1">
+                <button onclick="previewActivePdf(false)" class="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold flex items-center justify-center gap-1">
                     <i class="fa-solid fa-eye text-slate-500"></i> <span data-i18n="btn_view_pdf">PDF ansehen</span>
                 </button>
                 <button onclick="savePdfDownload()" class="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold flex items-center justify-center gap-1">
@@ -993,8 +1002,8 @@
                         <i class="fa-solid fa-file-pdf"></i>
                     </div>
                     <div>
-                        <h3 class="font-bold text-slate-900 text-xs">ECB Wartungsprotokoll (PDF)</h3>
-                        <p class="text-[10px] text-emerald-600 font-semibold">✓ Offiziell formatiert (Deutsch) & signiert</p>
+                        <h3 class="font-bold text-slate-900 text-xs" id="pdf-modal-title">ECB Wartungsprotokoll (PDF)</h3>
+                        <p class="text-[10px] text-emerald-600 font-semibold">✓ Offiziell formatiert (Deutsch) & digital signiert</p>
                     </div>
                 </div>
                 <button onclick="closeModal('modal-pdf')" class="text-slate-400 hover:text-slate-700 p-1">
@@ -1022,11 +1031,23 @@
         <div class="bg-white rounded-2xl max-w-sm w-full p-4 shadow-2xl space-y-3">
             <div class="flex items-center justify-between pb-2 border-b border-slate-100">
                 <h3 class="font-bold text-slate-900 text-sm flex items-center gap-1.5">
-                    <i class="fa-solid fa-sliders text-ecb"></i> <span data-i18n="settings_title">Einstellungen & Dropbox</span>
+                    <i class="fa-solid fa-sliders text-ecb"></i> <span data-i18n="settings_title">Einstellungen & Cloud</span>
                 </h3>
                 <button onclick="closeModal('modal-settings')" class="text-slate-400 hover:text-slate-600 p-1">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
+            </div>
+
+            <!-- Firebase Status Info -->
+            <div class="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-cloud text-emerald-600 text-sm"></i>
+                    <div>
+                        <div class="text-[9px] uppercase font-bold text-emerald-800">Google Firebase Live-Sync</div>
+                        <div class="text-xs font-bold text-slate-900">eck-kontroll-app</div>
+                    </div>
+                </div>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">Aktiv</span>
             </div>
 
             <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
@@ -1051,7 +1072,7 @@
                     </span>
                 </div>
                 <p class="text-[10px] text-sky-700 leading-snug" data-i18n="dropbox_desc">
-                    Tragen Sie hier Ihren Dropbox Access Token ein. Jedes PDF wird beim Absenden automatisch unter <code>/ECB-Kontrollen/</code> gespeichert.
+                    Tragen Sie hier Ihren Dropbox Access Token ein. Jedes Protokoll wird beim Absenden automatisch im jeweiligen <strong>Kategorie-Ordner</strong> abgelegt.
                 </p>
                 <input type="text" id="setting-dropbox-token" placeholder="sl.u.AF..." class="w-full p-2 bg-white border border-sky-200 rounded-xl text-xs font-mono">
                 
@@ -1059,13 +1080,6 @@
                     <i class="fa-solid fa-plug"></i> <span data-i18n="dropbox_test_btn">Dropbox-Verbindung testen</span>
                 </button>
                 <div id="dropbox-test-result" class="text-[10px] font-medium hidden"></div>
-            </div>
-
-            <div class="space-y-2">
-                <div>
-                    <label class="block text-[11px] font-bold text-slate-700 mb-0.5">WEB3FORMS ACCESS KEY</label>
-                    <input type="text" id="setting-key-1" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono">
-                </div>
             </div>
 
             <div class="flex gap-2 pt-2">
@@ -1089,35 +1103,56 @@
         const RECIPIENT_EMAIL = "pb@ecb-system.de";
         const DEFAULT_KEY_1 = "92e7e675-69a2-4557-8441-2c2b262e83ba";
 
+        // ====================================================
+        // GOOGLE FIREBASE CONFIGURATION (ECK-KONTROLL-APP)
+        // ====================================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyDPmUJhS6ohvvb71jirGhaKH2cXsIjPTLk",
+            authDomain: "eck-kontroll-app.firebaseapp.com",
+            projectId: "eck-kontroll-app",
+            storageBucket: "eck-kontroll-app.firebasestorage.app",
+            messagingSenderId: "1027112243456",
+            appId: "1:1027112243456:web:20476b48de7847550f23e5",
+            measurementId: "G-5KN7S0DV8H"
+        };
+
+        let db = null;
+        try {
+            firebase.initializeApp(firebaseConfig);
+            db = firebase.firestore();
+            db.enablePersistence({ synchronizeTabs: true }).catch(() => {});
+        } catch(e) {
+            console.warn("Firebase Initialisierungsfehler:", e);
+        }
+
         // ==========================================
         // Mehrsprachigkeit (DEUTSCH & RUMÄNISCH)
-        // PDF-Ausgabe & Mailtexte bleiben 100% Deutsch
         // ==========================================
         const translations = {
             de: {
                 app_title: "ECB Kontroll App",
                 app_sub: "Reinigungssysteme",
                 overview_title: "Übersicht",
-                overview_desc: "Tägliche Kontrollen erfassen, unterschreiben und melden.",
+                overview_desc: "Tägliche Kontrollen einzeln erfassen, unterschreiben und sofort melden.",
                 daily_status_label: "Tagesstatus:",
-                send_protocol_btn: "Protokoll senden",
+                send_all_btn: "Gesamt-PDF",
                 card_demin_title: "1. Entmineralisierungsanlage",
-                card_demin_desc: "Tägliche Kontrolle & Messwerte",
+                card_demin_desc: "Tägliche Kontrolle & Messwerte (Einzelversand)",
                 card_outdoor_title: "2. Außenbereich",
-                card_outdoor_desc: "Sauberkeit, Mülleimer & Tische mit Foto",
+                card_outdoor_desc: "Mülleimer, Tische & Sauberkeit mit Foto",
                 card_breakroom_title: "3. Pausenraum",
                 card_breakroom_desc: "Ordnung, Hygiene & Müllentsorgung",
                 card_vehicle_title: "4. Fahrzeuge",
                 card_vehicle_desc: "Zustand, Reifendruck & Sauberkeit",
                 start_control: "Kontrolle starten",
-                latest_controls_title: "Letzte Kontrollen",
-                btn_all: "Alle",
+                latest_controls_title: "Letzte Kontrollen (Cloud-Live)",
+                btn_folders: "Zu den Ordnern",
                 no_controls_today: "Noch keine Kontrollen heute durchgeführt.",
                 back_btn: "Zurück",
-                step1_of_4: "1 von 4",
-                step2_of_4: "2 von 4",
-                step3_of_4: "3 von 4",
-                step4_of_4: "4 von 4",
+                step1_of_4: "Bereich 1",
+                step2_of_4: "Bereich 2",
+                step3_of_4: "Bereich 3",
+                step4_of_4: "Bereich 4",
                 demin_header: "Entmineralisierungsanlage",
                 outdoor_header: "Außenbereichskontrolle",
                 breakroom_header: "Pausenraumkontrolle",
@@ -1136,10 +1171,10 @@
                 status_ok: "In Ordnung",
                 status_fail: "Nicht i.O.",
                 label_demin_notes: "Bemerkungen / Mängelhinweise",
-                ph_demin_notes: "Optional: Filterwechsel fällig, Auffälligkeiten...",
+                ph_demin_notes: "Optional: Filterwechsel fällig...",
                 label_sig: "Digitale Unterschrift *",
                 btn_clear: "Löschen",
-                btn_save_demin: "Entmineralisierung speichern & weiter",
+                btn_save_send_demin: "Entmineralisierung speichern & Protokoll versenden",
                 label_photo: "Aktuelles Live-Foto des Außenbereichs *",
                 btn_take_photo: "Aktuelles Foto mit Kamera aufnehmen",
                 photo_captured: "Foto erfasst",
@@ -1150,7 +1185,7 @@
                 check_outdoor_grounds: "Sauberkeit der Flächen, Abläufe & Zufahrtswege frei",
                 label_outdoor_notes: "Besondere Vorkommnisse / Mängel",
                 ph_outdoor_notes: "Optional: Mängel oder Reinigungsbedarf...",
-                btn_save_outdoor: "Außenbereich speichern & weiter",
+                btn_save_send_outdoor: "Außenbereich speichern & Protokoll versenden",
                 label_photo_breakroom: "Foto des Pausenraums (Zustand / Spüle / Müll)",
                 btn_take_photo_breakroom: "Foto mit Kamera aufnehmen",
                 label_breakroom_checks: "Hygiene & Ordnung",
@@ -1159,8 +1194,8 @@
                 check_br_trash: "Mülleimer geleert & Mülltrennung i.O.",
                 check_br_floor: "Fußboden sauber / gekehrt / gewischt",
                 label_breakroom_notes: "Bemerkungen / Reinigungsbedarf",
-                ph_breakroom_notes: "Optional: Verbrauchsmaterial fehlt, Schäden...",
-                btn_save_breakroom: "Pausenraum speichern & weiter",
+                ph_breakroom_notes: "Optional: Verbrauchsmaterial fehlt...",
+                btn_save_send_breakroom: "Pausenraum speichern & Protokoll versenden",
                 label_vehicle_plate: "Fahrzeug / Kennzeichen *",
                 ph_plate: "z. B. HP-EC 101",
                 label_vehicle_km: "Kilometerstand (km) *",
@@ -1173,15 +1208,17 @@
                 check_veh_tire_pressure: "Reifendruck prüfen und korrigieren",
                 check_veh_warnings: "Keine Warnleuchten / Keine neuen Kratzer oder Dellen",
                 label_vehicle_notes: "Mängel / Schäden / Werkstattbedarf",
-                ph_vehicle_notes: "Optional: Steinschlag, Kratzer, Service fällig...",
-                btn_save_vehicle: "Fahrzeuge speichern & Bericht öffnen",
-                history_title: "Historie & Protokolle",
-                history_sub: "Archiv aller Kontrollberichte",
+                ph_vehicle_notes: "Optional: Steinschlag, Kratzer...",
+                btn_save_send_vehicle: "Fahrzeuge speichern & Protokoll versenden",
+                history_title: "Historie & Ordner",
+                history_sub: "Google Firebase Cloud-Archiv",
                 btn_daily_pdf: "Tages-PDF",
-                dispatch_box_title: "Tagesbericht versenden",
-                dispatch_box_sub: "Alle erfassten Kontrollen an pb@ecb-system.de",
-                btn_send: "Senden",
-                no_history: "Noch keine Kontrollberichte gespeichert.",
+                filter_all: "Alle",
+                filter_demin: "Entmineral.",
+                filter_outdoor: "Außen",
+                filter_breakroom: "Pause",
+                filter_vehicle: "KFZ",
+                no_history: "Noch keine Kontrollberichte in diesem Ordner gespeichert.",
                 btn_csv: "CSV Export",
                 btn_clear_history: "Verlauf leeren",
                 nav_start: "Start",
@@ -1189,32 +1226,29 @@
                 nav_outdoor: "Außen",
                 nav_breakroom: "Pause",
                 nav_vehicle: "KFZ",
-                nav_history: "Archiv",
-                direct_send_title: "Direktversand per Web-Dienst",
+                nav_history: "Ordner",
+                direct_send_title: "Sofort an pb@ecb-system.de",
                 badge_recommended: "Empfohlen",
-                direct_send_desc: "Sendet das <strong>deutsche 2-seitige PDF-Wartungsprotokoll mit Messwerten, Fotos & Unterschriften</strong> an <strong>pb@ecb-system.de</strong> und archiviert es in Dropbox.",
-                btn_send_now: "PDF-Protokoll jetzt versenden",
-                mail_app_title: "In Smartphone Mail-App mit PDF-Anhang",
+                direct_send_desc: "Sendet das <strong>offizielle deutsche PDF-Wartungsprotokoll mit Prüfwerten, Fotos & Unterschrift</strong> direkt per Mail und archiviert es im passenden Dropbox-Ordner.",
+                btn_send_now: "Protokoll jetzt versenden",
+                mail_app_title: "In Smartphone Mail-App mit PDF",
                 mail_app_desc: "Übergibt das PDF an Apple Mail oder Gmail.",
                 btn_open_mail_app: "In Apple Mail / Gmail öffnen",
                 btn_view_pdf: "PDF ansehen",
                 btn_download: "Speichern",
                 btn_fullscreen: "Vollbild",
-                settings_title: "Einstellungen & Dropbox",
+                settings_title: "Einstellungen & Cloud",
                 lang_selection_label: "App-Sprache / Limba aplicației",
                 btn_switch_lang: "Wechseln",
                 fixed_recipient: "Feste Empfänger-Adresse",
                 dropbox_title: "Automatische Dropbox-Ablage",
-                dropbox_desc: "Tragen Sie hier Ihren Dropbox Access Token ein. Jedes PDF wird beim Absenden automatisch unter /ECB-Kontrollen/ gespeichert.",
+                dropbox_desc: "Tragen Sie hier Ihren Dropbox Access Token ein. Jedes Protokoll wird beim Absenden automatisch im jeweiligen Kategorie-Ordner abgelegt.",
                 dropbox_test_btn: "Dropbox-Verbindung testen",
                 btn_save: "Speichern",
                 btn_close: "Schließen",
                 badge_done: "✓ Erledigt",
                 badge_open: "Offen",
-                toast_saved_demin: "1. Entmineralisierung gespeichert!",
-                toast_saved_outdoor: "2. Außenbereich gespeichert!",
-                toast_saved_breakroom: "3. Pausenraum gespeichert!",
-                toast_saved_vehicle: "4. Fahrzeugkontrolle gespeichert!",
+                toast_saved: "In Cloud gespeichert & bereit zum Senden!",
                 toast_need_sig: "Bitte digitale Unterschrift leisten!",
                 toast_need_photo: "Bitte Live-Foto aufnehmen!",
                 toast_sent: "Protokoll erfolgreich übermittelt!"
@@ -1223,26 +1257,26 @@
                 app_title: "Aplicație Control ECB",
                 app_sub: "Sisteme de Curățare",
                 overview_title: "Prezentare Generală",
-                overview_desc: "Înregistrați controalele zilnice, semnați și trimiteți.",
+                overview_desc: "Înregistrați controalele individual, semnați și trimiteți imediat.",
                 daily_status_label: "Statusul zilei:",
-                send_protocol_btn: "Trimite raportul",
+                send_all_btn: "PDF General",
                 card_demin_title: "1. Demineralizare",
-                card_demin_desc: "Control zilnic & valori măsurate",
+                card_demin_desc: "Control zilnic & valori măsurate (trimitere individuală)",
                 card_outdoor_title: "2. Zona Exterioară",
-                card_outdoor_desc: "Curățenie, coșuri de gunoi & mese cu foto",
+                card_outdoor_desc: "Coșuri de gunoi, mese & curățenie cu foto",
                 card_breakroom_title: "3. Sala de Pauză",
                 card_breakroom_desc: "Ordine, igienă & colectare deșeuri",
                 card_vehicle_title: "4. Vehicule",
                 card_vehicle_desc: "Stare, presiune anvelope & curățenie",
                 start_control: "Începe controlul",
-                latest_controls_title: "Ultimele controale",
-                btn_all: "Toate",
+                latest_controls_title: "Ultimele controale (Cloud-Live)",
+                btn_folders: "La dosare",
                 no_controls_today: "Nu s-a efectuat niciun control astăzi.",
                 back_btn: "Înapoi",
-                step1_of_4: "1 din 4",
-                step2_of_4: "2 din 4",
-                step3_of_4: "3 din 4",
-                step4_of_4: "4 din 4",
+                step1_of_4: "Zona 1",
+                step2_of_4: "Zona 2",
+                step3_of_4: "Zona 3",
+                step4_of_4: "Zona 4",
                 demin_header: "Instalație Demineralizare",
                 outdoor_header: "Controlul Zonei Exterioare",
                 breakroom_header: "Controlul Sălii de Pauză",
@@ -1261,10 +1295,10 @@
                 status_ok: "În regulă",
                 status_fail: "Neconform",
                 label_demin_notes: "Observații / Deficiențe",
-                ph_demin_notes: "Opțional: Schimbare filtru necesară, anomalii...",
+                ph_demin_notes: "Opțional: Schimbare filtru necesară...",
                 label_sig: "Semnătură digitală *",
                 btn_clear: "Șterge",
-                btn_save_demin: "Salvează demineralizarea & continuă",
+                btn_save_send_demin: "Salvează demineralizarea & trimite protocolul",
                 label_photo: "Fotografie live a zonei exterioare *",
                 btn_take_photo: "Fă o fotografie acum cu camera",
                 photo_captured: "Foto înregistrată",
@@ -1275,7 +1309,7 @@
                 check_outdoor_grounds: "Curățenie pe platformă, rigole & căi de acces libere",
                 label_outdoor_notes: "Incidente speciale / Deficiențe",
                 ph_outdoor_notes: "Opțional: Defecțiuni sau curățenie necesară...",
-                btn_save_outdoor: "Salvează zona exterioară & continuă",
+                btn_save_send_outdoor: "Salvează zona exterioară & trimite protocolul",
                 label_photo_breakroom: "Fotografie sală de pauză (stare / chiuvetă / gunoi)",
                 btn_take_photo_breakroom: "Fă o fotografie cu camera",
                 label_breakroom_checks: "Igienă & Ordine",
@@ -1284,8 +1318,8 @@
                 check_br_trash: "Coșuri de gunoi golite & colectare selectivă",
                 check_br_floor: "Podea curată / măturată / spălată",
                 label_breakroom_notes: "Observații / Necesitate curățenie",
-                ph_breakroom_notes: "Opțional: Lipsă consumabile, defecțiuni...",
-                btn_save_breakroom: "Salvează sala de pauză & continuă",
+                ph_breakroom_notes: "Opțional: Lipsă consumabile...",
+                btn_save_send_breakroom: "Salvează sala de pauză & trimite protocolul",
                 label_vehicle_plate: "Vehicul / Nr. Înmatriculare *",
                 ph_plate: "ex. HP-EC 101",
                 label_vehicle_km: "Kilometraj (km) *",
@@ -1298,15 +1332,17 @@
                 check_veh_tire_pressure: "Verificare și corectare presiune anvelope",
                 check_veh_warnings: "Fără martori de avarie în bord / fără zgârieturi noi",
                 label_vehicle_notes: "Defecțiuni / Avarii / Service",
-                ph_vehicle_notes: "Opțional: Piatră în parbriz, zgârieturi, revizie...",
-                btn_save_vehicle: "Salvează vehiculul & deschide raportul",
-                history_title: "Istoric și Rapoarte",
-                history_sub: "Arhiva tuturor rapoartelor de control",
+                ph_vehicle_notes: "Opțional: Piatră în parbriz, zgârieturi...",
+                btn_save_send_vehicle: "Salvează vehiculul & trimite protocolul",
+                history_title: "Istoric & Dosare",
+                history_sub: "Arhivă Google Firebase Cloud",
                 btn_daily_pdf: "PDF Zilnic",
-                dispatch_box_title: "Trimite raportul zilnic",
-                dispatch_box_sub: "Toate controalele către pb@ecb-system.de",
-                btn_send: "Trimite",
-                no_history: "Niciun raport salvat până acum.",
+                filter_all: "Toate",
+                filter_demin: "Demin.",
+                filter_outdoor: "Exterior",
+                filter_breakroom: "Pauză",
+                filter_vehicle: "KFZ",
+                no_history: "Niciun raport în acest dosar până acum.",
                 btn_csv: "Export CSV",
                 btn_clear_history: "Golește istoricul",
                 nav_start: "Start",
@@ -1314,35 +1350,32 @@
                 nav_outdoor: "Exterior",
                 nav_breakroom: "Pauză",
                 nav_vehicle: "KFZ",
-                nav_history: "Arhivă",
-                direct_send_title: "Trimitere directă prin serviciu Web",
+                nav_history: "Dosare",
+                direct_send_title: "Trimite direct la pb@ecb-system.de",
                 badge_recommended: "Recomandat",
-                direct_send_desc: "Trimite <strong>protocolul oficial PDF în limba germană (2 pagini)</strong> la <strong>pb@ecb-system.de</strong> și îl arhivează în Dropbox.",
-                btn_send_now: "Trimite raportul PDF acum",
-                mail_app_title: "Deschide în aplicația Mail cu fișier PDF",
+                direct_send_desc: "Trimite <strong>protocolul oficial PDF în limba germană</strong> la pb@ecb-system.de și îl arhivează în dosarul corespunzător Dropbox.",
+                btn_send_now: "Trimite protocolul acum",
+                mail_app_title: "Deschide în aplicația Mail cu PDF",
                 mail_app_desc: "Transferă PDF-ul către Apple Mail sau Gmail.",
                 btn_open_mail_app: "Deschide în Apple Mail / Gmail",
                 btn_view_pdf: "Vizualizează PDF",
                 btn_download: "Salvează",
                 btn_fullscreen: "Ecran complet",
-                settings_title: "Setări & Dropbox",
+                settings_title: "Setări & Cloud",
                 lang_selection_label: "Limba aplicației / App-Sprache",
                 btn_switch_lang: "Schimbă",
                 fixed_recipient: "Adresă destinatar fixă",
                 dropbox_title: "Arhivare automată Dropbox",
-                dropbox_desc: "Introduceți token-ul Dropbox. Fiecare PDF este salvat automat în /ECB-Kontrollen/.",
+                dropbox_desc: "Introduceți token-ul Dropbox. Fiecare protocol este salvat automat în dosarul de categorie respectiv.",
                 dropbox_test_btn: "Testează conexiunea Dropbox",
                 btn_save: "Salvează",
                 btn_close: "Închide",
                 badge_done: "✓ Finalizat",
                 badge_open: "Deschis",
-                toast_saved_demin: "1. Demineralizarea a fost salvată!",
-                toast_saved_outdoor: "2. Zona exterioară a fost salvată!",
-                toast_saved_breakroom: "3. Sala de pauză a fost salvată!",
-                toast_saved_vehicle: "4. Vehiculul a fost salvat!",
+                toast_saved: "Salvat în Cloud & gata de trimitere!",
                 toast_need_sig: "Vă rugăm să semnați digital!",
                 toast_need_photo: "Vă rugăm să faceți o fotografie!",
-                toast_sent: "Raportul a fost transmis cu succes!"
+                toast_sent: "Protocolul a fost transmis cu succes!"
             }
         };
 
@@ -1358,6 +1391,7 @@
             document.documentElement.lang = lang;
             applyTranslations();
             updateDashboard();
+            renderHistoryView();
         }
 
         function toggleLanguage() {
@@ -1405,15 +1439,18 @@
                 fahrzeuge: null
             },
             statusDemin: { leak: 'ok', filter: 'ok', resin: 'ok' },
-            // Aktualisiert: trash (Mülleimer/Kippen), tables (Tische/Dosen), grounds (Flächen/Abläufe)
             statusOutdoor: { trash: 'ok', tables: 'ok', grounds: 'ok' },
             statusBreakroom: { surfaces: 'ok', appliances: 'ok', trash: 'ok', floor: 'ok' },
-            // Aktualisiert: clean (Sauberkeit), condition (Zustand/Licht), tirePressure (Reifendruck), warnings
             statusVehicle: { clean: 'ok', condition: 'ok', tirePressure: 'ok', warnings: 'ok' },
             signatures: { demin: null, outdoor: null, breakroom: null, vehicle: null },
             photos: { outdoor: null, breakroom: null, vehicle: null },
-            pendingSubject: '',
-            pendingBody: ''
+            currentDispatchContext: {
+                type: 'Gesamtbericht',
+                data: null,
+                subject: '',
+                body: '',
+                categoryFolder: 'Tagesberichte'
+            }
         };
 
         let pads = {
@@ -1425,6 +1462,8 @@
 
         let activePdfBlob = null;
         let activePdfUrl = null;
+        let cloudHistory = [];
+        let currentHistoryFilter = 'all';
 
         function setItemStatus(domain, key, status) {
             if (domain === 'demin') {
@@ -1569,13 +1608,51 @@
 
             applyTranslations();
             loadState();
-            renderHistoryView();
+            setupFirebaseRealtimeListener();
             updateDashboard();
         });
 
         window.addEventListener('resize', () => {
             Object.values(pads).forEach(p => { if (p) p.resize(); });
         });
+
+        // ====================================================
+        // FIREBASE ECHTZEIT-SYNCHRONISATION
+        // ====================================================
+        function setupFirebaseRealtimeListener() {
+            if (!db) {
+                renderHistoryView();
+                return;
+            }
+
+            const indicator = document.getElementById('cloud-indicator');
+
+            db.collection('kontrollen')
+                .orderBy('createdAt', 'desc')
+                .limit(80)
+                .onSnapshot((snapshot) => {
+                    const items = [];
+                    snapshot.forEach(doc => {
+                        items.push({ id: doc.id, ...doc.data() });
+                    });
+                    cloudHistory = items;
+                    try { localStorage.setItem('ecb_app_history_v3', JSON.stringify(items)); } catch(e){}
+                    renderHistoryView();
+                    updateDashboard();
+
+                    if (indicator) {
+                        indicator.className = 'flex items-center text-[9px] text-emerald-600 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded-full';
+                        indicator.innerHTML = '<i class="fa-solid fa-cloud text-[8px] mr-1"></i> Cloud Live';
+                    }
+                }, (error) => {
+                    console.warn("Firestore Listener Fehler:", error);
+                    renderHistoryView();
+                    if (indicator) {
+                        indicator.className = 'flex items-center text-[9px] text-amber-600 font-semibold bg-amber-50 px-1.5 py-0.5 rounded-full';
+                        indicator.innerHTML = '<i class="fa-solid fa-cloud text-[8px] mr-1"></i> Lokal';
+                    }
+                });
+        }
 
         function switchView(viewName) {
             document.querySelectorAll('.view-panel').forEach(p => p.classList.add('hidden'));
@@ -1613,7 +1690,7 @@
             reader.onload = (evt) => {
                 const img = new Image();
                 img.onload = () => {
-                    const maxDim = 1200;
+                    const maxDim = 1000;
                     let w = img.width;
                     let h = img.height;
                     if (w > maxDim || h > maxDim) {
@@ -1630,7 +1707,7 @@
                     c.height = h;
                     const ctx = c.getContext('2d');
                     ctx.drawImage(img, 0, 0, w, h);
-                    const compressed = c.toDataURL('image/jpeg', 0.82);
+                    const compressed = c.toDataURL('image/jpeg', 0.75);
                     state.photos[domain] = compressed;
 
                     const previewImg = document.getElementById(`photo-preview-img-${domain}`);
@@ -1669,7 +1746,7 @@
         }
 
         // ==========================================
-        // 1. Speichern: Entmineralisierung
+        // 1. Speichern & EINZELVERSAND: Entmineralisierung
         // ==========================================
         function saveDemin(e) {
             e.preventDefault();
@@ -1683,7 +1760,7 @@
             const sig = pads.demin.canvas.toDataURL('image/png');
             state.signatures.demin = sig;
 
-            state.data.entmineralisierung = {
+            const rec = {
                 inspector: document.getElementById('demin-inspector').value.trim(),
                 conductivity: document.getElementById('demin-cond').value.trim() || 'Nicht gemessen',
                 pressure: document.getElementById('demin-press').value.trim() || 'Nicht gemessen',
@@ -1695,15 +1772,18 @@
                 signature: sig
             };
 
+            state.data.entmineralisierung = rec;
             persist();
-            addHistory('Entmineralisierung', state.data.entmineralisierung);
+            addHistory('Entmineralisierung', rec);
             updateDashboard();
-            showToast(t('toast_saved_demin'));
-            switchView('outdoor');
+            showToast(t('toast_saved'));
+
+            // Öffne direkt das Versand-Modal für dieses Einzelprotokoll
+            triggerSingleDispatch('Entmineralisierung', rec);
         }
 
         // ==========================================
-        // 2. Speichern: Außenbereich (Mülleimer, Tische, Flächen)
+        // 2. Speichern & EINZELVERSAND: Außenbereich
         // ==========================================
         function saveOutdoor(e) {
             e.preventDefault();
@@ -1721,7 +1801,7 @@
             const sig = pads.outdoor.canvas.toDataURL('image/png');
             state.signatures.outdoor = sig;
 
-            state.data.aussenbereich = {
+            const rec = {
                 inspector: document.getElementById('outdoor-inspector').value.trim(),
                 statusTrash: state.statusOutdoor.trash,
                 statusTables: state.statusOutdoor.tables,
@@ -1732,15 +1812,17 @@
                 timestamp: timeFormatted
             };
 
+            state.data.aussenbereich = rec;
             persist();
-            addHistory('Außenbereich', state.data.aussenbereich);
+            addHistory('Außenbereich', rec);
             updateDashboard();
-            showToast(t('toast_saved_outdoor'));
-            switchView('breakroom');
+            showToast(t('toast_saved'));
+
+            triggerSingleDispatch('Außenbereich', rec);
         }
 
         // ==========================================
-        // 3. Speichern: Pausenraum
+        // 3. Speichern & EINZELVERSAND: Pausenraum
         // ==========================================
         function saveBreakroom(e) {
             e.preventDefault();
@@ -1754,7 +1836,7 @@
             const sig = pads.breakroom.canvas.toDataURL('image/png');
             state.signatures.breakroom = sig;
 
-            state.data.pausenraum = {
+            const rec = {
                 inspector: document.getElementById('breakroom-inspector').value.trim(),
                 statusSurfaces: state.statusBreakroom.surfaces,
                 statusAppliances: state.statusBreakroom.appliances,
@@ -1766,15 +1848,17 @@
                 timestamp: timeFormatted
             };
 
+            state.data.pausenraum = rec;
             persist();
-            addHistory('Pausenraum', state.data.pausenraum);
+            addHistory('Pausenraum', rec);
             updateDashboard();
-            showToast(t('toast_saved_breakroom'));
-            switchView('vehicle');
+            showToast(t('toast_saved'));
+
+            triggerSingleDispatch('Pausenraum', rec);
         }
 
         // ==========================================
-        // 4. Speichern: Fahrzeuge (Sauber, Zustand, Reifendruck, Warnleuchten)
+        // 4. Speichern & EINZELVERSAND: Fahrzeuge
         // ==========================================
         function saveVehicle(e) {
             e.preventDefault();
@@ -1788,7 +1872,7 @@
             const sig = pads.vehicle.canvas.toDataURL('image/png');
             state.signatures.vehicle = sig;
 
-            state.data.fahrzeuge = {
+            const rec = {
                 inspector: document.getElementById('vehicle-inspector').value.trim(),
                 plate: document.getElementById('vehicle-plate').value.trim(),
                 km: document.getElementById('vehicle-km').value.trim(),
@@ -1802,18 +1886,83 @@
                 timestamp: timeFormatted
             };
 
+            state.data.fahrzeuge = rec;
             persist();
-            addHistory('Fahrzeuge', state.data.fahrzeuge);
+            addHistory('Fahrzeuge', rec);
             updateDashboard();
-            showToast(t('toast_saved_vehicle'));
+            showToast(t('toast_saved'));
 
-            // Öffne direkt das Versand-Modal für den vollständigen Tagesbericht
-            openDispatchToday();
+            triggerSingleDispatch('Fahrzeuge', rec);
+        }
+
+        function triggerSingleDispatch(type, rec) {
+            const dateStr = new Date().toLocaleDateString('de-DE');
+            let subject = `[ECB Kontroll App] ${type} - ${dateStr} - ${rec.inspector || 'Prüfer'}`;
+            let body = `ECB REINIGUNGSSYSTEME - EINZELPROTOKOLL: ${type.toUpperCase()}\nDatum / Zeit: ${rec.timestamp}\nPrüfer: ${rec.inspector}\n========================================\n\n`;
+
+            if (type === 'Entmineralisierung') {
+                body += `Leitwert: ${rec.conductivity} µS/cm\nDruck: ${rec.pressure} bar\nDichtheit: ${rec.statusLeak === 'ok' ? 'In Ordnung' : 'Mangelhaft'}\nVorfilter: ${rec.statusFilter === 'ok' ? 'In Ordnung' : 'Mangelhaft'}\nHarz: ${rec.statusResin === 'ok' ? 'In Ordnung' : 'Mangelhaft'}\nBemerkung: ${rec.notes}\n\n`;
+            } else if (type === 'Außenbereich') {
+                body += `Mülleimer & Zigaretten: ${rec.statusTrash === 'ok' ? 'In Ordnung' : 'Mangelhaft'}\nTische & Dosen: ${rec.statusTables === 'ok' ? 'In Ordnung' : 'Mangelhaft'}\nFlächen & Wege: ${rec.statusGrounds === 'ok' ? 'In Ordnung' : 'Mangelhaft'}\nMängel: ${rec.notes}\nFoto: Liegt im PDF vor\n\n`;
+            } else if (type === 'Pausenraum') {
+                body += `Tische & Spüle: ${rec.statusSurfaces === 'ok' ? 'In Ordnung' : 'Mangelhaft'}\nKühlschrank: ${rec.statusAppliances === 'ok' ? 'In Ordnung' : 'Mangelhaft'}\nMülltrennung: ${rec.statusTrash === 'ok' ? 'In Ordnung' : 'Mangelhaft'}\nBoden: ${rec.statusFloor === 'ok' ? 'In Ordnung' : 'Mangelhaft'}\nBemerkung: ${rec.notes}\n\n`;
+            } else if (type === 'Fahrzeuge') {
+                body += `Kennzeichen: ${rec.plate}\nKM-Stand: ${rec.km} km\nSauberkeit: ${rec.statusClean === 'ok' ? 'In Ordnung' : 'Mangelhaft'}\nZustand & Licht: ${rec.statusCondition === 'ok' ? 'In Ordnung' : 'Mangelhaft'}\nReifendruck: ${rec.statusTirePressure === 'ok' ? 'In Ordnung' : 'Mangelhaft'}\nWarnleuchten: ${rec.statusWarnings === 'ok' ? 'In Ordnung' : 'Mangelhaft'}\nMängel: ${rec.notes}\n\n`;
+            }
+
+            body += `Digital signiert und an ${RECIPIENT_EMAIL} übermittelt.`;
+
+            state.currentDispatchContext = {
+                type: type,
+                data: rec,
+                subject: subject,
+                body: body,
+                categoryFolder: type
+            };
+
+            const modalTitle = currentLang === 'ro' 
+                ? `Trimite protocolul: ${type}` 
+                : `Protokoll: ${type} versenden`;
+            
+            document.getElementById('dispatch-title').innerText = modalTitle;
+            const msgEl = document.getElementById('dispatch-status-msg');
+            if (msgEl) msgEl.className = 'hidden';
+            openModal('modal-dispatch');
+        }
+
+        function openDispatchDaySummary() {
+            const d = state.data;
+            if (!d.entmineralisierung && !d.aussenbereich && !d.pausenraum && !d.fahrzeuge) {
+                showToast(currentLang === 'ro' ? 'Înregistrați cel puțin un control!' : 'Bitte mindestens eine Kontrolle erfassen!');
+                return;
+            }
+            const dateStr = new Date().toLocaleDateString('de-DE');
+            const subject = `[ECB Kontroll App] Tagesgesamtbericht - ${dateStr}`;
+            let body = `ECB REINIGUNGSSYSTEME - TAGESGESAMTBERICHT\nDatum: ${dateStr}\n========================================\n\n`;
+
+            if (d.entmineralisierung) body += `1. ENTMINERALISIERUNG: ${d.entmineralisierung.inspector} (Leitwert: ${d.entmineralisierung.conductivity} µS/cm)\n`;
+            if (d.aussenbereich) body += `2. AUSSENBEREICH: ${d.aussenbereich.inspector} (${d.aussenbereich.notes})\n`;
+            if (d.pausenraum) body += `3. PAUSENRAUM: ${d.pausenraum.inspector} (${d.pausenraum.notes})\n`;
+            if (d.fahrzeuge) body += `4. FAHRZEUGE: ${d.fahrzeuge.inspector} (KFZ: ${d.fahrzeuge.plate}, ${d.fahrzeuge.km} km)\n`;
+            body += `\nOffizielles PDF-Protokoll liegt vor.\nZieladresse: ${RECIPIENT_EMAIL}`;
+
+            state.currentDispatchContext = {
+                type: 'Gesamtbericht',
+                data: d,
+                subject: subject,
+                body: body,
+                categoryFolder: 'Tagesberichte'
+            };
+
+            document.getElementById('dispatch-title').innerText = currentLang === 'ro' ? 'Trimite raportul zilnic general' : 'Tagesgesamtbericht versenden';
+            const msgEl = document.getElementById('dispatch-status-msg');
+            if (msgEl) msgEl.className = 'hidden';
+            openModal('modal-dispatch');
         }
 
         function persist() {
             try {
-                localStorage.setItem('ecb_app_data_v3_' + state.todayKey, JSON.stringify({
+                localStorage.setItem('ecb_app_data_v4_' + state.todayKey, JSON.stringify({
                     data: state.data,
                     statusDemin: state.statusDemin,
                     statusOutdoor: state.statusOutdoor,
@@ -1825,7 +1974,7 @@
 
         function loadState() {
             try {
-                const raw = localStorage.getItem('ecb_app_data_v3_' + state.todayKey);
+                const raw = localStorage.getItem('ecb_app_data_v4_' + state.todayKey);
                 if (!raw) return;
                 const parsed = JSON.parse(raw);
 
@@ -1974,9 +2123,9 @@
         }
 
         // ==========================================
-        // 2-SEITIGER DIN-A4 PDF GENERATOR (100% DEUTSCH)
+        // PDF-GENERATOR (EINZEL- ODER GESAMTPROTOKOLL)
         // ==========================================
-        function buildPdfDocument(sourceData) {
+        function buildPdfDocumentForContext(ctx) {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
@@ -1984,17 +2133,217 @@
             const dateStr = now.toLocaleDateString('de-DE');
             const timeStr = now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
 
-            // ------------------------------------------
-            // SEITE 1: ENTMINERALISIERUNG & AUSSENBEREICH
-            // ------------------------------------------
-            renderPdfHeader(doc, 'WARTUNGS- & KONTROLLPROTOKOLL', dateStr, timeStr);
+            if (ctx.type === 'Gesamtbericht') {
+                return buildCompletePdf(doc, dateStr, timeStr);
+            } else {
+                return buildSingleSectionPdf(doc, ctx.type, ctx.data, dateStr, timeStr);
+            }
+        }
 
-            // SEKTION 1: ENTMINERALISIERUNGSANLAGE
+        function buildSingleSectionPdf(doc, type, rec, dateStr, timeStr) {
+            renderPdfHeader(doc, `EINZELPROTOKOLL: ${type.toUpperCase()}`, dateStr, timeStr);
+
+            doc.setDrawColor(226, 232, 240);
+            doc.setLineWidth(0.4);
+            doc.roundedRect(15, 36, 180, 234, 3, 3, 'S');
+
+            doc.setFillColor(248, 250, 252);
+            doc.roundedRect(15, 36, 180, 10, 3, 3, 'F');
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(10);
+            doc.setTextColor(15, 23, 42);
+            doc.text(`OFFIZIELLES KONTROLLPROTOKOLL - ${type.toUpperCase()}`, 19, 42.5);
+
+            // Prüfer & Zeitstempel Box
+            doc.setFillColor(241, 245, 249);
+            doc.roundedRect(19, 50, 172, 16, 2, 2, 'F');
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(8.5);
+            doc.setTextColor(71, 85, 105);
+            doc.text('Prüfer: ', 23, 57);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(15, 23, 42);
+            doc.text(rec.inspector || '-', 38, 57);
+
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(71, 85, 105);
+            doc.text('Erfasst am: ', 23, 62.5);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(15, 23, 42);
+            doc.text(rec.timestamp || '-', 43, 62.5);
+
+            if (type === 'Entmineralisierung') {
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(8.5);
+                doc.setTextColor(71, 85, 105);
+                doc.text('Elektr. Leitwert:', 115, 57);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(94, 166, 59);
+                doc.text(`${rec.conductivity} µS/cm`, 142, 57);
+
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(71, 85, 105);
+                doc.text('Betriebsdruck:', 115, 62.5);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(94, 166, 59);
+                doc.text(`${rec.pressure} bar`, 142, 62.5);
+
+                let curY = 74;
+                drawCheckLine(doc, '1. Dichtheit der Anlage & Schläuche:', rec.statusLeak, 23, curY); curY += 10;
+                drawCheckLine(doc, '2. Vorfilter & Patronenzustand:', rec.statusFilter, 23, curY); curY += 10;
+                drawCheckLine(doc, '3. Harzkapazität ausreichend:', rec.statusResin, 23, curY); curY += 14;
+
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(8);
+                doc.setTextColor(71, 85, 105);
+                doc.text('Mängelhinweise / Bemerkungen: ' + (rec.notes || 'Keine Auffälligkeiten'), 23, curY);
+
+                // Signaturfeld groß
+                doc.setDrawColor(203, 213, 225);
+                doc.roundedRect(23, 140, 164, 85, 2, 2, 'S');
+                doc.setFontSize(8);
+                doc.setTextColor(100, 116, 139);
+                doc.text('DIGITALE FREIGABE-UNTERSCHRIFT DES PRÜFERS', 105, 147, { align: 'center' });
+                if (rec.signature) {
+                    try { doc.addImage(rec.signature, 'PNG', 35, 155, 140, 65); } catch(err){}
+                }
+
+            } else if (type === 'Außenbereich') {
+                let curY = 74;
+                drawCheckLine(doc, '1. Mülleimer geleert und Zigarettenstummel entsorgt:', rec.statusTrash, 23, curY); curY += 9;
+                drawCheckLine(doc, '2. Kein Essen auf den Tischen, leere Dosen entsorgt:', rec.statusTables, 23, curY); curY += 9;
+                drawCheckLine(doc, '3. Sauberkeit der Flächen, Abläufe & Zufahrtswege frei:', rec.statusGrounds, 23, curY); curY += 12;
+
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(8);
+                doc.setTextColor(71, 85, 105);
+                doc.text('Mängel / Bemerkungen: ' + (rec.notes || 'Keine Mängel festgestellt'), 23, curY);
+
+                // Foto & Signatur
+                doc.setDrawColor(203, 213, 225);
+                doc.roundedRect(23, 115, 100, 140, 2, 2, 'S');
+                doc.setFontSize(7.5);
+                doc.setTextColor(100, 116, 139);
+                doc.text('KONTROLLFOTO AUSSENBEREICH', 73, 120.5, { align: 'center' });
+                if (rec.photo) {
+                    try {
+                        const fmt = rec.photo.startsWith('data:image/png') ? 'PNG' : 'JPEG';
+                        doc.addImage(rec.photo, fmt, 25, 123, 96, 128);
+                    } catch(err){}
+                }
+
+                doc.roundedRect(128, 115, 59, 140, 2, 2, 'S');
+                doc.setFontSize(7.5);
+                doc.setTextColor(100, 116, 139);
+                doc.text('UNTERSCHRIFT', 157.5, 120.5, { align: 'center' });
+                if (rec.signature) {
+                    try { doc.addImage(rec.signature, 'PNG', 130, 160, 55, 38); } catch(err){}
+                }
+
+            } else if (type === 'Pausenraum') {
+                let curY = 74;
+                drawCheckLine(doc, '1. Tische, Arbeitsflächen & Spüle sauber:', rec.statusSurfaces, 23, curY); curY += 8;
+                drawCheckLine(doc, '2. Kühlschrank & Küchengeräte sauber / leer:', rec.statusAppliances, 23, curY); curY += 8;
+                drawCheckLine(doc, '3. Mülleimer geleert & Mülltrennung i.O.:', rec.statusTrash, 23, curY); curY += 8;
+                drawCheckLine(doc, '4. Fußboden sauber / gekehrt / gewischt:', rec.statusFloor, 23, curY); curY += 11;
+
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(8);
+                doc.setTextColor(71, 85, 105);
+                doc.text('Reinigungsbedarf / Bemerkungen: ' + (rec.notes || 'Keine Mängel'), 23, curY);
+
+                doc.setDrawColor(203, 213, 225);
+                doc.roundedRect(23, 115, 100, 140, 2, 2, 'S');
+                doc.setFontSize(7.5);
+                doc.setTextColor(100, 116, 139);
+                doc.text('KONTROLLFOTO PAUSENRAUM', 73, 120.5, { align: 'center' });
+                if (rec.photo) {
+                    try {
+                        const fmt = rec.photo.startsWith('data:image/png') ? 'PNG' : 'JPEG';
+                        doc.addImage(rec.photo, fmt, 25, 123, 96, 128);
+                    } catch(err){}
+                }
+
+                doc.roundedRect(128, 115, 59, 140, 2, 2, 'S');
+                doc.setFontSize(7.5);
+                doc.setTextColor(100, 116, 139);
+                doc.text('UNTERSCHRIFT', 157.5, 120.5, { align: 'center' });
+                if (rec.signature) {
+                    try { doc.addImage(rec.signature, 'PNG', 130, 160, 55, 38); } catch(err){}
+                }
+
+            } else if (type === 'Fahrzeuge') {
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(8.5);
+                doc.setTextColor(71, 85, 105);
+                doc.text('Kennzeichen:', 115, 57);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(15, 23, 42);
+                doc.text(rec.plate || '-', 142, 57);
+
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(71, 85, 105);
+                doc.text('KM-Stand:', 115, 62.5);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(94, 166, 59);
+                doc.text(`${rec.km || '-'} km`, 142, 62.5);
+
+                let curY = 74;
+                drawCheckLine(doc, '1. Fahrzeug sauber (Fahrerkabine & Außen sauber):', rec.statusClean, 23, curY); curY += 8;
+                drawCheckLine(doc, '2. Zustand & Beleuchtung / Blinker in Ordnung:', rec.statusCondition, 23, curY); curY += 8;
+                drawCheckLine(doc, '3. Reifendruck prüfen und korrigieren:', rec.statusTirePressure, 23, curY); curY += 8;
+                drawCheckLine(doc, '4. Keine Warnleuchten / Keine Neuschäden:', rec.statusWarnings, 23, curY); curY += 11;
+
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(8);
+                doc.setTextColor(71, 85, 105);
+                doc.text('Mängel / Schäden: ' + (rec.notes || 'Keine Mängel festgestellt'), 23, curY);
+
+                doc.setDrawColor(203, 213, 225);
+                doc.roundedRect(23, 115, 100, 140, 2, 2, 'S');
+                doc.setFontSize(7.5);
+                doc.setTextColor(100, 116, 139);
+                doc.text('KONTROLLFOTO FAHRZEUG / TACHO', 73, 120.5, { align: 'center' });
+                if (rec.photo) {
+                    try {
+                        const fmt = rec.photo.startsWith('data:image/png') ? 'PNG' : 'JPEG';
+                        doc.addImage(rec.photo, fmt, 25, 123, 96, 128);
+                    } catch(err){}
+                }
+
+                doc.roundedRect(128, 115, 59, 140, 2, 2, 'S');
+                doc.setFontSize(7.5);
+                doc.setTextColor(100, 116, 139);
+                doc.text('UNTERSCHRIFT', 157.5, 120.5, { align: 'center' });
+                if (rec.signature) {
+                    try { doc.addImage(rec.signature, 'PNG', 130, 160, 55, 38); } catch(err){}
+                }
+            }
+
+            renderPdfFooter(doc, 1, 1);
+            return doc;
+        }
+
+        function buildCompletePdf(doc, dateStr, timeStr) {
+            // SEITE 1: ENTMINERALISIERUNG & AUSSENBEREICH
+            renderPdfHeader(doc, 'GESAMT-WARTUNGSPROTOKOLL (SEITE 1/2)', dateStr, timeStr);
+            renderCompletePage1(doc, state.data);
+            renderPdfFooter(doc, 1, 2);
+
+            // SEITE 2: PAUSENRAUM & FAHRZEUGE
+            doc.addPage();
+            renderPdfHeader(doc, 'GESAMT-WARTUNGSPROTOKOLL (SEITE 2/2)', dateStr, timeStr);
+            renderCompletePage2(doc, state.data);
+            renderPdfFooter(doc, 2, 2);
+
+            return doc;
+        }
+
+        function renderCompletePage1(doc, sourceData) {
             const d = sourceData.entmineralisierung;
             doc.setDrawColor(226, 232, 240);
             doc.setLineWidth(0.4);
             doc.roundedRect(15, 36, 180, 84, 3, 3, 'S');
-
             doc.setFillColor(248, 250, 252);
             doc.roundedRect(15, 36, 180, 8, 3, 3, 'F');
             doc.setFont('helvetica', 'bold');
@@ -2003,33 +2352,14 @@
             doc.text('1. ENTMINERALISIERUNGSANLAGE', 19, 41.5);
 
             if (d) {
-                const deminHasDefect = (d.statusLeak === 'fail' || d.statusFilter === 'fail' || d.statusResin === 'fail');
-                doc.setFillColor(deminHasDefect ? 254 : 234, deminHasDefect ? 226 : 245, deminHasDefect ? 226 : 229);
-                doc.roundedRect(148, 37.5, 43, 5, 1.5, 1.5, 'F');
-                doc.setTextColor(deminHasDefect ? 185 : 74, deminHasDefect ? 28 : 133, deminHasDefect ? 28 : 46);
-                doc.setFontSize(7);
-                doc.text(deminHasDefect ? '⚠️ MÄNGEL ERFASST' : '✓ KONTROLLIERT', 169.5, 41, { align: 'center' });
-
                 doc.setFont('helvetica', 'normal');
                 doc.setFontSize(8);
                 doc.setTextColor(71, 85, 105);
-                doc.text(`Prüfer: `, 19, 49);
-                doc.setFont('helvetica', 'bold');
-                doc.setTextColor(15, 23, 42);
-                doc.text(d.inspector || '-', 32, 49);
-
-                doc.setFont('helvetica', 'normal');
-                doc.setTextColor(71, 85, 105);
-                doc.text(`Zeitstempel: `, 115, 49);
-                doc.setFont('helvetica', 'bold');
-                doc.setTextColor(15, 23, 42);
-                doc.text(d.timestamp || '-', 135, 49);
+                doc.text(`Prüfer: ${d.inspector || '-'}`, 19, 49);
+                doc.text(`Zeitstempel: ${d.timestamp || '-'}`, 115, 49);
 
                 doc.setFillColor(241, 245, 249);
                 doc.roundedRect(19, 52.5, 172, 8.5, 1.5, 1.5, 'F');
-                doc.setFont('helvetica', 'normal');
-                doc.setFontSize(8);
-                doc.setTextColor(71, 85, 105);
                 doc.text('Elektr. Leitwert:', 23, 58);
                 doc.setFont('helvetica', 'bold');
                 doc.setTextColor(94, 166, 59);
@@ -2056,26 +2386,18 @@
                 doc.setFontSize(6.5);
                 doc.setTextColor(148, 163, 184);
                 doc.text('Digitale Freigabe-Unterschrift', 156, 89, { align: 'center' });
-
                 if (d.signature) {
                     try { doc.addImage(d.signature, 'PNG', 128, 91, 56, 22); } catch(err){}
                 }
             } else {
-                doc.setFillColor(254, 243, 199);
-                doc.roundedRect(155, 37.5, 36, 5, 1.5, 1.5, 'F');
-                doc.setTextColor(180, 83, 9);
-                doc.setFontSize(7);
-                doc.text('! OFFEN', 173, 41, { align: 'center' });
                 doc.setFontSize(8.5);
                 doc.setTextColor(148, 163, 184);
                 doc.text('Für den heutigen Tag noch nicht erfasst.', 23, 56);
             }
 
-            // SEKTION 2: AUSSENBEREICH (MIT DEN NEUEN KRITERIEN)
             const a = sourceData.aussenbereich;
             doc.setDrawColor(226, 232, 240);
             doc.roundedRect(15, 126, 180, 142, 3, 3, 'S');
-
             doc.setFillColor(248, 250, 252);
             doc.roundedRect(15, 126, 180, 8, 3, 3, 'F');
             doc.setFont('helvetica', 'bold');
@@ -2084,44 +2406,26 @@
             doc.text('2. AUSSENBEREICHSKONTROLLE & FOTODOKUMENTATION', 19, 131.5);
 
             if (a) {
-                const outdoorHasDefect = (a.statusTrash === 'fail' || a.statusTables === 'fail' || a.statusGrounds === 'fail');
-                doc.setFillColor(outdoorHasDefect ? 254 : 234, outdoorHasDefect ? 226 : 245, outdoorHasDefect ? 226 : 229);
-                doc.roundedRect(144, 127.5, 47, 5, 1.5, 1.5, 'F');
-                doc.setTextColor(outdoorHasDefect ? 185 : 74, outdoorHasDefect ? 28 : 133, outdoorHasDefect ? 28 : 46);
-                doc.setFontSize(7);
-                doc.text(outdoorHasDefect ? '⚠️ MÄNGEL ERFASST' : '✓ FOTODOKUMENTIERT', 167.5, 131, { align: 'center' });
-
                 doc.setFont('helvetica', 'normal');
                 doc.setFontSize(8);
                 doc.setTextColor(71, 85, 105);
-                doc.text(`Prüfer: `, 19, 139);
-                doc.setFont('helvetica', 'bold');
-                doc.setTextColor(15, 23, 42);
-                doc.text(a.inspector || '-', 32, 139);
+                doc.text(`Prüfer: ${a.inspector || '-'}`, 19, 139);
+                doc.text(`Zeitstempel: ${a.timestamp || '-'}`, 115, 139);
 
-                doc.setFont('helvetica', 'normal');
-                doc.setTextColor(71, 85, 105);
-                doc.text(`Zeitstempel: `, 115, 139);
-                doc.setFont('helvetica', 'bold');
-                doc.setTextColor(15, 23, 42);
-                doc.text(a.timestamp || '-', 135, 139);
-
-                drawCheckLine(doc, 'Mülleimer geleert & Kippen entsorgt:', a.statusTrash, 23, 146);
-                drawCheckLine(doc, 'Tische sauber: Kein Essen & Dosen:', a.statusTables, 23, 151);
-                drawCheckLine(doc, 'Flächen, Abläufe & Wege frei:', a.statusGrounds, 23, 156);
+                drawCheckLine(doc, 'Mülleimer geleert & Zigaretten entsorgt:', a.statusTrash, 23, 146);
+                drawCheckLine(doc, 'Tische sauber, kein Essen & Dosen:', a.statusTables, 23, 151);
+                drawCheckLine(doc, 'Flächen, Abläufe & Zufahrtswege frei:', a.statusGrounds, 23, 156);
 
                 doc.setFont('helvetica', 'normal');
                 doc.setFontSize(7.5);
                 doc.setTextColor(71, 85, 105);
                 doc.text('Mängel / Bemerkungen: ' + (a.notes || 'Keine Mängel festgestellt'), 23, 162);
 
-                // Foto Box
                 doc.setDrawColor(203, 213, 225);
                 doc.roundedRect(19, 167, 102, 95, 2, 2, 'S');
                 doc.setFontSize(7);
                 doc.setTextColor(100, 116, 139);
                 doc.text('KONTROLLFOTO AUSSENBEREICH', 70, 171.5, { align: 'center' });
-
                 if (a.photo) {
                     try {
                         const fmt = a.photo.startsWith('data:image/png') ? 'PNG' : 'JPEG';
@@ -2129,43 +2433,24 @@
                     } catch(err){}
                 }
 
-                // Signatur Box
                 doc.roundedRect(127, 167, 64, 95, 2, 2, 'S');
                 doc.setFontSize(7);
                 doc.setTextColor(100, 116, 139);
                 doc.text('FREIGABE-UNTERSCHRIFT', 159, 171.5, { align: 'center' });
-
                 if (a.signature) {
                     try { doc.addImage(a.signature, 'PNG', 130, 195, 58, 35); } catch(err){}
                 }
-
-                doc.setFontSize(6);
-                doc.setTextColor(148, 163, 184);
-                doc.text('Sec-Sign Verified', 159, 258, { align: 'center' });
             } else {
-                doc.setFillColor(254, 243, 199);
-                doc.roundedRect(145, 127.5, 46, 5, 1.5, 1.5, 'F');
-                doc.setTextColor(180, 83, 9);
-                doc.setFontSize(7);
-                doc.text('! OFFEN', 168, 131, { align: 'center' });
                 doc.setFontSize(8.5);
                 doc.setTextColor(148, 163, 184);
                 doc.text('Für den heutigen Tag noch nicht erfasst.', 23, 145);
             }
+        }
 
-            renderPdfFooter(doc, 1, 2);
-
-            // ------------------------------------------
-            // SEITE 2: PAUSENRAUM & FAHRZEUGE
-            // ------------------------------------------
-            doc.addPage();
-            renderPdfHeader(doc, 'WARTUNGSPROTOKOLL (FORTSETZUNG)', dateStr, timeStr);
-
-            // SEKTION 3: PAUSENRAUM
+        function renderCompletePage2(doc, sourceData) {
             const p = sourceData.pausenraum;
             doc.setDrawColor(226, 232, 240);
             doc.roundedRect(15, 36, 180, 110, 3, 3, 'S');
-
             doc.setFillColor(248, 250, 252);
             doc.roundedRect(15, 36, 180, 8, 3, 3, 'F');
             doc.setFont('helvetica', 'bold');
@@ -2174,27 +2459,11 @@
             doc.text('3. PAUSENRAUMKONTROLLE & HYGIENE', 19, 41.5);
 
             if (p) {
-                const brHasDefect = (p.statusSurfaces === 'fail' || p.statusAppliances === 'fail' || p.statusTrash === 'fail' || p.statusFloor === 'fail');
-                doc.setFillColor(brHasDefect ? 254 : 234, brHasDefect ? 226 : 245, brHasDefect ? 226 : 229);
-                doc.roundedRect(148, 37.5, 43, 5, 1.5, 1.5, 'F');
-                doc.setTextColor(brHasDefect ? 185 : 74, brHasDefect ? 28 : 133, brHasDefect ? 28 : 46);
-                doc.setFontSize(7);
-                doc.text(brHasDefect ? '⚠️ MÄNGEL ERFASST' : '✓ KONTROLLIERT', 169.5, 41, { align: 'center' });
-
                 doc.setFont('helvetica', 'normal');
                 doc.setFontSize(8);
                 doc.setTextColor(71, 85, 105);
-                doc.text(`Prüfer: `, 19, 49);
-                doc.setFont('helvetica', 'bold');
-                doc.setTextColor(15, 23, 42);
-                doc.text(p.inspector || '-', 32, 49);
-
-                doc.setFont('helvetica', 'normal');
-                doc.setTextColor(71, 85, 105);
-                doc.text(`Zeitstempel: `, 115, 49);
-                doc.setFont('helvetica', 'bold');
-                doc.setTextColor(15, 23, 42);
-                doc.text(p.timestamp || '-', 135, 49);
+                doc.text(`Prüfer: ${p.inspector || '-'}`, 19, 49);
+                doc.text(`Zeitstempel: ${p.timestamp || '-'}`, 115, 49);
 
                 drawCheckLine(doc, 'Tische, Arbeitsflächen & Spüle sauber:', p.statusSurfaces, 23, 56);
                 drawCheckLine(doc, 'Kühlschrank & Küchengeräte sauber / leer:', p.statusAppliances, 23, 61);
@@ -2206,7 +2475,6 @@
                 doc.setTextColor(71, 85, 105);
                 doc.text('Bemerkungen: ' + (p.notes || 'Keine Mängel festgestellt'), 23, 77);
 
-                // Foto & Signatur Box
                 doc.setDrawColor(203, 213, 225);
                 doc.roundedRect(19, 81, 95, 60, 2, 2, 'S');
                 doc.setFontSize(7);
@@ -2227,21 +2495,14 @@
                     try { doc.addImage(p.signature, 'PNG', 124, 95, 63, 30); } catch(err){}
                 }
             } else {
-                doc.setFillColor(254, 243, 199);
-                doc.roundedRect(155, 37.5, 36, 5, 1.5, 1.5, 'F');
-                doc.setTextColor(180, 83, 9);
-                doc.setFontSize(7);
-                doc.text('! OFFEN', 173, 41, { align: 'center' });
                 doc.setFontSize(8.5);
                 doc.setTextColor(148, 163, 184);
                 doc.text('Für den heutigen Tag noch nicht erfasst.', 23, 56);
             }
 
-            // SEKTION 4: FAHRZEUGKONTROLLE (MIT DEN NEUEN KRITERIEN)
             const v = sourceData.fahrzeuge;
             doc.setDrawColor(226, 232, 240);
             doc.roundedRect(15, 152, 180, 116, 3, 3, 'S');
-
             doc.setFillColor(248, 250, 252);
             doc.roundedRect(15, 152, 180, 8, 3, 3, 'F');
             doc.setFont('helvetica', 'bold');
@@ -2250,34 +2511,12 @@
             doc.text('4. FAHRZEUGKONTROLLE & FUHRPARK', 19, 157.5);
 
             if (v) {
-                const vehHasDefect = (v.statusClean === 'fail' || v.statusCondition === 'fail' || v.statusTirePressure === 'fail' || v.statusWarnings === 'fail');
-                doc.setFillColor(vehHasDefect ? 254 : 234, vehHasDefect ? 226 : 245, vehHasDefect ? 226 : 229);
-                doc.roundedRect(148, 153.5, 43, 5, 1.5, 1.5, 'F');
-                doc.setTextColor(vehHasDefect ? 185 : 74, vehHasDefect ? 28 : 133, vehHasDefect ? 28 : 46);
-                doc.setFontSize(7);
-                doc.text(vehHasDefect ? '⚠️ MÄNGEL ERFASST' : '✓ KONTROLLIERT', 169.5, 157, { align: 'center' });
-
                 doc.setFont('helvetica', 'normal');
                 doc.setFontSize(8);
                 doc.setTextColor(71, 85, 105);
-                doc.text(`Prüfer: `, 19, 165);
-                doc.setFont('helvetica', 'bold');
-                doc.setTextColor(15, 23, 42);
-                doc.text(v.inspector || '-', 32, 165);
-
-                doc.setFont('helvetica', 'normal');
-                doc.setTextColor(71, 85, 105);
-                doc.text(`Kennzeichen: `, 85, 165);
-                doc.setFont('helvetica', 'bold');
-                doc.setTextColor(15, 23, 42);
-                doc.text(v.plate || '-', 106, 165);
-
-                doc.setFont('helvetica', 'normal');
-                doc.setTextColor(71, 85, 105);
-                doc.text(`KM-Stand: `, 145, 165);
-                doc.setFont('helvetica', 'bold');
-                doc.setTextColor(94, 166, 59);
-                doc.text(`${v.km || '-'} km`, 162, 165);
+                doc.text(`Prüfer: ${v.inspector || '-'}`, 19, 165);
+                doc.text(`Kennzeichen: ${v.plate || '-'}`, 85, 165);
+                doc.text(`KM: ${v.km || '-'} km`, 150, 165);
 
                 drawCheckLine(doc, 'Fahrzeug sauber (Innen & Außen):', v.statusClean, 23, 172);
                 drawCheckLine(doc, 'Fahrzeugzustand & Beleuchtung i.O.:', v.statusCondition, 23, 177);
@@ -2287,9 +2526,8 @@
                 doc.setFont('helvetica', 'normal');
                 doc.setFontSize(7.5);
                 doc.setTextColor(71, 85, 105);
-                doc.text('Mängel / Werkstattbedarf: ' + (v.notes || 'Keine Mängel festgestellt'), 23, 193);
+                doc.text('Mängel: ' + (v.notes || 'Keine Mängel festgestellt'), 23, 193);
 
-                // Foto & Signatur Box
                 doc.setDrawColor(203, 213, 225);
                 doc.roundedRect(19, 197, 95, 66, 2, 2, 'S');
                 doc.setFontSize(7);
@@ -2310,23 +2548,13 @@
                     try { doc.addImage(v.signature, 'PNG', 124, 213, 63, 34); } catch(err){}
                 }
             } else {
-                doc.setFillColor(254, 243, 199);
-                doc.roundedRect(155, 153.5, 36, 5, 1.5, 1.5, 'F');
-                doc.setTextColor(180, 83, 9);
-                doc.setFontSize(7);
-                doc.text('! OFFEN', 173, 157, { align: 'center' });
                 doc.setFontSize(8.5);
                 doc.setTextColor(148, 163, 184);
                 doc.text('Für den heutigen Tag noch nicht erfasst.', 23, 172);
             }
-
-            renderPdfFooter(doc, 2, 2);
-
-            return doc;
         }
 
         function renderPdfHeader(doc, subtitle, dateStr, timeStr) {
-            // ECB Logo Kachel (#5ea63b)
             doc.setFillColor(94, 166, 59);
             doc.roundedRect(15, 12, 24, 16, 3, 3, 'F');
             doc.setTextColor(255, 255, 255);
@@ -2344,7 +2572,7 @@
 
             doc.setTextColor(28, 25, 23);
             doc.setFont('helvetica', 'bold');
-            doc.setFontSize(12.5);
+            doc.setFontSize(12);
             doc.text(subtitle, 43, 22.5);
 
             doc.setTextColor(100, 116, 139);
@@ -2352,7 +2580,6 @@
             doc.setFontSize(7.5);
             doc.text('Offizieller Prüfnachweis für Betriebs-, Außen- und Fuhrparkanlagen', 43, 26.5);
 
-            // Empfänger Rechts
             doc.setFont('helvetica', 'bold');
             doc.setFontSize(7.5);
             doc.setTextColor(94, 166, 59);
@@ -2374,7 +2601,7 @@
             doc.line(15, 276, 195, 276);
             doc.setFontSize(7);
             doc.setTextColor(148, 163, 184);
-            doc.text(`ECB Reinigungssysteme • Tägliches Wartungsprotokoll (Seite ${pageNum} von ${totalPages})`, 15, 281);
+            doc.text(`ECB Reinigungssysteme • Wartungsprotokoll (${pageNum} von ${totalPages})`, 15, 281);
             doc.text(`Meldung an ${RECIPIENT_EMAIL} • Erstellt mit ECB Kontroll App`, 195, 281, { align: 'right' });
         }
 
@@ -2387,17 +2614,17 @@
             if (status === 'fail') {
                 doc.setFont('helvetica', 'bold');
                 doc.setTextColor(220, 38, 38);
-                doc.text('[✗] NICHT IN ORDNUNG', x + 72, y);
+                doc.text('[✗] NICHT IN ORDNUNG', x + 88, y);
             } else {
                 doc.setFont('helvetica', 'bold');
                 doc.setTextColor(22, 163, 74);
-                doc.text('[✓] In Ordnung', x + 72, y);
+                doc.text('[✓] In Ordnung', x + 88, y);
             }
         }
 
-        async function getPreparedPdfBlob(sourceData) {
-            const dataToUse = sourceData || state.data;
-            const doc = buildPdfDocument(dataToUse);
+        async function getPreparedPdfBlob(contextToUse) {
+            const ctx = contextToUse || state.currentDispatchContext;
+            const doc = buildPdfDocumentForContext(ctx);
             const blob = doc.output('blob');
             activePdfBlob = blob;
             if (activePdfUrl) URL.revokeObjectURL(activePdfUrl);
@@ -2405,51 +2632,15 @@
             return blob;
         }
 
-        function openDispatchModal(title, subject, body) {
-            state.pendingSubject = subject;
-            state.pendingBody = body;
-            document.getElementById('dispatch-title').innerText = title;
-            const msgEl = document.getElementById('dispatch-status-msg');
-            if (msgEl) msgEl.className = 'hidden';
-            openModal('modal-dispatch');
-        }
-
-        function openDispatchToday() {
-            const d = state.data;
-            if (!d.entmineralisierung && !d.aussenbereich && !d.pausenraum && !d.fahrzeuge) {
-                showToast(currentLang === 'ro' ? 'Înregistrați cel puțin un control!' : 'Bitte mindestens eine Kontrolle erfassen!');
-                return;
-            }
-            const dateStr = new Date().toLocaleDateString('de-DE');
-            const subject = `[ECB Kontroll App] Tagesgesamtbericht - ${dateStr}`;
-            let body = `ECB REINIGUNGSSYSTEME - TAGESGESAMTBERICHT\nDatum: ${dateStr}\n========================================\n\n`;
-
-            if (d.entmineralisierung) {
-                body += `1. ENTMINERALISIERUNGSANLAGE: ERLEDIGT\nPrüfer: ${d.entmineralisierung.inspector} | Leitwert: ${d.entmineralisierung.conductivity} µS/cm | Druck: ${d.entmineralisierung.pressure} bar\n\n`;
-            }
-            if (d.aussenbereich) {
-                body += `2. AUSSENBEREICH: ERLEDIGT & FOTODOKUMENTIERT\nPrüfer: ${d.aussenbereich.inspector} | Notizen: ${d.aussenbereich.notes}\n\n`;
-            }
-            if (d.pausenraum) {
-                body += `3. PAUSENRAUM: ERLEDIGT\nPrüfer: ${d.pausenraum.inspector} | Notizen: ${d.pausenraum.notes}\n\n`;
-            }
-            if (d.fahrzeuge) {
-                body += `4. FAHRZEUGE: ERLEDIGT\nPrüfer: ${d.fahrzeuge.inspector} | KFZ: ${d.fahrzeuge.plate} | KM: ${d.fahrzeuge.km}\n\n`;
-            }
-            body += `Offizielles 2-seitiges PDF-Protokoll liegt vor.\nZieladresse: ${RECIPIENT_EMAIL}`;
-
-            openDispatchModal(currentLang === 'ro' ? 'Trimite raportul zilnic' : 'Tagesbericht versenden', subject, body);
-        }
-
-        // Dropbox API Integration
-        async function uploadToDropbox(pdfBlob, filename) {
+        async function uploadToDropbox(pdfBlob, filename, categoryFolder) {
             const token = localStorage.getItem('ecb_dropbox_token');
             if (!token) return null;
 
             try {
                 const year = new Date().getFullYear();
                 const month = String(new Date().getMonth() + 1).padStart(2, '0');
-                const path = `/ECB-Kontrollen/${year}-${month}/${filename}`;
+                const folder = categoryFolder || 'Allgemein';
+                const path = `/ECB-Kontrollen/${folder}/${year}-${month}/${filename}`;
 
                 const res = await fetch('https://content.dropboxapi.com/2/files/upload', {
                     method: 'POST',
@@ -2468,7 +2659,6 @@
 
                 return res.ok;
             } catch(err) {
-                console.warn('Dropbox Upload Fehler:', err);
                 return false;
             }
         }
@@ -2524,6 +2714,7 @@
         async function executeWebServiceSend() {
             const btn = document.getElementById('btn-send-pdf-direct');
             const msgEl = document.getElementById('dispatch-status-msg');
+            const ctx = state.currentDispatchContext;
 
             if (btn) {
                 btn.disabled = true;
@@ -2531,8 +2722,8 @@
             }
 
             const loadingText = currentLang === 'ro'
-                ? `Se generează PDF-ul oficial (DE, 2 pagini), se trimite la ${RECIPIENT_EMAIL} și se arhivează în Dropbox...`
-                : `PDF (2 Seiten) wird erstellt, an ${RECIPIENT_EMAIL} gesendet & in Dropbox archiviert...`;
+                ? `Se generează PDF-ul oficial (${ctx.type}) și se trimite...`
+                : `PDF (${ctx.type}) wird erstellt, an ${RECIPIENT_EMAIL} gesendet & in Dropbox archiviert...`;
 
             msgEl.className = 'p-3 bg-sky-50 text-sky-900 border border-sky-200 rounded-xl text-xs block space-y-1';
             msgEl.innerHTML = `
@@ -2543,17 +2734,18 @@
             `;
 
             try {
-                const pdfBlob = await getPreparedPdfBlob(state.data);
-                const fileName = `ECB-Wartungsprotokoll-${state.todayKey}.pdf`;
+                const pdfBlob = await getPreparedPdfBlob(ctx);
+                const safeType = ctx.type.replace(/[^a-zA-Z0-9]/g, '_');
+                const fileName = `ECB-${safeType}-${state.todayKey}.pdf`;
 
-                const dropboxSuccess = await uploadToDropbox(pdfBlob, fileName);
+                const dropboxSuccess = await uploadToDropbox(pdfBlob, fileName, ctx.categoryFolder);
                 const pdfCloudUrl = await uploadPdfToCloud(pdfBlob, fileName);
 
-                let emailMessage = state.pendingBody;
+                let emailMessage = ctx.body;
                 if (pdfCloudUrl) {
                     emailMessage = 
 `=============================================================
-📄 OFFIZIELLES ECB WARTUNGSPROTOKOLL (PDF):
+📄 OFFIZIELLES ECB WARTUNGSPROTOKOLL (${ctx.type.toUpperCase()}):
 👉 HIER KLICKEN ZUM ÖFFNEN / HERUNTERLADEN DES PDFS:
 ${pdfCloudUrl}
 =============================================================
@@ -2565,7 +2757,7 @@ ${pdfCloudUrl}
 
                 try {
                     const fsData = new FormData();
-                    fsData.append("_subject", state.pendingSubject);
+                    fsData.append("_subject", ctx.subject);
                     fsData.append("Bericht", emailMessage);
                     fsData.append("_captcha", "false");
                     fsData.append("attachment", pdfBlob, fileName);
@@ -2582,7 +2774,7 @@ ${pdfCloudUrl}
                     try {
                         const fd = new FormData();
                         fd.append("access_key", k1);
-                        fd.append("subject", state.pendingSubject);
+                        fd.append("subject", ctx.subject);
                         fd.append("from_name", "ECB Kontroll App");
                         fd.append("message", emailMessage);
 
@@ -2595,10 +2787,10 @@ ${pdfCloudUrl}
                 try { savePdfDownload(); } catch(err) {}
 
                 if (delivered || dropboxSuccess) {
-                    const okHeading = currentLang === 'ro' ? 'Raport transmis cu succes!' : 'Protokoll erfolgreich übermittelt!';
+                    const okHeading = currentLang === 'ro' ? 'Protocol transmis cu succes!' : 'Protokoll erfolgreich übermittelt!';
                     const okSub = currentLang === 'ro' 
-                        ? `E-mail trimis către <strong>${RECIPIENT_EMAIL}</strong>.${dropboxSuccess ? '<br><strong class="text-sky-700 font-bold">✓ Salvat cu succes în Dropbox!</strong>' : ''}`
-                        : `E-Mail an <strong>${RECIPIENT_EMAIL}</strong> gesendet.${dropboxSuccess ? '<br><strong class="text-sky-700 font-bold">✓ Erfolgreich in Dropbox gespeichert!</strong>' : ''}`;
+                        ? `E-mail trimis către <strong>${RECIPIENT_EMAIL}</strong>.${dropboxSuccess ? `<br><strong class="text-sky-700 font-bold">✓ Salvat în Dropbox Ordner: /${ctx.categoryFolder}/!</strong>` : ''}`
+                        : `E-Mail an <strong>${RECIPIENT_EMAIL}</strong> gesendet.${dropboxSuccess ? `<br><strong class="text-sky-700 font-bold">✓ Im Dropbox-Ordner /${ctx.categoryFolder}/ gesichert!</strong>` : ''}`;
                     const btnPdfOnline = currentLang === 'ro' ? 'Deschide PDF online' : 'PDF online öffnen';
 
                     msgEl.className = 'p-3 bg-emerald-50 text-emerald-950 border border-emerald-300 rounded-xl text-xs block space-y-1.5';
@@ -2621,22 +2813,17 @@ ${pdfCloudUrl}
                     msgEl.innerHTML = `
                         <div class="flex items-center gap-1.5 font-bold text-amber-800">
                             <i class="fa-solid fa-triangle-exclamation text-amber-600"></i>
-                            <span>PDF lokal gesichert / salvat local</span>
+                            <span>PDF lokal gesichert</span>
                         </div>
                         <p class="text-[11px] text-amber-900 leading-snug">
-                            ${currentLang === 'ro' 
-                                ? 'Folosiți opțiunea <strong>„Deschide în Apple Mail / Gmail”</strong> pentru a trimite PDF-ul prin aplicația de mail.'
-                                : 'Nutzen Sie unten <strong>„In Apple Mail / Gmail öffnen“</strong>, um das Dokument per Mail-App mit Anhang zu senden.'}
+                            Nutzen Sie unten <strong>„In Apple Mail / Gmail öffnen“</strong>, um das Dokument per Mail-App zu versenden.
                         </p>
                     `;
                 }
 
             } catch(e) {
                 msgEl.className = 'p-3 bg-rose-50 text-rose-950 border border-rose-300 rounded-xl text-xs block';
-                msgEl.innerHTML = `
-                    <div class="font-bold text-rose-800 mb-1">Info</div>
-                    <p class="text-[11px] text-rose-900">${currentLang === 'ro' ? 'Vă rugăm să folosiți butonul de mai jos.' : 'Bitte nutzen Sie den Button "In Apple Mail / Gmail öffnen".'}</p>
-                `;
+                msgEl.innerHTML = `<p class="text-[11px] text-rose-900">Bitte nutzen Sie die Option Mail-App unten.</p>`;
             } finally {
                 if (btn) {
                     btn.disabled = false;
@@ -2647,36 +2834,48 @@ ${pdfCloudUrl}
 
         async function sendWebShareAction() {
             showToast(currentLang === 'ro' ? 'Se pregătește PDF-ul...' : 'Bereite PDF vor...');
+            const ctx = state.currentDispatchContext;
             try {
-                const pdfBlob = await getPreparedPdfBlob(state.data);
+                const pdfBlob = await getPreparedPdfBlob(ctx);
+                const safeType = ctx.type.replace(/[^a-zA-Z0-9]/g, '_');
                 const files = [
-                    new File([pdfBlob], `ECB-Wartungsprotokoll-${state.todayKey}.pdf`, { type: 'application/pdf' })
+                    new File([pdfBlob], `ECB-${safeType}-${state.todayKey}.pdf`, { type: 'application/pdf' })
                 ];
 
                 if (navigator.canShare && navigator.canShare({ files })) {
                     await navigator.share({
-                        title: state.pendingSubject,
-                        text: state.pendingBody + `\n\n(Zieladresse: ${RECIPIENT_EMAIL})`,
+                        title: ctx.subject,
+                        text: ctx.body + `\n\n(Zieladresse: ${RECIPIENT_EMAIL})`,
                         files: files
                     });
-                    showToast(currentLang === 'ro' ? 'PDF transmis către aplicația de Mail!' : 'PDF an Mail-App übergeben!');
+                    showToast(currentLang === 'ro' ? 'PDF transmis!' : 'PDF an Mail-App übergeben!');
                     closeModal('modal-dispatch');
                 } else {
-                    previewActivePdf();
-                    const mailto = `mailto:${RECIPIENT_EMAIL}?subject=${encodeURIComponent(state.pendingSubject)}&body=${encodeURIComponent(state.pendingBody)}`;
+                    previewActivePdf(false);
+                    const mailto = `mailto:${RECIPIENT_EMAIL}?subject=${encodeURIComponent(ctx.subject)}&body=${encodeURIComponent(ctx.body)}`;
                     window.location.href = mailto;
                 }
             } catch(err) {
                 if (err.name !== 'AbortError') {
-                    previewActivePdf();
+                    previewActivePdf(false);
                 }
             }
         }
 
-        async function previewActivePdf() {
-            await getPreparedPdfBlob(state.data);
+        async function previewActivePdf(isDaySummary) {
+            if (isDaySummary) {
+                state.currentDispatchContext = {
+                    type: 'Gesamtbericht',
+                    data: state.data,
+                    subject: `[ECB Kontroll App] Tagesgesamtbericht - ${new Date().toLocaleDateString('de-DE')}`,
+                    body: '',
+                    categoryFolder: 'Tagesberichte'
+                };
+            }
+            await getPreparedPdfBlob(state.currentDispatchContext);
             const frame = document.getElementById('pdf-viewer-frame');
             if (frame && activePdfUrl) frame.src = activePdfUrl;
+            document.getElementById('pdf-modal-title').innerText = `ECB Protokoll: ${state.currentDispatchContext.type}`;
             openModal('modal-pdf');
         }
 
@@ -2685,45 +2884,98 @@ ${pdfCloudUrl}
         }
 
         function savePdfDownload() {
+            const ctx = state.currentDispatchContext;
             if (!activePdfBlob) {
-                getPreparedPdfBlob(state.data).then(() => savePdfDownload());
+                getPreparedPdfBlob(ctx).then(() => savePdfDownload());
                 return;
             }
+            const safeType = ctx.type.replace(/[^a-zA-Z0-9]/g, '_');
             const a = document.createElement('a');
             a.href = activePdfUrl;
-            a.download = `ECB-Wartungsprotokoll-${state.todayKey}.pdf`;
+            a.download = `ECB-${safeType}-${state.todayKey}.pdf`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             showToast(currentLang === 'ro' ? 'PDF descărcat!' : 'PDF heruntergeladen!');
         }
 
+        // ==========================================
+        // HISTORIE & KATEGORIE-ORDNER VERWALTUNG
+        // ==========================================
         function getHistory() {
-            try { return JSON.parse(localStorage.getItem('ecb_app_history_v2') || '[]'); } catch(e) { return []; }
+            if (cloudHistory.length > 0) return cloudHistory;
+            try { return JSON.parse(localStorage.getItem('ecb_app_history_v3') || '[]'); } catch(e) { return []; }
         }
 
         function addHistory(type, rec) {
-            const h = getHistory();
             const now = new Date();
-            h.unshift({
-                id: 'h_' + Date.now(),
+            const newEntry = {
                 date: now.toISOString().slice(0, 10),
                 timestamp: rec.timestamp || now.toLocaleTimeString('de-DE'),
+                createdAt: Date.now(),
                 type: type,
-                inspector: rec.inspector,
+                inspector: rec.inspector || '',
                 data: rec
-            });
+            };
+
+            if (db) {
+                db.collection('kontrollen').add(newEntry).catch(err => {
+                    console.warn("Fehler beim Cloud-Speichern:", err);
+                });
+            }
+
+            const h = getHistory();
+            h.unshift(newEntry);
             if (h.length > 80) h.pop();
-            try { localStorage.setItem('ecb_app_history_v2', JSON.stringify(h)); } catch(e){}
+            try { localStorage.setItem('ecb_app_history_v3', JSON.stringify(h)); } catch(e){}
+            renderHistoryView();
+        }
+
+        function setHistoryFilter(category) {
+            currentHistoryFilter = category;
+            document.querySelectorAll('.hist-filter-btn').forEach(btn => {
+                btn.className = 'hist-filter-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-white border border-slate-200 text-slate-600 hover:bg-slate-100';
+            });
+
+            let activeBtnId = 'hist-filter-all';
+            if (category === 'Entmineralisierung') activeBtnId = 'hist-filter-demin';
+            if (category === 'Außenbereich') activeBtnId = 'hist-filter-outdoor';
+            if (category === 'Pausenraum') activeBtnId = 'hist-filter-breakroom';
+            if (category === 'Fahrzeuge') activeBtnId = 'hist-filter-vehicle';
+
+            const activeBtn = document.getElementById(activeBtnId);
+            if (activeBtn) {
+                activeBtn.className = 'hist-filter-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-white shadow-xs';
+            }
+
             renderHistoryView();
         }
 
         function renderHistoryView() {
             const c = document.getElementById('history-items-container');
             if (!c) return;
-            const list = getHistory();
+            const allList = getHistory();
 
-            if (!list.length) {
+            // Ordner-Zähler aktualisieren
+            const countAll = allList.length;
+            const countDemin = allList.filter(i => i.type === 'Entmineralisierung').length;
+            const countOutdoor = allList.filter(i => i.type === 'Außenbereich').length;
+            const countBreakroom = allList.filter(i => i.type === 'Pausenraum').length;
+            const countVehicle = allList.filter(i => i.type === 'Fahrzeuge').length;
+
+            const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.innerText = val; };
+            setTxt('count-all', countAll);
+            setTxt('count-demin', countDemin);
+            setTxt('count-outdoor', countOutdoor);
+            setTxt('count-breakroom', countBreakroom);
+            setTxt('count-vehicle', countVehicle);
+
+            // Nach aktuellem Ordner filtern
+            const filteredList = currentHistoryFilter === 'all' 
+                ? allList 
+                : allList.filter(i => i.type === currentHistoryFilter);
+
+            if (!filteredList.length) {
                 c.innerHTML = `
                     <div class="p-6 text-center text-xs text-slate-400 border-2 border-dashed border-slate-200 rounded-2xl">
                         ${t('no_history')}
@@ -2731,7 +2983,7 @@ ${pdfCloudUrl}
                 return;
             }
 
-            c.innerHTML = list.map((item, idx) => {
+            c.innerHTML = filteredList.map((item, idx) => {
                 let iconClass = 'fa-droplet text-sky-600 bg-sky-50';
                 if (item.type === 'Außenbereich') iconClass = 'fa-tree text-emerald-600 bg-emerald-50';
                 if (item.type === 'Pausenraum') iconClass = 'fa-mug-saucer text-amber-600 bg-amber-50';
@@ -2747,7 +2999,7 @@ ${pdfCloudUrl}
 
                 const inspectorLabel = currentLang === 'ro' ? 'Inspector' : 'Prüfer';
                 const viewPdfText = currentLang === 'ro' ? 'Vezi PDF' : 'PDF ansehen';
-                const statusBadge = currentLang === 'ro' ? '✓ Înregistrat' : '✓ Erfasst';
+                const resendText = currentLang === 'ro' ? 'Trimite' : 'Versenden';
 
                 return `
                     <div class="p-3 bg-white border border-slate-200 rounded-2xl shadow-xs space-y-2">
@@ -2761,12 +3013,13 @@ ${pdfCloudUrl}
                                     <div class="text-[10px] text-slate-400 font-mono">${item.timestamp}</div>
                                 </div>
                             </div>
-                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">${statusBadge}</span>
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">✓ In Cloud</span>
                         </div>
 
                         <div class="text-[11px] text-slate-600">
                             ${inspectorLabel}: <strong>${item.inspector || '-'}</strong>
                             ${item.data.plate ? ` · KFZ: <strong>${item.data.plate}</strong>` : ''}
+                            ${item.data.conductivity ? ` · Leitwert: <strong>${item.data.conductivity} µS</strong>` : ''}
                         </div>
 
                         ${item.data.photo ? `
@@ -2775,10 +3028,15 @@ ${pdfCloudUrl}
                             </div>` : ''}
 
                         <div class="flex items-center justify-between pt-1 border-t border-slate-100 text-xs">
-                            <button onclick="viewHistoryPdf(${idx})" class="text-sky-600 font-bold hover:underline flex items-center gap-1">
-                                <i class="fa-solid fa-file-pdf"></i> ${viewPdfText}
-                            </button>
-                            <button onclick="deleteHistoryEntry(${idx})" class="text-rose-500 hover:text-rose-700 text-xs">
+                            <div class="flex items-center gap-3">
+                                <button onclick="viewHistoryItemPdf('${item.id || idx}')" class="text-sky-600 font-bold hover:underline flex items-center gap-1">
+                                    <i class="fa-solid fa-file-pdf"></i> ${viewPdfText}
+                                </button>
+                                <button onclick="resendHistoryItem('${item.id || idx}')" class="text-ecb hover:text-ecb-dark font-bold flex items-center gap-1">
+                                    <i class="fa-solid fa-paper-plane"></i> ${resendText}
+                                </button>
+                            </div>
+                            <button onclick="deleteHistoryEntry('${item.id || idx}')" class="text-rose-500 hover:text-rose-700 text-xs">
                                 <i class="fa-solid fa-trash-can"></i>
                             </button>
                         </div>
@@ -2787,35 +3045,57 @@ ${pdfCloudUrl}
             }).join('');
         }
 
-        async function viewHistoryPdf(idx) {
+        function findHistoryItem(key) {
             const list = getHistory();
-            const item = list[idx];
+            let item = list.find(i => i.id === key);
+            if (!item && !isNaN(key)) item = list[parseInt(key)];
+            return item;
+        }
+
+        async function viewHistoryItemPdf(key) {
+            const item = findHistoryItem(key);
             if (!item) return;
 
-            const singleState = {
-                entmineralisierung: item.type === 'Entmineralisierung' ? item.data : null,
-                aussenbereich: item.type === 'Außenbereich' ? item.data : null,
-                pausenraum: item.type === 'Pausenraum' ? item.data : null,
-                fahrzeuge: item.type === 'Fahrzeuge' ? item.data : null
+            state.currentDispatchContext = {
+                type: item.type,
+                data: item.data,
+                subject: `[ECB Kontroll App] ${item.type} - ${item.date}`,
+                body: '',
+                categoryFolder: item.type
             };
 
-            await getPreparedPdfBlob(singleState);
+            await getPreparedPdfBlob(state.currentDispatchContext);
             const frame = document.getElementById('pdf-viewer-frame');
             if (frame && activePdfUrl) frame.src = activePdfUrl;
+            document.getElementById('pdf-modal-title').innerText = `ECB Protokoll: ${item.type}`;
             openModal('modal-pdf');
         }
 
-        function deleteHistoryEntry(idx) {
-            const h = getHistory();
-            h.splice(idx, 1);
-            localStorage.setItem('ecb_app_history_v2', JSON.stringify(h));
-            renderHistoryView();
-            updateDashboard();
-            showToast(currentLang === 'ro' ? 'Intrare ștearsă.' : 'Eintrag gelöscht.');
+        function resendHistoryItem(key) {
+            const item = findHistoryItem(key);
+            if (!item) return;
+            triggerSingleDispatch(item.type, item.data);
+        }
+
+        function deleteHistoryEntry(key) {
+            const list = getHistory();
+            const itemIndex = list.findIndex(i => i.id === key || list.indexOf(i) === parseInt(key));
+            if (itemIndex > -1) {
+                const item = list[itemIndex];
+                if (item.id && db) {
+                    db.collection('kontrollen').doc(item.id).delete().catch(() => {});
+                }
+                list.splice(itemIndex, 1);
+                localStorage.setItem('ecb_app_history_v3', JSON.stringify(list));
+                renderHistoryView();
+                updateDashboard();
+                showToast(currentLang === 'ro' ? 'Intrare ștearsă.' : 'Eintrag gelöscht.');
+            }
         }
 
         function confirmResetAll() {
-            localStorage.removeItem('ecb_app_history_v2');
+            localStorage.removeItem('ecb_app_history_v3');
+            cloudHistory = [];
             renderHistoryView();
             updateDashboard();
             showToast(currentLang === 'ro' ? 'Istoricul a fost golit.' : 'Verlauf geleert.');
@@ -2853,7 +3133,6 @@ ${pdfCloudUrl}
         }
 
         function openSettingsModal() {
-            document.getElementById('setting-key-1').value = localStorage.getItem('ecb_k1') || DEFAULT_KEY_1;
             document.getElementById('setting-dropbox-token').value = localStorage.getItem('ecb_dropbox_token') || '';
             const resEl = document.getElementById('dropbox-test-result');
             if (resEl) resEl.className = 'hidden';
@@ -2861,11 +3140,9 @@ ${pdfCloudUrl}
         }
 
         function saveSettingsKeys() {
-            const k1 = document.getElementById('setting-key-1').value.trim();
             const dbt = document.getElementById('setting-dropbox-token').value.trim();
-            localStorage.setItem('ecb_k1', k1);
             localStorage.setItem('ecb_dropbox_token', dbt);
-            showToast(currentLang === 'ro' ? 'Setările au fost salvate!' : 'Einstellungen & Dropbox-Token gespeichert!');
+            showToast(currentLang === 'ro' ? 'Setările au fost salvate!' : 'Einstellungen gespeichert!');
             closeModal('modal-settings');
         }
 
