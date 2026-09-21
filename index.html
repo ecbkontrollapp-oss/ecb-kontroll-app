@@ -77,9 +77,9 @@
                 <div>
                     <div class="flex items-center gap-1.5">
                         <h1 class="text-xs font-bold text-slate-900 tracking-tight leading-none" data-i18n="app_title">ECB Kontroll App</h1>
-                        <span id="cloud-indicator" class="flex items-center text-[9px] text-emerald-600 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded-full" title="Google Firebase Live-Sync aktiv">
-                            <i class="fa-solid fa-cloud text-[8px] mr-1"></i> Cloud
-                        </span>
+                        <button onclick="showCloudDiagnostic()" id="cloud-indicator" class="flex items-center text-[9px] text-amber-700 font-semibold bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200 transition-colors" title="Google Firebase Status">
+                            <i class="fa-solid fa-rotate fa-spin text-[8px] mr-1"></i> <span id="cloud-indicator-label">Verbinde...</span>
+                        </button>
                     </div>
                     <span class="text-[9px] text-slate-400" data-i18n="app_sub">Reinigungssysteme</span>
                 </div>
@@ -140,7 +140,7 @@
                     </div>
                     
                     <h3 class="text-sm font-bold text-slate-900 group-hover:text-sky-600 transition-colors" data-i18n="card_demin_title">1. Entmineralisierungsanlage</h3>
-                    <p class="text-[11px] text-slate-500 mt-0.5 font-normal" data-i18n="card_demin_desc">Tägliche Kontrolle & Messwerte (Einzelversand)</p>
+                    <p id="card-sub-demin" class="text-[11px] text-slate-500 mt-0.5 font-normal" data-i18n="card_demin_desc">Tägliche Kontrolle & Messwerte (Einzelversand)</p>
 
                     <div class="mt-2.5 flex items-center text-[11px] font-semibold text-slate-700 group-hover:text-sky-600 transition-colors">
                         <span data-i18n="start_control">Kontrolle starten</span>
@@ -160,7 +160,7 @@
                     </div>
                     
                     <h3 class="text-sm font-bold text-slate-900 group-hover:text-emerald-700 transition-colors" data-i18n="card_outdoor_title">2. Außenbereich</h3>
-                    <p class="text-[11px] text-slate-500 mt-0.5 font-normal" data-i18n="card_outdoor_desc">Mülleimer, Tische & Sauberkeit mit Foto</p>
+                    <p id="card-sub-outdoor" class="text-[11px] text-slate-500 mt-0.5 font-normal" data-i18n="card_outdoor_desc">Mülleimer, Tische & Sauberkeit mit Foto</p>
 
                     <div class="mt-2.5 flex items-center text-[11px] font-semibold text-slate-700 group-hover:text-emerald-700 transition-colors">
                         <span data-i18n="start_control">Kontrolle starten</span>
@@ -180,7 +180,7 @@
                     </div>
                     
                     <h3 class="text-sm font-bold text-slate-900 group-hover:text-amber-700 transition-colors" data-i18n="card_breakroom_title">3. Pausenraum</h3>
-                    <p class="text-[11px] text-slate-500 mt-0.5 font-normal" data-i18n="card_breakroom_desc">Ordnung, Hygiene & Müllentsorgung</p>
+                    <p id="card-sub-breakroom" class="text-[11px] text-slate-500 mt-0.5 font-normal" data-i18n="card_breakroom_desc">Ordnung, Hygiene & Müllentsorgung</p>
 
                     <div class="mt-2.5 flex items-center text-[11px] font-semibold text-slate-700 group-hover:text-amber-700 transition-colors">
                         <span data-i18n="start_control">Kontrolle starten</span>
@@ -200,7 +200,7 @@
                     </div>
                     
                     <h3 class="text-sm font-bold text-slate-900 group-hover:text-indigo-700 transition-colors" data-i18n="card_vehicle_title">4. Fahrzeuge</h3>
-                    <p class="text-[11px] text-slate-500 mt-0.5 font-normal" data-i18n="card_vehicle_desc">Zustand, Reifendruck & Sauberkeit</p>
+                    <p id="card-sub-vehicle" class="text-[11px] text-slate-500 mt-0.5 font-normal" data-i18n="card_vehicle_desc">Zustand, Reifendruck & Sauberkeit</p>
 
                     <div class="mt-2.5 flex items-center text-[11px] font-semibold text-slate-700 group-hover:text-indigo-700 transition-colors">
                         <span data-i18n="start_control">Kontrolle starten</span>
@@ -931,6 +931,30 @@
         </div>
     </nav>
 
+    <!-- CLOUD DIAGNOSE MODAL -->
+    <div id="modal-cloud" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-3">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-4 shadow-2xl space-y-3">
+            <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                <h3 class="font-bold text-slate-900 text-sm flex items-center gap-1.5">
+                    <i class="fa-solid fa-cloud text-emerald-600"></i> Cloud-Status & Diagnose
+                </h3>
+                <button onclick="closeModal('modal-cloud')" class="text-slate-400 hover:text-slate-600 p-1">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div id="cloud-diagnostic-content" class="text-xs space-y-2 text-slate-700">
+                Lade Status...
+            </div>
+
+            <div class="pt-2 border-t border-slate-100">
+                <button onclick="closeModal('modal-cloud')" class="w-full py-2 bg-slate-900 text-white rounded-xl font-bold text-xs">
+                    Schließen
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- VERSAND MODAL (FÜR EINZELPROTOKOLLE & GESAMTBERICHTE) -->
     <div id="modal-dispatch" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-3">
         <div class="bg-white rounded-2xl max-w-sm w-full p-4 shadow-2xl space-y-3 max-h-[90vh] overflow-y-auto">
@@ -1039,7 +1063,7 @@
             </div>
 
             <!-- Firebase Status Info -->
-            <div class="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-between">
+            <div class="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-between cursor-pointer" onclick="showCloudDiagnostic()">
                 <div class="flex items-center gap-2">
                     <i class="fa-solid fa-cloud text-emerald-600 text-sm"></i>
                     <div>
@@ -1047,7 +1071,7 @@
                         <div class="text-xs font-bold text-slate-900">eck-kontroll-app</div>
                     </div>
                 </div>
-                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">Aktiv</span>
+                <span id="settings-cloud-status" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">Status prüfen</span>
             </div>
 
             <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
@@ -1117,11 +1141,19 @@
         };
 
         let db = null;
+        let firebaseStatus = {
+            connected: false,
+            error: null,
+            count: 0
+        };
+
         try {
-            firebase.initializeApp(firebaseConfig);
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
             db = firebase.firestore();
-            db.enablePersistence({ synchronizeTabs: true }).catch(() => {});
         } catch(e) {
+            firebaseStatus.error = e.message || String(e);
             console.warn("Firebase Initialisierungsfehler:", e);
         }
 
@@ -1620,38 +1652,132 @@
         // FIREBASE ECHTZEIT-SYNCHRONISATION
         // ====================================================
         function setupFirebaseRealtimeListener() {
+            const indicator = document.getElementById('cloud-indicator');
+            const indicatorLabel = document.getElementById('cloud-indicator-label');
+
             if (!db) {
+                firebaseStatus.connected = false;
+                if (indicator) {
+                    indicator.className = 'flex items-center text-[9px] text-rose-700 font-semibold bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200 cursor-pointer';
+                    if (indicatorLabel) indicatorLabel.innerText = 'Nicht initialisiert';
+                }
                 renderHistoryView();
                 return;
             }
 
-            const indicator = document.getElementById('cloud-indicator');
-
+            // 1. Höre auf alle Kontrollen (Historie)
             db.collection('kontrollen')
                 .orderBy('createdAt', 'desc')
-                .limit(80)
+                .limit(100)
                 .onSnapshot((snapshot) => {
                     const items = [];
                     snapshot.forEach(doc => {
                         items.push({ id: doc.id, ...doc.data() });
                     });
                     cloudHistory = items;
+                    firebaseStatus.connected = true;
+                    firebaseStatus.error = null;
+                    firebaseStatus.count = items.length;
+
                     try { localStorage.setItem('ecb_app_history_v3', JSON.stringify(items)); } catch(e){}
                     renderHistoryView();
-                    updateDashboard();
+
+                    // Heutige Kontrollen direkt in die Startkarten übernehmen (damit Gerät B alles sieht!)
+                    syncTodayControlsFromCloud(items);
 
                     if (indicator) {
-                        indicator.className = 'flex items-center text-[9px] text-emerald-600 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded-full';
-                        indicator.innerHTML = '<i class="fa-solid fa-cloud text-[8px] mr-1"></i> Cloud Live';
+                        indicator.className = 'flex items-center text-[9px] text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 cursor-pointer';
+                        if (indicatorLabel) indicatorLabel.innerText = 'Cloud Live';
                     }
                 }, (error) => {
-                    console.warn("Firestore Listener Fehler:", error);
+                    console.error("Firestore Listener Fehler:", error);
+                    firebaseStatus.connected = false;
+                    firebaseStatus.error = error.message || String(error);
+
                     renderHistoryView();
                     if (indicator) {
-                        indicator.className = 'flex items-center text-[9px] text-amber-600 font-semibold bg-amber-50 px-1.5 py-0.5 rounded-full';
-                        indicator.innerHTML = '<i class="fa-solid fa-cloud text-[8px] mr-1"></i> Lokal';
+                        indicator.className = 'flex items-center text-[9px] text-rose-700 font-semibold bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200 cursor-pointer';
+                        if (indicatorLabel) indicatorLabel.innerText = 'Cloud-Fehler';
                     }
                 });
+        }
+
+        function syncTodayControlsFromCloud(items) {
+            const todayStr = new Date().toISOString().slice(0, 10);
+            const todayItems = items.filter(i => i.date === todayStr);
+
+            let updated = false;
+
+            todayItems.forEach(item => {
+                if (item.type === 'Entmineralisierung' && !state.data.entmineralisierung) {
+                    state.data.entmineralisierung = item.data;
+                    updated = true;
+                }
+                if (item.type === 'Außenbereich' && !state.data.aussenbereich) {
+                    state.data.aussenbereich = item.data;
+                    updated = true;
+                }
+                if (item.type === 'Pausenraum' && !state.data.pausenraum) {
+                    state.data.pausenraum = item.data;
+                    updated = true;
+                }
+                if (item.type === 'Fahrzeuge' && !state.data.fahrzeuge) {
+                    state.data.fahrzeuge = item.data;
+                    updated = true;
+                }
+            });
+
+            if (updated) {
+                persist();
+                updateDashboard();
+            }
+        }
+
+        function showCloudDiagnostic() {
+            const modalContent = document.getElementById('cloud-diagnostic-content');
+            if (!modalContent) return;
+
+            if (firebaseStatus.connected) {
+                modalContent.innerHTML = `
+                    <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-xl space-y-1.5">
+                        <div class="flex items-center gap-1.5 text-emerald-800 font-bold">
+                            <i class="fa-solid fa-circle-check text-emerald-600 text-sm"></i>
+                            <span>Verbindung aktiv & synchronisiert</span>
+                        </div>
+                        <p class="text-[11px] text-emerald-900 leading-snug">
+                            Projekt: <strong>eck-kontroll-app</strong><br>
+                            Einträge in Cloud geladen: <strong>${firebaseStatus.count}</strong><br>
+                            Alle Geräte synchronisieren automatisch in Echtzeit.
+                        </p>
+                    </div>
+                `;
+            } else {
+                const err = firebaseStatus.error || "Keine Verbindung zum Firebase-Dienst.";
+                let hint = "Bitte prüfen Sie, ob in der Firebase-Konsole unter <strong>Firestore Database</strong> der Button <strong>„Datenbank erstellen“</strong> geklickt wurde und die Sicherheitsregeln im <strong>Testmodus</strong> sind.";
+                
+                if (err.includes('permission') || err.includes('PERMISSION_DENIED')) {
+                    hint = "<strong>Zugriffsregel blockiert:</strong> Die Datenbank-Regeln in Firebase müssen auf Testmodus stehen: <code>allow read, write: if true;</code>";
+                } else if (err.includes('not exist') || err.includes('NOT_FOUND')) {
+                    hint = "<strong>Datenbank fehlt:</strong> Die Firestore-Datenbank wurde in Firebase noch nicht angelegt. Klicken Sie in der Firebase Console auf <em>Firestore Database -> Datenbank erstellen</em>.";
+                }
+
+                modalContent.innerHTML = `
+                    <div class="p-3 bg-rose-50 border border-rose-200 rounded-xl space-y-2">
+                        <div class="flex items-center gap-1.5 text-rose-800 font-bold">
+                            <i class="fa-solid fa-circle-exclamation text-rose-600 text-sm"></i>
+                            <span>Cloud-Verbindung unterbrochen</span>
+                        </div>
+                        <div class="p-2 bg-white rounded border border-rose-200 font-mono text-[10px] text-rose-900 break-words">
+                            ${err}
+                        </div>
+                        <p class="text-[11px] text-slate-700 leading-snug">
+                            👉 <strong>Lösung:</strong> ${hint}
+                        </p>
+                    </div>
+                `;
+            }
+
+            openModal('modal-cloud');
         }
 
         function switchView(viewName) {
@@ -1690,7 +1816,8 @@
             reader.onload = (evt) => {
                 const img = new Image();
                 img.onload = () => {
-                    const maxDim = 1000;
+                    // Komprimiere auf max 800px & 0.65 Qualität, damit Firestore die 1MB Grenze niemals überschreitet!
+                    const maxDim = 800;
                     let w = img.width;
                     let h = img.height;
                     if (w > maxDim || h > maxDim) {
@@ -1707,7 +1834,7 @@
                     c.height = h;
                     const ctx = c.getContext('2d');
                     ctx.drawImage(img, 0, 0, w, h);
-                    const compressed = c.toDataURL('image/jpeg', 0.75);
+                    const compressed = c.toDataURL('image/jpeg', 0.65);
                     state.photos[domain] = compressed;
 
                     const previewImg = document.getElementById(`photo-preview-img-${domain}`);
@@ -1778,7 +1905,6 @@
             updateDashboard();
             showToast(t('toast_saved'));
 
-            // Öffne direkt das Versand-Modal für dieses Einzelprotokoll
             triggerSingleDispatch('Entmineralisierung', rec);
         }
 
@@ -2073,20 +2199,24 @@
                     : count > 0 ? 'w-2.5 h-2.5 rounded-full bg-amber-400' : 'w-2.5 h-2.5 rounded-full bg-slate-300';
             }
 
-            const updateBadge = (id, done) => {
+            const updateBadge = (id, subId, done, inspector) => {
                 const badge = document.getElementById(id);
+                const sub = document.getElementById(subId);
                 if (badge) {
                     badge.className = done 
                         ? 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800' 
                         : 'text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500';
                     badge.innerText = done ? t('badge_done') : t('badge_open');
                 }
+                if (sub && done && inspector) {
+                    sub.innerHTML = `✓ Erledigt von <strong>${inspector}</strong>`;
+                }
             };
 
-            updateBadge('card-badge-demin', dDone);
-            updateBadge('card-badge-outdoor', oDone);
-            updateBadge('card-badge-breakroom', bDone);
-            updateBadge('card-badge-vehicle', vDone);
+            updateBadge('card-badge-demin', 'card-sub-demin', dDone, state.data.entmineralisierung?.inspector);
+            updateBadge('card-badge-outdoor', 'card-sub-outdoor', oDone, state.data.aussenbereich?.inspector);
+            updateBadge('card-badge-breakroom', 'card-sub-breakroom', bDone, state.data.pausenraum?.inspector);
+            updateBadge('card-badge-vehicle', 'card-sub-vehicle', vDone, state.data.fahrzeuge?.inspector);
 
             const previewEl = document.getElementById('latest-control-preview');
             const history = getHistory();
@@ -2219,7 +2349,6 @@
                 doc.setTextColor(71, 85, 105);
                 doc.text('Mängel / Bemerkungen: ' + (rec.notes || 'Keine Mängel festgestellt'), 23, curY);
 
-                // Foto & Signatur
                 doc.setDrawColor(203, 213, 225);
                 doc.roundedRect(23, 115, 100, 140, 2, 2, 'S');
                 doc.setFontSize(7.5);
@@ -2325,12 +2454,10 @@
         }
 
         function buildCompletePdf(doc, dateStr, timeStr) {
-            // SEITE 1: ENTMINERALISIERUNG & AUSSENBEREICH
             renderPdfHeader(doc, 'GESAMT-WARTUNGSPROTOKOLL (SEITE 1/2)', dateStr, timeStr);
             renderCompletePage1(doc, state.data);
             renderPdfFooter(doc, 1, 2);
 
-            // SEITE 2: PAUSENRAUM & FAHRZEUGE
             doc.addPage();
             renderPdfHeader(doc, 'GESAMT-WARTUNGSPROTOKOLL (SEITE 2/2)', dateStr, timeStr);
             renderCompletePage2(doc, state.data);
@@ -2919,14 +3046,19 @@ ${pdfCloudUrl}
             };
 
             if (db) {
-                db.collection('kontrollen').add(newEntry).catch(err => {
-                    console.warn("Fehler beim Cloud-Speichern:", err);
-                });
+                db.collection('kontrollen').add(newEntry)
+                    .then(() => {
+                        console.log("Erfolgreich in Cloud gespeichert!");
+                    })
+                    .catch(err => {
+                        console.warn("Fehler beim Cloud-Speichern:", err);
+                        firebaseStatus.error = err.message || String(err);
+                    });
             }
 
             const h = getHistory();
             h.unshift(newEntry);
-            if (h.length > 80) h.pop();
+            if (h.length > 100) h.pop();
             try { localStorage.setItem('ecb_app_history_v3', JSON.stringify(h)); } catch(e){}
             renderHistoryView();
         }
@@ -2956,7 +3088,6 @@ ${pdfCloudUrl}
             if (!c) return;
             const allList = getHistory();
 
-            // Ordner-Zähler aktualisieren
             const countAll = allList.length;
             const countDemin = allList.filter(i => i.type === 'Entmineralisierung').length;
             const countOutdoor = allList.filter(i => i.type === 'Außenbereich').length;
@@ -2970,7 +3101,6 @@ ${pdfCloudUrl}
             setTxt('count-breakroom', countBreakroom);
             setTxt('count-vehicle', countVehicle);
 
-            // Nach aktuellem Ordner filtern
             const filteredList = currentHistoryFilter === 'all' 
                 ? allList 
                 : allList.filter(i => i.type === currentHistoryFilter);
@@ -3018,11 +3148,11 @@ ${pdfCloudUrl}
 
                         <div class="text-[11px] text-slate-600">
                             ${inspectorLabel}: <strong>${item.inspector || '-'}</strong>
-                            ${item.data.plate ? ` · KFZ: <strong>${item.data.plate}</strong>` : ''}
-                            ${item.data.conductivity ? ` · Leitwert: <strong>${item.data.conductivity} µS</strong>` : ''}
+                            ${item.data?.plate ? ` · KFZ: <strong>${item.data.plate}</strong>` : ''}
+                            ${item.data?.conductivity ? ` · Leitwert: <strong>${item.data.conductivity} µS</strong>` : ''}
                         </div>
 
-                        ${item.data.photo ? `
+                        ${item.data?.photo ? `
                             <div class="w-full h-24 rounded-xl overflow-hidden border border-slate-100 mt-1">
                                 <img src="${item.data.photo}" class="w-full h-full object-cover">
                             </div>` : ''}
@@ -3109,8 +3239,8 @@ ${pdfCloudUrl}
             }
             let csv = "Datum;Uhrzeit;Bereich;Pruefer;Details;Notizen\n";
             h.forEach(i => {
-                const details = i.data.plate ? `KFZ: ${i.data.plate} (${i.data.km}km)` : (i.data.conductivity ? `Leitwert: ${i.data.conductivity}` : '');
-                csv += `"${i.date}";"${i.timestamp}";"${i.type}";"${i.inspector || ''}";"${details}";"${(i.data.notes || '').replace(/"/g, '""')}"\n`;
+                const details = i.data?.plate ? `KFZ: ${i.data.plate} (${i.data.km}km)` : (i.data?.conductivity ? `Leitwert: ${i.data.conductivity}` : '');
+                csv += `"${i.date}";"${i.timestamp}";"${i.type}";"${i.inspector || ''}";"${details}";"${(i.data?.notes || '').replace(/"/g, '""')}"\n`;
             });
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
