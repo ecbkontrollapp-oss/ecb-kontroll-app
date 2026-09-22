@@ -10,9 +10,6 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#5ea63b">
     
-    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' rx='44' fill='%235ea63b'/%3E%3Ctext x='50%25' y='48%25' dominant-baseline='central' text-anchor='middle' font-family='sans-serif' font-style='italic' font-weight='bold' font-size='68' fill='white'%3Eecb%3C/text%3E%3Cpath d='M25 145 C65 118, 120 152, 175 118 C152 154, 98 162, 25 145 Z' fill='white'/%3E%3C/svg%3E">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' rx='44' fill='%235ea63b'/%3E%3Ctext x='50%25' y='48%25' dominant-baseline='central' text-anchor='middle' font-family='sans-serif' font-style='italic' font-weight='bold' font-size='68' fill='white'%3Eecb%3C/text%3E%3Cpath d='M25 145 C65 118, 120 152, 175 118 C152 154, 98 162, 25 145 Z' fill='white'/%3E%3C/svg%3E">
-
     <title>ECB Kontroll App</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -58,10 +55,10 @@
         }
     </style>
 </head>
-<body class="h-full bg-slate-50 text-slate-800 flex flex-col font-sans select-none antialiased">
+<body id="app-body" class="h-full bg-slate-50 text-slate-800 flex flex-col font-sans select-none antialiased">
 
     <header class="sticky top-0 z-30 bg-white border-b border-slate-200/80 px-4 py-2.5 shadow-xs">
-        <div class="max-w-md mx-auto flex items-center justify-between">
+        <div id="header-container" class="max-w-md mx-auto flex items-center justify-between">
             <div class="flex items-center gap-2.5">
                 <div class="w-10 h-10 rounded-xl bg-ecb flex flex-col items-center justify-center text-white shadow-xs p-1 cursor-pointer" onclick="switchView('start')">
                     <span class="font-black italic text-base leading-none tracking-tight">ecb</span>
@@ -71,34 +68,35 @@
                 </div>
                 <div>
                     <h1 class="text-xs font-bold text-slate-900 tracking-tight leading-none" data-i18n="app_title">ECB Kontroll App</h1>
-                    <span class="text-[9px] text-slate-400" data-i18n="app_sub">Reinigungssysteme</span>
+                    <span id="device-mode-label" class="text-[9px] text-slate-400 font-mono">Mobile</span>
                 </div>
             </div>
             
             <div class="flex items-center gap-2">
-                <!-- CLOUD INDICATOR & ATTENDANCE BUTTON -->
-                <button onclick="showCloudDiagnostic()" id="cloud-indicator" class="flex items-center text-[8px] text-emerald-700 font-semibold bg-emerald-50 px-1.5 py-1 rounded-lg border border-emerald-200 transition-colors" title="Google Firebase Status">
-                    <i class="fa-solid fa-cloud text-[7px] mr-1"></i> <span id="cloud-indicator-label">Cloud</span>
+                <!-- CLOUD INDICATOR (COMPACT) -->
+                <button onclick="showCloudDiagnostic()" id="cloud-indicator" class="flex items-center justify-center text-[8px] text-emerald-700 font-semibold bg-emerald-50 px-2 py-2 rounded-xl border border-emerald-200 transition-colors h-10" title="Google Firebase Status">
+                    <i class="fa-solid fa-cloud text-[9px] mr-1"></i> <span id="cloud-indicator-label">Cloud</span>
                 </button>
 
-                <button onclick="openAttendanceModal()" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-xs font-bold text-emerald-800 transition-colors shadow-2xs" title="Wer ist heute da?">
+                <!-- ATTENDANCE BUTTON (PROMINENT & ENLARGED) -->
+                <button onclick="openAttendanceModal()" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-xs font-bold text-emerald-800 transition-colors shadow-2xs h-10" title="Wer ist heute da?">
                     <i class="fa-solid fa-users text-emerald-600 text-sm"></i>
                     <span data-i18n="attendance_btn">Anwesende</span>
                 </button>
 
-                <button onclick="toggleLanguage()" id="lang-btn" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs font-bold text-slate-700 transition-colors shadow-2xs">
-                    <span id="lang-flag" class="text-2xl leading-none">🇷🇴</span>
-                    <span id="lang-label" class="text-xs">RO</span>
+                <!-- LANGUAGE SWITCH (ENLARGED FLAG) -->
+                <button onclick="toggleLanguage()" id="lang-btn" class="flex items-center justify-center px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 transition-colors shadow-2xs h-10">
+                    <span id="lang-flag" class="text-4xl leading-none">🇷🇴</span>
                 </button>
 
-                <button onclick="openSettingsModal()" class="w-9 h-9 rounded-full flex items-center justify-center text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors" title="Einstellungen">
+                <button onclick="openSettingsModal()" class="w-10 h-10 rounded-full flex items-center justify-center text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors" title="Einstellungen">
                     <i class="fa-solid fa-sliders text-sm"></i>
                 </button>
             </div>
         </div>
     </header>
 
-    <main class="flex-1 max-w-md w-full mx-auto px-4 py-3 space-y-3.5 pb-28">
+    <main id="main-container" class="flex-1 max-w-md w-full mx-auto px-4 py-3 space-y-3.5 pb-28">
 
         <!-- START VIEW -->
         <section id="view-start" class="view-panel space-y-3.5">
@@ -127,6 +125,22 @@
                 </div>
             </div>
 
+            <!-- SCHNELLSTART: SCHICHTKALENDER VERKNÜPFUNG -->
+            <div onclick="switchView('shifts')" class="bg-gradient-to-r from-indigo-500 to-blue-600 rounded-2xl p-4 text-white shadow-md flex items-center justify-between cursor-pointer hover:opacity-95 transition-all">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-xl bg-white/20 flex items-center justify-center text-xl">
+                        🕒
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold tracking-tight" data-i18n="shift_title">Schichtkalender & Auslieferung</h3>
+                        <p class="text-[11px] text-indigo-100 font-medium" data-i18n="shift_sub">Früh-, Mittagsschichten & Freischichten live</p>
+                    </div>
+                </div>
+                <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-xs">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+            </div>
+
             <!-- Tagesstatus Pill -->
             <div class="bg-white rounded-2xl p-3 border border-slate-200/90 flex items-center justify-between shadow-xs">
                 <div class="flex items-center gap-2">
@@ -140,7 +154,7 @@
             </div>
 
             <!-- GRID MIT DEN 4 BEREICHEN -->
-            <div class="grid grid-cols-1 gap-2.5">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
                 
                 <!-- CARD 1: Entmineralisierungsanlage -->
                 <div onclick="switchView('demin')" class="bg-white rounded-2xl p-3.5 border border-slate-200 hover:border-sky-300 shadow-xs hover:shadow transition-all cursor-pointer group">
@@ -763,7 +777,7 @@
                 </button>
             </div>
 
-            <!-- LEITUNG / MANAGER LOGIN BOX -->
+            <!-- LEITUNG / MANAGER COLLAPSIBLE LOGIN BOX -->
             <div class="bg-slate-900 text-white rounded-2xl p-4 shadow-md space-y-3">
                 <div onclick="toggleManagerLogin()" class="flex items-center justify-between cursor-pointer select-none">
                     <div class="flex items-center gap-2.5">
@@ -805,9 +819,7 @@
                         <i class="fa-solid fa-calendar-days text-ecb"></i> <span data-i18n="monthly_calendar_title">Monatskalender & Team-Übersicht</span>
                     </h3>
                     <div class="flex items-center gap-1.5">
-                        <select id="vacation-year-select" onchange="renderVacationList()" class="bg-slate-100 border border-slate-200 text-slate-800 text-[11px] font-bold rounded-lg px-2 py-1.5 outline-none">
-                            <!-- Dynamische Jahre bis 2050 -->
-                        </select>
+                        <select id="vacation-year-select" onchange="renderVacationList()" class="bg-slate-100 border border-slate-200 text-slate-800 text-[11px] font-bold rounded-lg px-2 py-1.5 outline-none"></select>
                         <select id="vacation-month-select" onchange="renderVacationList()" class="bg-slate-100 border border-slate-200 text-slate-800 text-[11px] font-bold rounded-lg px-2 py-1.5 outline-none">
                             <option value="01" data-i18n="month_jan">Januar</option>
                             <option value="02" data-i18n="month_feb">Februar</option>
@@ -828,7 +840,7 @@
                     </div>
                 </div>
 
-                <!-- VERBESSERTE LEGENDE MIT UNTERSCHIEDLICHEN FARBEN -->
+                <!-- VERBESSERTE LEGENDE MIT SEPARATEN FARBEN -->
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] text-slate-600 pt-1">
                     <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span> <span data-i18n="legend_approved">Genehmigt</span></span>
                     <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-400 inline-block"></span> <span data-i18n="legend_pending">Beantragt / Offen</span></span>
@@ -837,7 +849,7 @@
                 </div>
 
                 <!-- VERGRÖSSERTER TEAM-KALENDER -->
-                <div id="monthly-calendar-grid" class="overflow-x-auto no-scrollbar pb-1 text-sm"></div>
+                <div id="monthly-calendar-grid" class="overflow-x-auto no-scrollbar pb-1 text-base"></div>
             </div>
 
             <!-- LISTE DER ANTRÄGE & FREIGABEN -->
@@ -849,6 +861,75 @@
                 <div id="vacation-list-container" class="space-y-2">
                     <div class="p-4 text-center text-xs text-slate-400 border-2 border-dashed border-slate-200 rounded-xl" data-i18n="no_vacations">
                         Keine Urlaube eingetragen.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SHIFTS VIEW -->
+        <section id="view-shifts" class="view-panel hidden space-y-3.5">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-black text-slate-900 tracking-tight" data-i18n="shift_title">Schichtkalender & Auslieferung</h2>
+                    <p class="text-xs text-slate-500 flex items-center gap-1">
+                        <i class="fa-solid fa-cloud text-emerald-600"></i>
+                        <span data-i18n="shift_sub">Früh-, Mittagsschichten, Freischichten & Auslieferung</span>
+                    </p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="previewShiftSummaryPdf()" class="px-3 py-2.5 bg-slate-900 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs" title="Schicht-PDF erstellen">
+                        <i class="fa-solid fa-file-pdf text-rose-400"></i> PDF
+                    </button>
+                    <button onclick="openNewShiftModal()" class="px-3.5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs">
+                        <i class="fa-solid fa-plus"></i> <span data-i18n="btn_new_shift">Schicht eintragen</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- MONATSAUSWAHL FÜR SCHICHTEN -->
+            <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs space-y-3">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-calendar-days text-indigo-600"></i> <span data-i18n="shift_calendar_title">Schicht-Übersicht & Auslieferung</span>
+                    </h3>
+                    <div class="flex items-center gap-1.5">
+                        <select id="shift-year-select" onchange="renderShiftList()" class="bg-slate-100 border border-slate-200 text-slate-800 text-[11px] font-bold rounded-lg px-2 py-1.5 outline-none"></select>
+                        <select id="shift-month-select" onchange="renderShiftList()" class="bg-slate-100 border border-slate-200 text-slate-800 text-[11px] font-bold rounded-lg px-2 py-1.5 outline-none">
+                            <option value="01" data-i18n="month_jan">Januar</option>
+                            <option value="02" data-i18n="month_feb">Februar</option>
+                            <option value="03" data-i18n="month_mar">März</option>
+                            <option value="04" data-i18n="month_apr">April</option>
+                            <option value="05" data-i18n="month_may">Mai</option>
+                            <option value="06" data-i18n="month_jun">Juni</option>
+                            <option value="07" data-i18n="month_jul">Juli</option>
+                            <option value="08" data-i18n="month_aug">August</option>
+                            <option value="09" data-i18n="month_sep">September</option>
+                            <option value="10" data-i18n="month_oct">Oktober</option>
+                            <option value="11" data-i18n="month_nov">November</option>
+                            <option value="12" data-i18n="month_dec">Dezember</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-[11px] text-slate-600 pt-1">
+                    <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-sky-500 inline-block"></span> <span>Frühschicht (F)</span></span>
+                    <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-indigo-500 inline-block"></span> <span>Mittagsschicht (M)</span></span>
+                    <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-slate-400 inline-block"></span> <span>Freischicht (FS)</span></span>
+                    <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span> <span>Urlaub (U)</span></span>
+                    <span class="flex items-center gap-1.5 font-bold text-slate-700">🚚 <span>Auslieferung</span></span>
+                </div>
+
+                <div id="monthly-shift-calendar-grid" class="overflow-x-auto no-scrollbar pb-1 text-sm"></div>
+            </div>
+
+            <!-- SCHICHT-LISTE -->
+            <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs space-y-3">
+                <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                    <i class="fa-solid fa-clock text-indigo-600"></i> <span data-i18n="shift_list_title">Aktuelle Schicht-Einträge</span>
+                </h3>
+                <div id="shift-list-container" class="space-y-2">
+                    <div class="p-4 text-center text-xs text-slate-400 border-2 border-dashed border-slate-200 rounded-xl" data-i18n="no_shifts">
+                        Keine Schichten eingetragen.
                     </div>
                 </div>
             </div>
@@ -908,28 +989,28 @@
 
     </main>
 
-    <!-- VERGRÖSSERTE UNTERE NAVIGATION -->
+    <!-- UNTERE NAVIGATION (ENLARGED ICONS & TEXT) -->
     <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 safe-bottom shadow-lg">
-        <div class="max-w-md mx-auto grid grid-cols-5 px-2 pt-3 pb-4 text-center">
+        <div class="max-w-md mx-auto grid grid-cols-5 px-1 pt-3 pb-4 text-center">
             <button onclick="switchView('start')" id="nav-btn-start" class="nav-item flex flex-col items-center justify-center py-1 text-sky-600 transition-colors">
-                <i class="fa-solid fa-house text-2xl mb-1"></i>
-                <span class="text-xs font-bold" data-i18n="nav_start">Start</span>
+                <i class="fa-solid fa-house text-3xl mb-1"></i>
+                <span class="text-xs font-extrabold" data-i18n="nav_start">Start</span>
             </button>
             <button onclick="switchView('demin')" id="nav-btn-demin" class="nav-item flex flex-col items-center justify-center py-1 text-slate-400 hover:text-slate-700 transition-colors">
-                <i class="fa-solid fa-droplet text-2xl mb-1"></i>
-                <span class="text-xs font-medium" data-i18n="nav_demin">Entmin.</span>
-            </button>
-            <button onclick="switchView('outdoor')" id="nav-btn-outdoor" class="nav-item flex flex-col items-center justify-center py-1 text-slate-400 hover:text-slate-700 transition-colors">
-                <i class="fa-solid fa-tree text-2xl mb-1"></i>
-                <span class="text-xs font-medium" data-i18n="nav_outdoor">Außen</span>
+                <i class="fa-solid fa-droplet text-3xl mb-1"></i>
+                <span class="text-xs font-bold" data-i18n="nav_demin">Entmin.</span>
             </button>
             <button onclick="switchView('vacation')" id="nav-btn-vacation" class="nav-item flex flex-col items-center justify-center py-1 text-slate-400 hover:text-slate-700 transition-colors">
-                <i class="fa-solid fa-umbrella-beach text-2xl mb-1"></i>
-                <span class="text-xs font-medium" data-i18n="nav_vacation">Urlaub</span>
+                <i class="fa-solid fa-umbrella-beach text-3xl mb-1"></i>
+                <span class="text-xs font-bold" data-i18n="nav_vacation">Urlaub</span>
+            </button>
+            <button onclick="switchView('shifts')" id="nav-btn-shifts" class="nav-item flex flex-col items-center justify-center py-1 text-slate-400 hover:text-slate-700 transition-colors">
+                <i class="fa-solid fa-clock text-3xl mb-1"></i>
+                <span class="text-xs font-bold" data-i18n="nav_shifts">Schichten</span>
             </button>
             <button onclick="switchView('history')" id="nav-btn-history" class="nav-item flex flex-col items-center justify-center py-1 text-slate-400 hover:text-slate-700 transition-colors">
-                <i class="fa-solid fa-folder-tree text-2xl mb-1"></i>
-                <span class="text-xs font-medium" data-i18n="nav_history">Ordner</span>
+                <i class="fa-solid fa-folder-tree text-3xl mb-1"></i>
+                <span class="text-xs font-bold" data-i18n="nav_history">Ordner</span>
             </button>
         </div>
     </nav>
@@ -1013,6 +1094,65 @@
         </div>
     </div>
 
+    <!-- SHIFT MODAL -->
+    <div id="modal-shift" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-3">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-4 shadow-2xl space-y-3 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                <h3 class="font-bold text-slate-900 text-sm flex items-center gap-1.5">
+                    <i class="fa-solid fa-clock text-indigo-600"></i> <span data-i18n="shift_modal_title">Schicht & Auslieferung eintragen</span>
+                </h3>
+                <button onclick="closeModal('modal-shift')" class="text-slate-400 hover:text-slate-600 p-1">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form id="form-shift-request" onsubmit="submitShift(event)" class="space-y-3">
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1" data-i18n="shift_label_date_from">Von Datum *</label>
+                        <input type="date" id="shift-date-start" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-indigo-600 outline-none font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1" data-i18n="shift_label_date_to">Bis Datum *</label>
+                        <input type="date" id="shift-date-end" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-indigo-600 outline-none font-bold">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1" data-i18n="shift_label_emp">Mitarbeiter *</label>
+                    <select id="shift-employee" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-indigo-600 outline-none font-bold">
+                        <option value="" data-i18n="vac_select_emp">-- Mitarbeiter wählen --</option>
+                        <option value="Neymar">Neymar</option>
+                        <option value="Vasi">Vasi</option>
+                        <option value="Maria">Maria</option>
+                        <option value="Livio">Livio</option>
+                        <option value="Mario">Mario</option>
+                        <option value="Mirel">Mirel</option>
+                        <option value="Bogdanie">Bogdanie</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1" data-i18n="shift_label_type">Schichtart *</label>
+                    <select id="shift-type" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-indigo-600 outline-none font-bold">
+                        <option value="Frühschicht" data-i18n="shift_early">Frühschicht (F)</option>
+                        <option value="Mittagsschicht" data-i18n="shift_mid">Mittagsschicht (M)</option>
+                        <option value="Freischicht" data-i18n="shift_free">Freischicht (FS)</option>
+                    </select>
+                </div>
+
+                <div class="flex items-center gap-2 pt-1">
+                    <input type="checkbox" id="shift-delivery" class="w-4 h-4 accent-indigo-600 rounded">
+                    <label for="shift-delivery" class="text-xs font-bold text-slate-800" data-i18n="shift_label_delivery">🚚 Übernimmt Auslieferung an diesem Tag</label>
+                </div>
+
+                <button type="submit" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-xs shadow-xs flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-floppy-disk"></i> <span data-i18n="shift_btn_save">Schicht speichern</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
     <!-- ATTENDANCE MODAL -->
     <div id="modal-attendance" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-3">
         <div class="bg-white rounded-2xl max-w-sm w-full p-4 shadow-2xl space-y-3">
@@ -1024,9 +1164,7 @@
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
-            <div id="attendance-list-container" class="space-y-2 max-h-[60vh] overflow-y-auto">
-                <!-- Dynamisch -->
-            </div>
+            <div id="attendance-list-container" class="space-y-2 max-h-[60vh] overflow-y-auto"></div>
             <div class="pt-2 border-t border-slate-100">
                 <button onclick="closeModal('modal-attendance')" class="w-full py-2 bg-slate-900 text-white rounded-xl font-bold text-xs" data-i18n="btn_close">Schließen</button>
             </div>
@@ -1113,8 +1251,8 @@
             </div>
 
             <div class="pt-3 border-t border-slate-100 grid grid-cols-2 gap-2">
-                <button onclick="openPdfFullScreen()" class="py-2.5 bg-slate-900 hover:bg-black text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5">
-                    <i class="fa-solid fa-arrow-up-right-from-square"></i> <span data-i18n="btn_fullscreen">Vollbild</span>
+                <button onclick="openPdfInNewTab()" class="py-2.5 bg-slate-900 hover:bg-black text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> <span data-i18n="btn_open_tab">In neuem Tab öffnen</span>
                 </button>
                 <button onclick="savePdfDownload()" class="py-2.5 bg-ecb hover:bg-ecb-dark text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5">
                     <i class="fa-solid fa-download"></i> <span data-i18n="btn_download">Herunterladen</span>
@@ -1237,8 +1375,8 @@
                 app_sub: "Reinigungssysteme",
                 attendance_btn: "Anwesende",
                 attendance_modal_title: "Wer ist heute da? (Live-Status)",
-                status_working: "Anwesend (Im Dienst)",
-                status_on_leave: "Im Urlaub / Abwesend",
+                status_working: "Anwesend",
+                status_on_leave: "Im Urlaub",
                 card_demin_title: "1. Entmineralisierungsanlage",
                 card_demin_desc: "Tägliche Kontrolle & Messwerte",
                 card_outdoor_title: "2. Außenbereich",
@@ -1318,6 +1456,22 @@
                 btn_new_vacation: "Urlaub beantragen",
                 team_vacation_title: "Urlaubsanträge & Status",
                 monthly_calendar_title: "Monatskalender & Team-Übersicht",
+                shift_title: "Schichtkalender & Auslieferung",
+                shift_sub: "Früh-, Mittagsschichten, Freischichten & Auslieferung",
+                btn_new_shift: "Schicht eintragen",
+                shift_calendar_title: "Schicht-Übersicht & Auslieferung",
+                shift_list_title: "Aktuelle Schicht-Einträge",
+                no_shifts: "Keine Schichten eingetragen.",
+                shift_modal_title: "Schicht & Auslieferung eintragen",
+                shift_label_date_from: "Von Datum *",
+                shift_label_date_to: "Bis Datum *",
+                shift_label_emp: "Mitarbeiter *",
+                shift_label_type: "Schichtart *",
+                shift_early: "Frühschicht (F)",
+                shift_mid: "Mittagsschicht (M)",
+                shift_free: "Freischicht (FS)",
+                shift_label_delivery: "🚚 Übernimmt Auslieferung an diesem Tag",
+                shift_btn_save: "Schicht speichern",
                 manager_login_title: "Führungskraft-Freigabe",
                 manager_click_unlock: "Klicken zum Entsperren mit Passwort",
                 manager_locked: "Gesperrt",
@@ -1348,13 +1502,13 @@
                 filter_breakroom: "Pause",
                 filter_vehicle: "KFZ",
                 filter_vacation: "Urlaub",
-                no_history: "Noch keine Kontrollen in diesem Ordner.",
+                no_history: "Keine Berichte in diesem Ordner.",
                 btn_csv: "CSV Export",
                 btn_clear_history: "Verlauf leeren",
                 nav_start: "Start",
                 nav_demin: "Entmin.",
-                nav_outdoor: "Außen",
                 nav_vacation: "Urlaub",
+                nav_shifts: "Schichten",
                 nav_history: "Ordner",
                 direct_send_title: "Sofort an pb@ecb-system.de",
                 badge_recommended: "Empfohlen",
@@ -1364,7 +1518,7 @@
                 btn_open_mail_app: "In Apple Mail / Gmail öffnen",
                 btn_view_pdf: "PDF ansehen",
                 btn_download: "Speichern",
-                btn_fullscreen: "Vollbild",
+                btn_open_tab: "In neuem Tab öffnen",
                 settings_title: "Einstellungen & Cloud",
                 firebase_live_sync: "Google Firebase Live-Sync",
                 badge_status: "Status",
@@ -1402,8 +1556,8 @@
                 app_sub: "Sisteme de Curățare",
                 attendance_btn: "Prezență",
                 attendance_modal_title: "Cine este prezent azi? (Status Live)",
-                status_working: "Prezent (La serviciu)",
-                status_on_leave: "În concediu / Absent",
+                status_working: "Prezent",
+                status_on_leave: "În concediu",
                 card_demin_title: "1. Demineralizare",
                 card_demin_desc: "Control zilnic & valori măsurate",
                 card_outdoor_title: "2. Zona Exterioară",
@@ -1483,6 +1637,22 @@
                 btn_new_vacation: "Cerere concediu",
                 team_vacation_title: "Cereri & Status Concedii",
                 monthly_calendar_title: "Calendar lunar & Prezentare generală echipă",
+                shift_title: "Calendar Schimente & Livrări",
+                shift_sub: "Tură dimineață, prânz, libere și livrări live",
+                btn_new_shift: "Adaugă schim",
+                shift_calendar_title: "Prezentare generală tură & Livrare",
+                shift_list_title: "Înregistrări ture recente",
+                no_shifts: "Nicio tură înregistrată.",
+                shift_modal_title: "Adăugare tură & Livrare",
+                shift_label_date_from: "De la data *",
+                shift_label_date_to: "Până la data *",
+                shift_label_emp: "Angajat *",
+                shift_label_type: "Tip tură *",
+                shift_early: "Tură de dimineață (F)",
+                shift_mid: "Tură de la prânz (M)",
+                shift_free: "Tură liberă (FS)",
+                shift_label_delivery: "🚚 Asigură livrarea în această zi",
+                shift_btn_save: "Salvează tura",
                 manager_login_title: "Aprobare Conducere",
                 manager_click_unlock: "Apăsați pentru deblocare cu parolă",
                 manager_locked: "Blocat",
@@ -1513,13 +1683,13 @@
                 filter_breakroom: "Pauză",
                 filter_vehicle: "KFZ",
                 filter_vacation: "Concediu",
-                no_history: "Niciun raport în acest dosar până acum.",
+                no_history: "Niciun raport în acest dosar.",
                 btn_csv: "Export CSV",
                 btn_clear_history: "Șterge istoricul",
                 nav_start: "Start",
                 nav_demin: "Demin.",
-                nav_outdoor: "Exterior",
                 nav_vacation: "Concediu",
+                nav_shifts: "Schimente",
                 nav_history: "Dosare",
                 direct_send_title: "Trimite imediat la pb@ecb-system.de",
                 badge_recommended: "Recomandat",
@@ -1529,7 +1699,7 @@
                 btn_open_mail_app: "Deschide în Apple Mail / Gmail",
                 btn_view_pdf: "Vezi PDF",
                 btn_download: "Salvează",
-                btn_fullscreen: "Ecran complet",
+                btn_open_tab: "Deschide în tab nou",
                 settings_title: "Setări & Cloud",
                 firebase_live_sync: "Sincronizare Google Firebase Live",
                 badge_status: "Status",
@@ -1578,6 +1748,7 @@
             updateDashboard();
             renderHistoryView();
             renderVacationList();
+            renderShiftList();
         }
 
         function toggleLanguage() {
@@ -1600,15 +1771,12 @@
             });
 
             const flagEl = document.getElementById('lang-flag');
-            const labelEl = document.getElementById('lang-label');
             const settingsLangText = document.getElementById('settings-lang-text');
             if (currentLang === 'de') {
                 if (flagEl) flagEl.innerText = '🇷🇴';
-                if (labelEl) labelEl.innerText = 'RO';
                 if (settingsLangText) settingsLangText.innerText = 'Deutsch 🇩🇪';
             } else {
                 if (flagEl) flagEl.innerText = '🇩🇪';
-                if (labelEl) labelEl.innerText = 'DE';
                 if (settingsLangText) settingsLangText.innerText = 'Română 🇷🇴';
             }
         }
@@ -1630,7 +1798,28 @@
         let activePdfUrl = null;
         let cloudHistory = [];
         let cloudVacations = [];
+        let cloudShifts = [];
         let currentHistoryFilter = 'all';
+
+        // DEVICE DETECTION (MOBILE vs LAPTOP/PC)
+        function checkDeviceMode() {
+            const isDesktop = window.innerWidth >= 768 && !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+            const mainContainer = document.getElementById('main-container');
+            const headerContainer = document.getElementById('header-container');
+            const deviceLabel = document.getElementById('device-mode-label');
+
+            if (isDesktop) {
+                if (mainContainer) mainContainer.className = 'flex-1 max-w-5xl w-full mx-auto px-6 py-6 space-y-5 pb-16';
+                if (headerContainer) headerContainer.className = 'max-w-5xl mx-auto flex items-center justify-between';
+                if (deviceLabel) deviceLabel.innerText = 'Desktop Web-Ansicht (Optimiert)';
+            } else {
+                if (mainContainer) mainContainer.className = 'flex-1 max-w-md w-full mx-auto px-4 py-3 space-y-3.5 pb-28';
+                if (headerContainer) headerContainer.className = 'max-w-md mx-auto flex items-center justify-between';
+                if (deviceLabel) deviceLabel.innerText = 'Mobile';
+            }
+        }
+
+        window.addEventListener('resize', checkDeviceMode);
 
         function setItemStatus(domain, key, status) {
             if (domain === 'demin') { state.statusDemin[key] = status; updateButtonUi(`btn-demin-${key}-ok`, `btn-demin-${key}-fail`, status); }
@@ -1726,28 +1915,34 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
+            checkDeviceMode();
             pads.demin = new SignaturePad('canvas-demin');
             pads.outdoor = new SignaturePad('canvas-outdoor');
             pads.breakroom = new SignaturePad('canvas-breakroom');
             pads.vehicle = new SignaturePad('canvas-vehicle');
             pads.vacation = new SignaturePad('canvas-vacation');
 
-            const yearSelect = document.getElementById('vacation-year-select');
-            const monthSelect = document.getElementById('vacation-month-select');
-            const currentD = new Date();
-            const currentY = currentD.getFullYear();
-            const currentM = String(currentD.getMonth() + 1).padStart(2, '0');
+            const nowD = new Date();
+            const currentY = nowD.getFullYear();
+            const currentM = String(nowD.getMonth() + 1).padStart(2, '0');
 
-            if (yearSelect) {
-                let opts = '';
-                for (let y = 2024; y <= 2050; y++) {
-                    opts += `<option value="${y}" ${y === currentY ? 'selected' : ''}>${y}</option>`;
+            const initDropdowns = (yearId, monthId) => {
+                const yearSelect = document.getElementById(yearId);
+                const monthSelect = document.getElementById(monthId);
+                if (yearSelect) {
+                    let opts = '';
+                    for (let y = 2024; y <= 2050; y++) {
+                        opts += `<option value="${y}" ${y === currentY ? 'selected' : ''}>${y}</option>`;
+                    }
+                    yearSelect.innerHTML = opts;
                 }
-                yearSelect.innerHTML = opts;
-            }
-            if (monthSelect) {
-                monthSelect.value = currentM;
-            }
+                if (monthSelect) {
+                    monthSelect.value = currentM;
+                }
+            };
+
+            initDropdowns('vacation-year-select', 'vacation-month-select');
+            initDropdowns('shift-year-select', 'shift-month-select');
 
             applyTranslations();
             loadState();
@@ -1764,11 +1959,12 @@
             if (!db) {
                 firebaseStatus.connected = false;
                 if (indicator) {
-                    indicator.className = 'flex items-center text-[8px] text-rose-700 font-semibold bg-rose-50 px-1.5 py-1 rounded-lg border border-rose-200 cursor-pointer';
+                    indicator.className = 'flex items-center justify-center text-[8px] text-rose-700 font-semibold bg-rose-50 px-2 py-1 rounded-xl border border-rose-200 cursor-pointer h-10';
                     if (indicatorLabel) indicatorLabel.innerText = 'Offline';
                 }
                 renderHistoryView();
                 renderVacationList();
+                renderShiftList();
                 return;
             }
 
@@ -1782,14 +1978,14 @@
                 syncTodayControlsFromCloud(items);
 
                 if (indicator) {
-                    indicator.className = 'flex items-center text-[8px] text-emerald-700 font-semibold bg-emerald-50 px-1.5 py-1 rounded-lg border border-emerald-200 cursor-pointer';
+                    indicator.className = 'flex items-center justify-center text-[8px] text-emerald-700 font-semibold bg-emerald-50 px-2.5 py-2 rounded-xl border border-emerald-200 cursor-pointer h-10';
                     if (indicatorLabel) indicatorLabel.innerText = 'Live';
                 }
             }, (error) => {
                 firebaseStatus.connected = false; firebaseStatus.error = error.message || String(error);
                 renderHistoryView();
                 if (indicator) {
-                    indicator.className = 'flex items-center text-[8px] text-rose-700 font-semibold bg-rose-50 px-1.5 py-1 rounded-lg border border-rose-200 cursor-pointer';
+                    indicator.className = 'flex items-center justify-center text-[8px] text-rose-700 font-semibold bg-rose-50 px-2.5 py-2 rounded-xl border border-emerald-200 cursor-pointer h-10';
                     if (indicatorLabel) indicatorLabel.innerText = 'Fehler';
                 }
             });
@@ -1800,7 +1996,16 @@
                 cloudVacations = items;
                 try { localStorage.setItem('ecb_app_vacations', JSON.stringify(items)); } catch(e){}
                 renderVacationList();
+                renderShiftList();
             }, (error) => { console.warn("Urlaub Firestore Fehler:", error); });
+
+            db.collection('schichten').orderBy('createdAt', 'desc').onSnapshot((snapshot) => {
+                const items = [];
+                snapshot.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
+                cloudShifts = items;
+                try { localStorage.setItem('ecb_app_shifts', JSON.stringify(items)); } catch(e){}
+                renderShiftList();
+            }, (error) => { console.warn("Schichten Firestore Fehler:", error); });
         }
 
         function syncTodayControlsFromCloud(items) {
@@ -1856,14 +2061,14 @@
             document.querySelectorAll('.nav-item').forEach(btn => {
                 btn.className = 'nav-item flex flex-col items-center justify-center py-1 text-slate-400 hover:text-slate-700 transition-colors';
                 const textSpan = btn.querySelector('span');
-                if (textSpan) textSpan.className = 'text-xs font-medium';
+                if (textSpan) textSpan.className = 'text-xs font-bold';
             });
 
             const activeBtn = document.getElementById('nav-btn-' + viewName);
             if (activeBtn) {
                 activeBtn.className = 'nav-item flex flex-col items-center justify-center py-1 text-sky-600 transition-colors';
                 const textSpan = activeBtn.querySelector('span');
-                if (textSpan) textSpan.className = 'text-xs font-bold';
+                if (textSpan) textSpan.className = 'text-xs font-extrabold';
             }
 
             if (viewName === 'history') renderHistoryView();
@@ -1874,6 +2079,14 @@
                 if (yrSel) yrSel.value = String(nowD.getFullYear());
                 if (moSel) moSel.value = String(nowD.getMonth() + 1).padStart(2, '0');
                 renderVacationList();
+            }
+            if (viewName === 'shifts') {
+                const nowD = new Date();
+                const yrSel = document.getElementById('shift-year-select');
+                const moSel = document.getElementById('shift-month-select');
+                if (yrSel) yrSel.value = String(nowD.getFullYear());
+                if (moSel) moSel.value = String(nowD.getMonth() + 1).padStart(2, '0');
+                renderShiftList();
             }
             if (viewName === 'start') updateDashboard();
 
@@ -2016,6 +2229,228 @@
             setTimeout(() => { if (pads.vacation) pads.vacation.resize(); }, 50);
         }
 
+        function openNewShiftModal() {
+            const form = document.getElementById('form-shift-request');
+            if (form) form.reset();
+            const todayIso = new Date().toISOString().slice(0, 10);
+            const dateStartInput = document.getElementById('shift-date-start');
+            const dateEndInput = document.getElementById('shift-date-end');
+            if (dateStartInput) dateStartInput.value = todayIso;
+            if (dateEndInput) dateEndInput.value = todayIso;
+            openModal('modal-shift');
+        }
+
+        function submitShift(e) {
+            e.preventDefault();
+            const startDate = document.getElementById('shift-date-start').value;
+            const endDate = document.getElementById('shift-date-end').value;
+            const employee = document.getElementById('shift-employee').value;
+            const shiftType = document.getElementById('shift-type').value;
+            const isDelivery = document.getElementById('shift-delivery').checked;
+
+            if (!startDate || !endDate || startDate > endDate) return;
+
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            let cur = new Date(start);
+
+            const now = new Date();
+            const timeFormatted = now.toLocaleDateString('de-DE') + ' · ' + now.toLocaleTimeString('de-DE');
+
+            while (cur <= end) {
+                const dateIso = cur.toISOString().slice(0, 10);
+                const rec = {
+                    date: dateIso,
+                    employee: employee,
+                    shiftType: shiftType,
+                    isDelivery: isDelivery,
+                    timestamp: timeFormatted,
+                    createdAt: Date.now()
+                };
+
+                if (db) {
+                    db.collection('schichten').add(rec).then(docRef => {
+                        rec.id = docRef.id;
+                        cloudShifts.unshift(rec);
+                        renderShiftList();
+                    }).catch(err => console.warn("Shift save error:", err));
+                } else {
+                    cloudShifts.unshift(rec);
+                }
+
+                cur.setDate(cur.getDate() + 1);
+            }
+
+            try { localStorage.setItem('ecb_app_shifts', JSON.stringify(cloudShifts)); } catch(e){}
+            renderShiftList();
+            closeModal('modal-shift');
+            showToast(currentLang === 'ro' ? 'Ture salvate cu succes!' : 'Schichten erfolgreich gespeichert!');
+        }
+
+        function deleteShiftEntry(docId) {
+            const idx = cloudShifts.findIndex(i => i.id === docId || cloudShifts.indexOf(i) === parseInt(docId));
+            if (idx > -1) {
+                const item = cloudShifts[idx];
+                if (item.id && db) {
+                    db.collection('schichten').doc(item.id).delete().catch(() => {});
+                }
+                cloudShifts.splice(idx, 1);
+                try { localStorage.setItem('ecb_app_shifts', JSON.stringify(cloudShifts)); } catch(e){}
+                renderShiftList();
+                showToast(currentLang === 'ro' ? 'Tură ștearsă.' : 'Schicht gelöscht.');
+            }
+        }
+
+        function renderShiftList() {
+            const container = document.getElementById('shift-list-container');
+            const calendarGrid = document.getElementById('monthly-shift-calendar-grid');
+            if (!container || !calendarGrid) return;
+
+            const list = cloudShifts.length > 0 ? cloudShifts : (function() {
+                try { return JSON.parse(localStorage.getItem('ecb_app_shifts') || '[]'); } catch(e) { return []; }
+            })();
+
+            const vacationList = cloudVacations.length > 0 ? cloudVacations : (function() {
+                try { return JSON.parse(localStorage.getItem('ecb_app_vacations') || '[]'); } catch(e) { return []; }
+            })();
+
+            const selectedYear = parseInt(document.getElementById('shift-year-select')?.value || new Date().getFullYear());
+            const selectedMonth = parseInt(document.getElementById('shift-month-select')?.value || (new Date().getMonth() + 1));
+            const daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
+            const weekdayNamesRo = ['Du', 'Lu', 'Ma', 'Mi', 'Jo', 'Vi', 'Sâ'];
+            const weekdayNamesDe = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+            const weekdayNames = (currentLang === 'ro') ? weekdayNamesRo : weekdayNamesDe;
+
+            let calendarHtml = `<table class="w-full border-collapse text-base"><thead>`;
+            calendarHtml += `<tr class="bg-slate-100 text-slate-900 font-black border-b border-slate-200">
+                <th class="p-4 text-left sticky left-0 bg-slate-100 z-10 w-44 text-sm uppercase tracking-wider">${currentLang === 'ro' ? 'Angajat' : 'Mitarbeiter'}</th>`;
+            for (let d = 1; d <= daysInMonth; d++) {
+                const dateObj = new Date(selectedYear, selectedMonth - 1, d);
+                const wd = weekdayNames[dateObj.getDay()];
+                const isSunday = (dateObj.getDay() === 0);
+                const holiday = getHolidayName(selectedYear, selectedMonth, d);
+                
+                let headerBg = '';
+                if (holiday) headerBg = 'bg-rose-500/10 text-rose-800';
+                else if (isSunday) headerBg = 'bg-indigo-500/10 text-indigo-800';
+
+                calendarHtml += `<th class="p-1.5 text-center font-mono w-11 text-xs border-l border-slate-200 ${headerBg}" title="${holiday || (isSunday ? 'Sonntag' : '')}">
+                    <div class="font-bold text-xs">${d}</div>
+                    <div class="text-[9px] text-slate-500 font-normal">${wd}</div>
+                </th>`;
+            }
+            calendarHtml += `</tr></thead><tbody>`;
+
+            TEAM_EMPLOYEES.forEach(emp => {
+                calendarHtml += `<tr class="border-b border-slate-200 hover:bg-slate-50">
+                    <td class="p-4 font-bold text-slate-900 text-sm sticky left-0 bg-white z-10 truncate shadow-xs">
+                        ${emp}
+                    </td>`;
+                for (let d = 1; d <= daysInMonth; d++) {
+                    const dateObj = new Date(selectedYear, selectedMonth - 1, d);
+                    const dateIso = dateObj.toISOString().slice(0, 10);
+                    const isSunday = (dateObj.getDay() === 0);
+                    const holiday = getHolidayName(selectedYear, selectedMonth, d);
+
+                    let isOnLeave = false;
+                    vacationList.forEach(item => {
+                        const rec = item.data || item;
+                        if ((rec.employee === emp || item.inspector === emp) && rec.status === 'Genehmigt') {
+                            if (rec.startDate && rec.endDate && dateIso >= rec.startDate && dateIso <= rec.endDate) {
+                                isOnLeave = true;
+                            }
+                        }
+                    });
+
+                    let shiftCode = '';
+                    let isDelivery = false;
+                    list.forEach(item => {
+                        if (item.employee === emp && item.date === dateIso) {
+                            if (item.shiftType === 'Frühschicht') shiftCode = 'F';
+                            else if (item.shiftType === 'Mittagsschicht') shiftCode = 'M';
+                            else if (item.shiftType === 'Freischicht') shiftCode = 'FS';
+                            isDelivery = !!item.isDelivery;
+                        }
+                    });
+
+                    let cellBg = '';
+                    let cellText = '';
+                    let titleText = `${emp} (${dateIso})`;
+
+                    if (isOnLeave) {
+                        cellBg = 'bg-emerald-500 text-white font-bold';
+                        cellText = 'U';
+                        titleText += ' - Im Urlaub';
+                    } else if (shiftCode === 'F') {
+                        cellBg = 'bg-sky-500 text-white font-bold';
+                        cellText = `F${isDelivery ? '🚚' : ''}`;
+                        titleText += ' - Frühschicht';
+                    } else if (shiftCode === 'M') {
+                        cellBg = 'bg-indigo-500 text-white font-bold';
+                        cellText = `M${isDelivery ? '🚚' : ''}`;
+                        titleText += ' - Mittagsschicht';
+                    } else if (shiftCode === 'FS') {
+                        cellBg = 'bg-slate-400 text-white font-bold';
+                        cellText = 'FS';
+                        titleText += ' - Freischicht';
+                    } else if (holiday) {
+                        cellBg = 'bg-rose-400/25';
+                        titleText = holiday;
+                    } else if (isSunday) {
+                        cellBg = 'bg-indigo-500/15';
+                        titleText = 'Sonntag';
+                    }
+
+                    calendarHtml += `<td class="p-1.5 text-center border-l border-slate-200 ${cellBg} text-xs relative" title="${titleText}">
+                        ${cellText}
+                    </td>`;
+                }
+                calendarHtml += `</tr>`;
+            });
+            calendarHtml += `</tbody></table>`;
+            calendarGrid.innerHTML = calendarHtml;
+
+            const monthFiltered = list.filter(item => {
+                if (!item.date) return false;
+                const parts = item.date.split('-');
+                return parseInt(parts[0]) === selectedYear && parseInt(parts[1]) === selectedMonth;
+            });
+
+            if (monthFiltered.length === 0) {
+                container.innerHTML = `<div class="p-4 text-center text-xs text-slate-400 border-2 border-dashed border-slate-200 rounded-xl">${t('no_shifts')}</div>`;
+                return;
+            }
+
+            container.innerHTML = monthFiltered.map((item, idx) => {
+                let badgeBg = 'bg-sky-100 text-sky-800';
+                if (item.shiftType === 'Mittagsschicht') badgeBg = 'bg-indigo-100 text-indigo-800';
+                if (item.shiftType === 'Freischicht') badgeBg = 'bg-slate-100 text-slate-800';
+                return `
+                    <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5 text-xs">
+                        <div class="flex items-center justify-between font-bold text-slate-900">
+                            <span>${item.employee}</span>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] ${badgeBg}">${item.shiftType}</span>
+                        </div>
+                        <div class="text-[11px] text-slate-600 flex items-center justify-between">
+                            <span>📅 ${item.date} ${item.isDelivery ? '• 🚚 <strong>Auslieferung</strong>' : ''}</span>
+                            <button onclick="deleteShiftEntry('${item.id || idx}')" class="text-rose-500 hover:text-rose-700"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function previewShiftSummaryPdf() {
+            const selectedYear = parseInt(document.getElementById('shift-year-select')?.value || new Date().getFullYear());
+            const selectedMonth = parseInt(document.getElementById('shift-month-select')?.value || (new Date().getMonth() + 1));
+            state.currentDispatchContext = { type: 'ShiftSummary', data: { year: selectedYear, month: selectedMonth, shifts: cloudShifts, vacations: cloudVacations }, subject: `[ECB] Schichtkalender ${selectedMonth}/${selectedYear}`, body: 'Schichtkalender als PDF.', categoryFolder: 'Schichten' };
+            await getPreparedPdfBlob(state.currentDispatchContext);
+            const frame = document.getElementById('pdf-viewer-frame');
+            if (frame && activePdfUrl) frame.src = activePdfUrl;
+            document.getElementById('pdf-modal-title').innerText = `ECB Schichtkalender ${selectedMonth}/${selectedYear} (PDF)`;
+            openModal('modal-pdf');
+        }
+
         function toggleManagerLogin() {
             const dropdown = document.getElementById('manager-login-dropdown');
             const chevron = document.getElementById('manager-chevron');
@@ -2078,7 +2513,6 @@
             if (statusText) statusText.innerText = currentLang === 'ro' ? 'Apăsați pentru deblocare cu parolă' : 'Klicken zum Entsperren mit Passwort';
         }
 
-        // Berechnung der Urlaubstage (ohne Sonntage)
         function calculateWorkingDays(startDateStr, endDateStr) {
             const start = new Date(startDateStr);
             const end = new Date(endDateStr);
@@ -2131,6 +2565,7 @@
 
             cloudVacations.unshift(newEntry);
             renderVacationList();
+            renderShiftList();
             closeModal('modal-vacation');
             showToast(t('toast_saved'));
             triggerSingleDispatch('Urlaub', rec);
@@ -2154,7 +2589,6 @@
             return Math.max(0, 24 - used);
         }
 
-        // Feste Feiertage in Baden-Württemberg / Deutschland
         function getHolidayName(year, month, day) {
             const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
             const fixed = {
@@ -2182,14 +2616,43 @@
                 db.collection('kontrollen').where('vacationDocId', '==', item.id).get().then(snapshot => {
                     snapshot.forEach(docSnap => {
                         docSnap.ref.update({ 'data.status': newStatus, 'data.approvedBy': 'Führungskraft', 'data': item.data }).catch(err => {});
+                        const histItem = cloudHistory.find(h => h.id === docSnap.id);
+                        if (histItem) { histItem.data = item.data; }
                     });
                 }).catch(err => {});
             }
 
             lockManagerSession();
             renderVacationList();
+            renderShiftList();
             renderHistoryView();
             showToast(newStatus === 'Genehmigt' ? (currentLang === 'ro' ? 'Concediu aprobat & actualizat!' : 'Urlaub genehmigt & im Kalender aktualisiert!') : (currentLang === 'ro' ? 'Cerere respinsă!' : 'Urlaub abgelehnt!'));
+        }
+
+        function deleteVacationEntry(key) {
+            const list = cloudVacations;
+            const idx = list.findIndex(i => i.id === key || list.indexOf(i) === parseInt(key));
+            if (idx > -1) {
+                const item = list[idx];
+                if (item.id) {
+                    if (db) {
+                        db.collection('urlaube').doc(item.id).delete().catch(() => {});
+                        db.collection('kontrollen').where('vacationDocId', '==', item.id).get().then(snapshot => {
+                            snapshot.forEach(docSnap => docSnap.ref.delete().catch(() => {}));
+                        }).catch(() => {});
+                    }
+                }
+                list.splice(idx, 1);
+                localStorage.setItem('ecb_app_vacations', JSON.stringify(list));
+                
+                cloudHistory = cloudHistory.filter(h => h.vacationDocId !== item.id && h.id !== item.id);
+                localStorage.setItem('ecb_app_history_v3', JSON.stringify(cloudHistory));
+
+                renderVacationList();
+                renderShiftList();
+                renderHistoryView();
+                showToast(currentLang === 'ro' ? 'Șters din plan & istoric.' : 'Aus Plan & Historie gelöscht.');
+            }
         }
 
         function renderVacationList() {
@@ -2205,9 +2668,10 @@
             const selectedYear = parseInt(document.getElementById('vacation-year-select')?.value || new Date().getFullYear());
             const selectedMonth = parseInt(document.getElementById('vacation-month-select')?.value || (new Date().getMonth() + 1));
             const daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
-            const weekdayNames = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+            const weekdayNamesRo = ['Du', 'Lu', 'Ma', 'Mi', 'Jo', 'Vi', 'Sâ'];
+            const weekdayNamesDe = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+            const weekdayNames = (currentLang === 'ro') ? weekdayNamesRo : weekdayNamesDe;
 
-            // Erweitertes Team-Kalender-Grid (größer, mit Wochentagen unter den Zahlen und Feiertagen)
             let calendarHtml = `<table class="w-full border-collapse text-base"><thead>`;
             
             calendarHtml += `<tr class="bg-slate-100 text-slate-900 font-black border-b border-slate-200">
@@ -2337,33 +2801,12 @@
                                 <button onclick="viewVacationPdf('${item.id || idx}')" class="px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-100 font-bold" title="PDF">
                                     <i class="fa-solid fa-file-pdf text-rose-500"></i> PDF (${(d.pdfLang || 'de').toUpperCase()})
                                 </button>
-                                <button onclick="deleteVacationEntry('${item.id || idx}')" class="px-2 py-1 text-rose-500 hover:text-rose-700 text-sm"><i class="fa-solid fa-trash-can"></i></button>
+                                <button onclick="deleteVacationEntry('${item.id || idx}')" class="px-2 py-1 text-rose-500 hover:text-rose-700 text-xs font-bold flex items-center gap-1"><i class="fa-solid fa-trash-can"></i> ${currentLang === 'ro' ? 'Șterge' : 'Löschen'}</button>
                             </div>
                         </div>
                     </div>
                 `;
             }).join('');
-        }
-
-        function deleteVacationEntry(key) {
-            const list = cloudVacations;
-            const idx = list.findIndex(i => i.id === key || list.indexOf(i) === parseInt(key));
-            if (idx > -1) {
-                const item = list[idx];
-                if (item.id) {
-                    if (db) {
-                        db.collection('urlaube').doc(item.id).delete().catch(() => {});
-                        db.collection('kontrollen').where('vacationDocId', '==', item.id).get().then(snapshot => {
-                            snapshot.forEach(docSnap => docSnap.ref.delete().catch(() => {}));
-                        }).catch(() => {});
-                    }
-                }
-                list.splice(idx, 1);
-                localStorage.setItem('ecb_app_vacations', JSON.stringify(list));
-                renderVacationList();
-                renderHistoryView();
-                showToast(currentLang === 'ro' ? 'Șters din plan & istoric.' : 'Aus Plan & Historie gelöscht.');
-            }
         }
 
         async function viewVacationPdf(key) {
@@ -2557,6 +3000,8 @@
                 return buildVacationPdf(doc, ctx.data, dateStr, timeStr);
             } else if (ctx.type === 'TeamUrlaubUebersicht') {
                 return buildTeamVacationSummaryPdf(doc, cloudVacations, dateStr, timeStr);
+            } else if (ctx.type === 'ShiftSummary') {
+                return buildShiftMatrixPdf(doc, ctx.data.year, ctx.data.month, ctx.data.shifts, ctx.data.vacations, dateStr, timeStr);
             } else {
                 return buildSingleSectionPdf(doc, ctx.type, ctx.data, dateStr, timeStr);
             }
@@ -2680,6 +3125,89 @@
                         startY += 10;
                     });
                 }
+            });
+
+            renderPdfFooter(doc, 1, 1);
+            return doc;
+        }
+
+        function buildShiftMatrixPdf(doc, year, month, shifts, vacations, dateStr, timeStr) {
+            renderPdfHeader(doc, `SCHICHTKALENDER & AUSLIEFERUNG (${month}/${year})`, dateStr, timeStr);
+            doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(15, 23, 42);
+            doc.text(`Monats-Matrix Übersicht (F = Früh, M = Mittag, FS = Freischicht, U = Urlaub, LKW = Auslieferung)`, 15, 38);
+
+            const daysInMonth = new Date(year, month, 0).getDate();
+            const colWidth = Math.min(5.1, 168 / daysInMonth);
+            const nameWidth = 32;
+
+            let startY = 46;
+            doc.setFillColor(241, 245, 249);
+            doc.rect(15, startY, nameWidth + (daysInMonth * colWidth), 8, 'F');
+            doc.setFont('helvetica', 'bold'); doc.setFontSize(7.5); doc.setTextColor(71, 85, 105);
+            doc.text('Mitarbeiter', 17, startY + 5.5);
+
+            for (let d = 1; d <= daysInMonth; d++) {
+                doc.text(String(d), 15 + nameWidth + ((d - 1) * colWidth) + (colWidth / 2), startY + 5.5, { align: 'center' });
+            }
+
+            startY += 8;
+            doc.setFont('helvetica', 'normal'); doc.setFontSize(7);
+
+            TEAM_EMPLOYEES.forEach(emp => {
+                if (startY > 270) { doc.addPage(); startY = 20; }
+                doc.setFont('helvetica', 'bold');
+                doc.text(emp, 17, startY + 6);
+                doc.setFont('helvetica', 'normal');
+
+                for (let d = 1; d <= daysInMonth; d++) {
+                    const dateObj = new Date(year, month - 1, d);
+                    const dateIso = dateObj.toISOString().slice(0, 10);
+                    
+                    let isOnLeave = false;
+                    vacations.forEach(item => {
+                        const rec = item.data || item;
+                        if ((rec.employee === emp || item.inspector === emp) && rec.status === 'Genehmigt') {
+                            if (rec.startDate && rec.endDate && dateIso >= rec.startDate && dateIso <= rec.endDate) {
+                                isOnLeave = true;
+                            }
+                        }
+                    });
+
+                    let shiftCode = '';
+                    let isDelivery = false;
+                    shifts.forEach(item => {
+                        if (item.employee === emp && item.date === dateIso) {
+                            if (item.shiftType === 'Frühschicht') shiftCode = 'F';
+                            else if (item.shiftType === 'Mittagsschicht') shiftCode = 'M';
+                            else if (item.shiftType === 'Freischicht') shiftCode = 'FS';
+                            isDelivery = !!item.isDelivery;
+                        }
+                    });
+
+                    const cellX = 15 + nameWidth + ((d - 1) * colWidth);
+                    doc.setDrawColor(226, 232, 240);
+                    doc.rect(cellX, startY, colWidth, 9);
+
+                    if (isOnLeave) {
+                        doc.setFont('helvetica', 'bold');
+                        doc.setTextColor(22, 101, 52);
+                        doc.text('U', cellX + (colWidth / 2), startY + 6, { align: 'center' });
+                        doc.setTextColor(15, 23, 42);
+                        doc.setFont('helvetica', 'normal');
+                    } else if (shiftCode) {
+                        doc.setFont('helvetica', 'bold');
+                        doc.text(shiftCode, cellX + (colWidth / 2), startY + 4, { align: 'center' });
+                        if (isDelivery) {
+                            doc.setFontSize(5.5);
+                            doc.setTextColor(180, 83, 9);
+                            doc.text('LKW', cellX + (colWidth / 2), startY + 8, { align: 'center' });
+                            doc.setTextColor(15, 23, 42);
+                            doc.setFontSize(7);
+                        }
+                        doc.setFont('helvetica', 'normal');
+                    }
+                }
+                startY += 9;
             });
 
             renderPdfFooter(doc, 1, 1);
@@ -2906,7 +3434,11 @@
             openModal('modal-pdf');
         }
 
-        function openPdfFullScreen() { if (activePdfUrl) window.open(activePdfUrl, '_blank'); }
+        function openPdfInNewTab() {
+            if (activePdfUrl) {
+                window.open(activePdfUrl, '_blank');
+            }
+        }
 
         function savePdfDownload() {
             const ctx = state.currentDispatchContext;
@@ -3062,21 +3594,31 @@
             if (!container) return;
 
             const todayIso = new Date().toISOString().slice(0, 10);
-            const list = cloudVacations.length > 0 ? cloudVacations : (function() {
+            const vacationList = cloudVacations.length > 0 ? cloudVacations : (function() {
                 try { return JSON.parse(localStorage.getItem('ecb_app_vacations') || '[]'); } catch(e) { return []; }
+            })();
+            const shiftList = cloudShifts.length > 0 ? cloudShifts : (function() {
+                try { return JSON.parse(localStorage.getItem('ecb_app_shifts') || '[]'); } catch(e) { return []; }
             })();
 
             let html = '';
             TEAM_EMPLOYEES.forEach(emp => {
                 let isOnLeave = false;
                 let leaveType = '';
-                list.forEach(item => {
+                vacationList.forEach(item => {
                     const rec = item.data || item;
                     if ((rec.employee === emp || item.inspector === emp) && rec.status === 'Genehmigt') {
                         if (rec.startDate && rec.endDate && todayIso >= rec.startDate && todayIso <= rec.endDate) {
                             isOnLeave = true;
                             leaveType = rec.vacType || 'Urlaub';
                         }
+                    }
+                });
+
+                let empShift = null;
+                shiftList.forEach(item => {
+                    if (item.employee === emp && item.date === todayIso) {
+                        empShift = item;
                     }
                 });
 
@@ -3091,11 +3633,27 @@
                         </div>
                     `;
                 } else {
+                    let shiftBadge = '';
+                    if (empShift) {
+                        let shiftName = empShift.shiftType;
+                        if (empShift.shiftType === 'Frühschicht') shiftName = 'Frühschicht (F)';
+                        else if (empShift.shiftType === 'Mittagsschicht') shiftName = 'Mittagsschicht (M)';
+                        else if (empShift.shiftType === 'Freischicht') shiftName = 'Freischicht (FS)';
+
+                        const deliveryBadge = empShift.isDelivery ? ' • 🚚 Auslieferung' : '';
+                        shiftBadge = `<div class="text-[10px] text-slate-500 font-mono mt-0.5">${shiftName}${deliveryBadge}</div>`;
+                    } else {
+                        shiftBadge = `<div class="text-[10px] text-slate-400 font-mono mt-0.5">Keine Schicht eingetragen</div>`;
+                    }
+
                     html += `
                         <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-between text-xs">
-                            <div class="font-bold text-slate-900 flex items-center gap-2">
-                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
-                                <span>${emp}</span>
+                            <div>
+                                <div class="font-bold text-slate-900 flex items-center gap-2">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
+                                    <span>${emp}</span>
+                                </div>
+                                ${shiftBadge}
                             </div>
                             <span class="text-[11px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full">🟢 ${t('status_working')}</span>
                         </div>
