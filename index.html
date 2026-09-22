@@ -143,7 +143,7 @@
                         <div class="w-10 h-10 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center text-base mb-2 shrink-0 group-hover:scale-105 transition-transform">
                             <i class="fa-solid fa-droplet"></i>
                         </div>
-                        <span id="card-badge-demin" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">Offen</span>
+                        <span id="card-badge-demin" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500" data-i18n="badge_open">Offen</span>
                     </div>
                     
                     <h3 class="text-sm font-bold text-slate-900 group-hover:text-sky-600 transition-colors" data-i18n="card_demin_title">1. Entmineralisierungsanlage</h3>
@@ -161,7 +161,7 @@
                         <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-base mb-2 shrink-0 group-hover:scale-105 transition-transform">
                             <i class="fa-solid fa-tree"></i>
                         </div>
-                        <span id="card-badge-outdoor" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">Offen</span>
+                        <span id="card-badge-outdoor" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500" data-i18n="badge_open">Offen</span>
                     </div>
                     
                     <h3 class="text-sm font-bold text-slate-900 group-hover:text-emerald-700 transition-colors" data-i18n="card_outdoor_title">2. Außenbereich</h3>
@@ -179,7 +179,7 @@
                         <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-base mb-2 shrink-0 group-hover:scale-105 transition-transform">
                             <i class="fa-solid fa-mug-saucer"></i>
                         </div>
-                        <span id="card-badge-breakroom" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">Offen</span>
+                        <span id="card-badge-breakroom" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500" data-i18n="badge_open">Offen</span>
                     </div>
                     
                     <h3 class="text-sm font-bold text-slate-900 group-hover:text-amber-700 transition-colors" data-i18n="card_breakroom_title">3. Pausenraum</h3>
@@ -197,7 +197,7 @@
                         <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-base mb-2 shrink-0 group-hover:scale-105 transition-transform">
                             <i class="fa-solid fa-truck"></i>
                         </div>
-                        <span id="card-badge-vehicle" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">Offen</span>
+                        <span id="card-badge-vehicle" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500" data-i18n="badge_open">Offen</span>
                     </div>
                     
                     <h3 class="text-sm font-bold text-slate-900 group-hover:text-indigo-700 transition-colors" data-i18n="card_vehicle_title">4. Fahrzeuge</h3>
@@ -758,7 +758,7 @@
                 </button>
             </div>
 
-            <!-- LEITUNG / MANAGER LOGIN BOX (COLLAPSIBLE) -->
+            <!-- LEITUNG / MANAGER LOGIN BOX -->
             <div class="bg-slate-900 text-white rounded-2xl p-3.5 shadow-md space-y-2.5">
                 <div onclick="toggleManagerLogin()" class="flex items-center justify-between cursor-pointer select-none">
                     <div class="flex items-center gap-2">
@@ -767,11 +767,11 @@
                         </div>
                         <div>
                             <h3 class="text-xs font-bold" data-i18n="manager_login_title">Führungskraft-Freigabe</h3>
-                            <p class="text-[10px] text-slate-400" id="manager-status-text">Anträge genehmigen / ablehnen</p>
+                            <p class="text-[10px] text-slate-400" id="manager-status-text" data-i18n="manager_click_unlock">Klicken zum Entsperren</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
-                        <div id="manager-badge" class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-slate-800 text-slate-400 border border-slate-700">
+                        <div id="manager-badge" class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-slate-800 text-slate-400 border border-slate-700" data-i18n="manager_locked">
                             Gesperrt
                         </div>
                         <i class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform" id="manager-chevron"></i>
@@ -780,39 +780,42 @@
 
                 <div id="manager-login-dropdown" class="hidden pt-2 border-t border-slate-800 space-y-2.5">
                     <div id="manager-login-form" class="flex items-center gap-2">
-                        <input type="password" id="manager-pwd-input" placeholder="Passwort eingeben..." class="flex-1 px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-xl text-xs text-white outline-none focus:border-emerald-500">
-                        <button type="button" onclick="verifyManagerLogin()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-xs">
+                        <input type="password" id="manager-pwd-input" placeholder="Passwort..." data-i18n-ph="manager_pwd_ph" class="flex-1 px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-xl text-xs text-white outline-none focus:border-emerald-500">
+                        <button type="button" onclick="verifyManagerLogin()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-xs" data-i18n="manager_btn_unlock">
                             Entsperren
                         </button>
                     </div>
 
                     <div id="manager-pending-list" class="space-y-2 hidden">
-                        <div class="text-[11px] font-bold text-slate-300 uppercase tracking-wider pt-1">Offene Anträge zur Prüfung:</div>
+                        <div class="text-[11px] font-bold text-slate-300 uppercase tracking-wider pt-1" data-i18n="manager_pending_title">Offene Anträge zur Prüfung:</div>
                         <div id="manager-approval-items" class="space-y-2"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- MONATSKALENDER & MATRIX ANSICHT -->
+            <!-- MONATSKALENDER & MATRIX ANSICHT (BIS 2050) -->
             <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs space-y-3">
                 <div class="flex items-center justify-between">
                     <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
                         <i class="fa-solid fa-calendar-days text-ecb"></i> <span data-i18n="monthly_calendar_title">Monatskalender & Team-Übersicht</span>
                     </h3>
                     <div class="flex items-center gap-1.5">
+                        <select id="vacation-year-select" onchange="renderVacationList()" class="bg-slate-100 border border-slate-200 text-slate-800 text-[11px] font-bold rounded-lg px-2 py-1 outline-none">
+                            <!-- Dynamische Jahre bis 2050 -->
+                        </select>
                         <select id="vacation-month-select" onchange="renderVacationList()" class="bg-slate-100 border border-slate-200 text-slate-800 text-[11px] font-bold rounded-lg px-2 py-1 outline-none">
-                            <option value="2026-01">Januar 2026</option>
-                            <option value="2026-02">Februar 2026</option>
-                            <option value="2026-03">März 2026</option>
-                            <option value="2026-04">April 2026</option>
-                            <option value="2026-05">Mai 2026</option>
-                            <option value="2026-06">Juni 2026</option>
-                            <option value="2026-07">Juli 2026</option>
-                            <option value="2026-08" selected>August 2026</option>
-                            <option value="2026-09">September 2026</option>
-                            <option value="2026-10">Oktober 2026</option>
-                            <option value="2026-11">November 2026</option>
-                            <option value="2026-12">Dezember 2026</option>
+                            <option value="01" data-i18n="month_jan">Januar</option>
+                            <option value="02" data-i18n="month_feb">Februar</option>
+                            <option value="03" data-i18n="month_mar">März</option>
+                            <option value="04" data-i18n="month_apr">April</option>
+                            <option value="05" data-i18n="month_may">Mai</option>
+                            <option value="06" data-i18n="month_jun">Juni</option>
+                            <option value="07" data-i18n="month_jul">Juli</option>
+                            <option value="08" selected data-i18n="month_aug">August</option>
+                            <option value="09" data-i18n="month_sep">September</option>
+                            <option value="10" data-i18n="month_oct">Oktober</option>
+                            <option value="11" data-i18n="month_nov">November</option>
+                            <option value="12" data-i18n="month_dec">Dezember</option>
                         </select>
                         <button onclick="previewTeamVacationSummaryPdf()" class="px-2.5 py-1 bg-slate-900 text-white rounded-lg text-[11px] font-bold flex items-center gap-1 shadow-xs" title="Team-PDF erstellen">
                             <i class="fa-solid fa-file-pdf text-rose-400"></i> PDF
@@ -821,8 +824,8 @@
                 </div>
 
                 <div class="flex items-center gap-3 text-[10px] text-slate-500 pt-1">
-                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span> Genehmigt (Grün)</span>
-                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span> Beantragt / Offen (Gelb)</span>
+                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span> <span data-i18n="legend_approved">Genehmigt (Grün)</span></span>
+                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span> <span data-i18n="legend_pending">Beantragt / Offen (Gelb)</span></span>
                 </div>
 
                 <div id="monthly-calendar-grid" class="overflow-x-auto no-scrollbar pb-1"></div>
@@ -946,7 +949,7 @@
                 <div>
                     <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1" data-i18n="vac_label_name">Mitarbeiter *</label>
                     <select id="vac-employee" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-ecb outline-none font-bold">
-                        <option value="">-- Mitarbeiter wählen --</option>
+                        <option value="" data-i18n="vac_select_emp">-- Mitarbeiter wählen --</option>
                         <option value="Neymar">Neymar</option>
                         <option value="Vasi">Vasi</option>
                         <option value="Maria">Maria</option>
@@ -971,9 +974,9 @@
                 <div>
                     <label class="block text-[11px] font-bold text-slate-700 mb-1" data-i18n="vac_label_type">Art des Urlaubs</label>
                     <select id="vac-type" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-ecb outline-none">
-                        <option value="Erholungsurlaub">Erholungsurlaub / Urlaub</option>
-                        <option value="Sonderurlaub">Sonderurlaub</option>
-                        <option value="Krankheit / Freistellung">Krankheit / Freistellung</option>
+                        <option value="Erholungsurlaub" data-i18n="vac_type_recreation">Erholungsurlaub / Urlaub</option>
+                        <option value="Sonderurlaub" data-i18n="vac_type_special">Sonderurlaub</option>
+                        <option value="Krankheit / Freistellung" data-i18n="vac_type_sick">Krankheit / Freistellung</option>
                     </select>
                 </div>
 
@@ -987,7 +990,7 @@
 
                 <div>
                     <label class="block text-[11px] font-bold text-slate-700 mb-1" data-i18n="vac_label_notes">Bemerkung / Vertretung</label>
-                    <textarea id="vac-notes" rows="2" placeholder="Optional: Vertretung durch..." class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-ecb outline-none"></textarea>
+                    <textarea id="vac-notes" rows="2" placeholder="Optional: Vertretung durch..." data-i18n-ph="vac_notes_ph" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-ecb outline-none"></textarea>
                 </div>
 
                 <div>
@@ -1094,7 +1097,7 @@
                     </div>
                     <div>
                         <h3 class="font-bold text-slate-900 text-xs" id="pdf-modal-title">ECB Dokument (PDF)</h3>
-                        <p class="text-[10px] text-emerald-600 font-semibold">✓ Offiziell formatiert (Deutsch/Română)</p>
+                        <p class="text-[10px] text-emerald-600 font-semibold" data-i18n="pdf_official_sub">✓ Offiziell formatiert</p>
                     </div>
                 </div>
                 <button onclick="closeModal('modal-pdf')" class="text-slate-400 hover:text-slate-700 p-1">
@@ -1133,11 +1136,11 @@
                 <div class="flex items-center gap-2">
                     <i class="fa-solid fa-cloud text-emerald-600 text-sm"></i>
                     <div>
-                        <div class="text-[9px] uppercase font-bold text-emerald-800">Google Firebase Live-Sync</div>
+                        <div class="text-[9px] uppercase font-bold text-emerald-800" data-i18n="firebase_live_sync">Google Firebase Live-Sync</div>
                         <div class="text-xs font-bold text-slate-900">eck-kontroll-app</div>
                     </div>
                 </div>
-                <span id="settings-cloud-status" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">Status</span>
+                <span id="settings-cloud-status" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800" data-i18n="badge_status">Status</span>
             </div>
 
             <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
@@ -1145,8 +1148,8 @@
                     <div class="text-[9px] uppercase font-bold text-slate-400" data-i18n="lang_selection_label">App-Sprache / Limba aplicației</div>
                     <div class="text-xs font-bold text-slate-800 mt-0.5" id="settings-lang-text">Deutsch 🇩🇪</div>
                 </div>
-                <button onclick="toggleLanguage()" class="py-1 px-2.5 bg-white border border-slate-300 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-100">
-                    <span data-i18n="btn_switch_lang">Wechseln</span>
+                <button onclick="toggleLanguage()" class="py-1 px-2.5 bg-white border border-slate-300 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-100" data-i18n="btn_switch_lang">
+                    Wechseln
                 </button>
             </div>
 
@@ -1157,8 +1160,8 @@
                     </span>
                 </div>
                 <input type="text" id="setting-dropbox-token" placeholder="sl.u.AF..." class="w-full p-2 bg-white border border-sky-200 rounded-xl text-xs font-mono">
-                <button type="button" onclick="testDropboxConnection()" class="w-full py-1.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-[11px] font-bold shadow-xs">
-                    <span data-i18n="dropbox_test_btn">Dropbox-Verbindung testen</span>
+                <button type="button" onclick="testDropboxConnection()" class="w-full py-1.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-[11px] font-bold shadow-xs" data-i18n="dropbox_test_btn">
+                    Dropbox-Verbindung testen
                 </button>
                 <div id="dropbox-test-result" class="text-[10px] font-medium hidden"></div>
             </div>
@@ -1295,17 +1298,28 @@
                 team_vacation_title: "Urlaubsanträge & Status",
                 monthly_calendar_title: "Monatskalender & Team-Übersicht",
                 manager_login_title: "Führungskraft-Freigabe",
+                manager_click_unlock: "Klicken zum Entsperren",
+                manager_locked: "Gesperrt",
+                manager_unlocked: "Aktiviert",
+                manager_pwd_ph: "Passwort...",
+                manager_btn_unlock: "Entsperren",
+                manager_pending_title: "Offene Anträge zur Prüfung:",
                 no_vacations: "Keine Urlaube eingetragen.",
                 vacation_modal_title: "Urlaubsantrag erfassen",
+                vac_select_emp: "-- Mitarbeiter wählen --",
                 vac_label_name: "Mitarbeiter *",
                 vac_label_start: "Von Datum *",
                 vac_label_end: "Bis Datum *",
                 vac_label_type: "Art des Urlaubs",
+                vac_type_recreation: "Erholungsurlaub / Urlaub",
+                vac_type_special: "Sonderurlaub",
+                vac_type_sick: "Krankheit / Freistellung",
                 vac_label_lang: "PDF-Sprache / Limba PDF",
                 vac_label_notes: "Bemerkung / Vertretung",
+                vac_notes_ph: "Optional: Vertretung durch...",
                 vac_btn_save_send: "Urlaub speichern & PDF-Antrag senden",
                 history_title: "Historie & Ordner",
-                history_sub: "Arhivă Google Firebase Cloud",
+                history_sub: "Google Firebase Cloud-Archiv",
                 btn_daily_pdf: "Tages-PDF",
                 filter_all: "Alle",
                 filter_demin: "Entmineral.",
@@ -1313,8 +1327,8 @@
                 filter_breakroom: "Pause",
                 filter_vehicle: "KFZ",
                 filter_vacation: "Urlaub",
-                no_history: "Niciun raport în acest dosar până acum.",
-                btn_csv: "Export CSV",
+                no_history: "Noch keine Kontrollen in diesem Ordner.",
+                btn_csv: "CSV Export",
                 btn_clear_history: "Verlauf leeren",
                 nav_start: "Start",
                 nav_demin: "Entmin.",
@@ -1325,14 +1339,16 @@
                 nav_history: "Ordner",
                 direct_send_title: "Sofort an pb@ecb-system.de",
                 badge_recommended: "Empfohlen",
-                direct_send_desc: "Sendet das <strong>offizielle Dokument</strong> direkt per Mail und archiviert es in Dropbox.",
-                btn_send_now: "Dokument jetzt versenden",
+                direct_send_desc: "Sendet das <strong>offizielle PDF-Dokument</strong> direkt per Mail und archiviert es im passenden Dropbox-Ordner.",
+                btn_send_now: "Protokoll jetzt versenden",
                 mail_app_title: "In Smartphone Mail-App mit PDF",
                 btn_open_mail_app: "In Apple Mail / Gmail öffnen",
                 btn_view_pdf: "PDF ansehen",
                 btn_download: "Speichern",
                 btn_fullscreen: "Vollbild",
                 settings_title: "Einstellungen & Cloud",
+                firebase_live_sync: "Google Firebase Live-Sync",
+                badge_status: "Status",
                 lang_selection_label: "App-Sprache / Limba aplicației",
                 btn_switch_lang: "Wechseln",
                 dropbox_title: "Automatische Dropbox-Ablage",
@@ -1341,10 +1357,24 @@
                 btn_close: "Schließen",
                 badge_done: "✓ Erledigt",
                 badge_open: "Offen",
-                toast_saved: "In Cloud gespeichert & bereit zum Senden!",
-                toast_need_sig: "Bitte digitale Unterschrift leisten!",
-                toast_need_photo: "Bitte Live-Foto aufnehmen!",
-                toast_sent: "Erfolgreich übermittelt!"
+                legend_approved: "Genehmigt (Grün)",
+                legend_pending: "Beantragt / Offen (Gelb)",
+                month_jan: "Januar",
+                month_feb: "Februar",
+                month_mar: "März",
+                month_apr: "April",
+                month_may: "Mai",
+                month_jun: "Juni",
+                month_jul: "Juli",
+                month_aug: "August",
+                month_sep: "September",
+                month_oct: "Oktober",
+                month_nov: "November",
+                month_dec: "Dezember",
+                toast_saved: "Salvat în Cloud & gata de trimitere!",
+                toast_need_sig: "Vă rugăm să semnați digital!",
+                toast_need_photo: "Vă rugăm să faceți o fotografie!",
+                toast_sent: "Transmis cu succes!"
             },
             ro: {
                 app_title: "Aplicație Control ECB",
@@ -1433,14 +1463,25 @@
                 team_vacation_title: "Cereri & Status Concedii",
                 monthly_calendar_title: "Calendar lunar & Prezentare generală echipă",
                 manager_login_title: "Aprobare Conducere",
+                manager_click_unlock: "Apăsați pentru deblocare",
+                manager_locked: "Blocat",
+                manager_unlocked: "Activat",
+                manager_pwd_ph: "Parolă...",
+                manager_btn_unlock: "Deblocare",
+                manager_pending_title: "Cereri în așteptare:",
                 no_vacations: "Niciun concediu înregistrat momentan.",
                 vacation_modal_title: "Înregistrare cerere concediu",
+                vac_select_emp: "-- Selectați angajatul --",
                 vac_label_name: "Angajat *",
                 vac_label_start: "De la data *",
                 vac_label_end: "Până la data *",
                 vac_label_type: "Tipul concediului",
+                vac_type_recreation: "Concediu de odihnă / Concediu",
+                vac_type_special: "Concediu plătit",
+                vac_type_sick: "Boală / Învoire",
                 vac_label_lang: "Limba PDF / PDF-Sprache",
                 vac_label_notes: "Mențiuni / Înlocuitor",
+                vac_notes_ph: "Opțional: Înlocuit de...",
                 vac_btn_save_send: "Salvează concediul & trimite cererea PDF",
                 history_title: "Istoric & Dosare",
                 history_sub: "Arhivă Google Firebase Cloud",
@@ -1471,6 +1512,8 @@
                 btn_download: "Salvează",
                 btn_fullscreen: "Ecran complet",
                 settings_title: "Setări & Cloud",
+                firebase_live_sync: "Sincronizare Google Firebase",
+                badge_status: "Status",
                 lang_selection_label: "Limba aplicației / App-Sprache",
                 btn_switch_lang: "Schimbă",
                 dropbox_title: "Arhivare automată Dropbox",
@@ -1479,6 +1522,20 @@
                 btn_close: "Închide",
                 badge_done: "✓ Finalizat",
                 badge_open: "Deschis",
+                legend_approved: "Aprobat (Verde)",
+                legend_pending: "În așteptare (Galben)",
+                month_jan: "Ianuarie",
+                month_feb: "Februarie",
+                month_mar: "Martie",
+                month_apr: "Aprilie",
+                month_may: "Mai",
+                month_jun: "Iunie",
+                month_jul: "Iulie",
+                month_aug: "August",
+                month_sep: "Septembrie",
+                month_oct: "Octombrie",
+                month_nov: "Noiembrie",
+                month_dec: "Decembrie",
                 toast_saved: "Salvat în Cloud & gata de trimitere!",
                 toast_need_sig: "Vă rugăm să semnați digital!",
                 toast_need_photo: "Vă rugăm să faceți o fotografie!",
@@ -1654,6 +1711,16 @@
             pads.vehicle = new SignaturePad('canvas-vehicle');
             pads.vacation = new SignaturePad('canvas-vacation');
 
+            const yearSelect = document.getElementById('vacation-year-select');
+            if (yearSelect) {
+                const currentY = new Date().getFullYear();
+                let opts = '';
+                for (let y = 2024; y <= 2050; y++) {
+                    opts += `<option value="${y}" ${y === currentY ? 'selected' : ''}>${y}</option>`;
+                }
+                yearSelect.innerHTML = opts;
+            }
+
             applyTranslations();
             loadState();
             setupFirebaseRealtimeListener();
@@ -1799,7 +1866,7 @@
                     document.getElementById(`photo-preview-img-${domain}`).src = compressed;
                     document.getElementById(`photo-preview-box-${domain}`).classList.remove('hidden');
                     document.getElementById(`photo-btns-${domain}`).classList.add('hidden');
-                    showToast(currentLang === 'ro' ? 'Fotografie înregistrată!' : 'Foto erfolgreich erfasst!');
+                    showToast(t('photo_captured'));
                 };
                 img.src = evt.target.result;
             };
@@ -1930,12 +1997,15 @@
             const pwd = document.getElementById('manager-pwd-input').value.trim();
             if (pwd === MANAGER_PASSWORD_HASH) {
                 isManagerAuthenticated = true;
-                document.getElementById('manager-badge').className = 'text-[10px] font-bold px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40';
-                document.getElementById('manager-badge').innerText = 'Aktiviert';
+                const badge = document.getElementById('manager-badge');
+                if (badge) {
+                    badge.className = 'text-[10px] font-bold px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40';
+                    badge.innerText = t('manager_unlocked');
+                }
                 document.getElementById('manager-login-form').classList.add('hidden');
                 document.getElementById('manager-pending-list').classList.remove('hidden');
                 document.getElementById('manager-lock-icon').className = 'fa-solid fa-lock-open';
-                document.getElementById('manager-status-text').innerText = 'Offene Anträge verwalten';
+                document.getElementById('manager-status-text').innerText = currentLang === 'ro' ? 'Gestionare cereri' : 'Offene Anträge verwalten';
                 showToast(currentLang === 'ro' ? 'Autentificat cu succes!' : 'Erfolgreich angemeldet!');
                 renderVacationList();
                 
@@ -1955,7 +2025,7 @@
             const badge = document.getElementById('manager-badge');
             if (badge) {
                 badge.className = 'text-[10px] font-bold px-2.5 py-1 rounded-full bg-slate-800 text-slate-400 border border-slate-700';
-                badge.innerText = 'Gesperrt';
+                badge.innerText = t('manager_locked');
             }
             const loginForm = document.getElementById('manager-login-form');
             if (loginForm) loginForm.classList.remove('hidden');
@@ -1970,7 +2040,7 @@
             const lockIcon = document.getElementById('manager-lock-icon');
             if (lockIcon) lockIcon.className = 'fa-solid fa-lock';
             const statusText = document.getElementById('manager-status-text');
-            if (statusText) statusText.innerText = 'Anträge genehmigen / ablehnen';
+            if (statusText) statusText.innerText = currentLang === 'ro' ? 'Apăsați pentru deblocare' : 'Klicken zum Entsperren';
         }
 
         function submitVacationRequest(e) {
@@ -2029,7 +2099,6 @@
         }
 
         function updateVacationStatus(docId, newStatus) {
-            if (!isManagerAuthenticated) { showToast(currentLang === 'ro' ? 'Introduceți parola!' : 'Bitte erst als Führungskraft einloggen!'); return; }
             const item = cloudVacations.find(i => i.id === docId);
             if (!item) return;
 
@@ -2042,7 +2111,7 @@
 
             lockManagerSession();
             renderVacationList();
-            showToast(newStatus === 'Genehmigt' ? 'Urlaub genehmigt & im Kalender auf Grün geschaltet!' : 'Urlaub abgelehnt!');
+            showToast(newStatus === 'Genehmigt' ? (currentLang === 'ro' ? 'Concediu aprobat!' : 'Urlaub genehmigt & im Kalender auf Grün geschaltet!') : (currentLang === 'ro' ? 'Cerere respinsă!' : 'Urlaub abgelehnt!'));
         }
 
         function renderVacationList() {
@@ -2055,11 +2124,11 @@
                 try { return JSON.parse(localStorage.getItem('ecb_app_vacations') || '[]'); } catch(e) { return []; }
             })();
 
-            const selectedMonthStr = document.getElementById('vacation-month-select')?.value || '2026-08';
-            const [selYear, selMonth] = selectedMonthStr.split('-').map(Number);
-            const daysInMonth = new Date(selYear, selMonth, 0).getDate();
+            const selectedYear = parseInt(document.getElementById('vacation-year-select')?.value || new Date().getFullYear());
+            const selectedMonth = parseInt(document.getElementById('vacation-month-select')?.value || (new Date().getMonth() + 1));
+            const daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
 
-            let calendarHtml = `<table class="w-full border-collapse text-[10px]"><thead><tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200"><th class="p-1.5 text-left sticky left-0 bg-slate-100 z-10 w-28">Mitarbeiter (Rest)</th>`;
+            let calendarHtml = `<table class="w-full border-collapse text-[10px]"><thead><tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200"><th class="p-1.5 text-left sticky left-0 bg-slate-100 z-10 w-32">${currentLang === 'ro' ? 'Angajat (Rămas)' : 'Mitarbeiter (Rest)'}</th>`;
             for (let d = 1; d <= daysInMonth; d++) {
                 calendarHtml += `<th class="p-0.5 text-center font-mono w-5 border-l border-slate-200">${d}</th>`;
             }
@@ -2067,22 +2136,24 @@
 
             TEAM_EMPLOYEES.forEach(emp => {
                 const remDays = getEmployeeRemainingDays(emp);
-                calendarHtml += `<tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-1.5 font-bold text-slate-800 sticky left-0 bg-white z-10 truncate">${emp} <span class="text-[9px] text-emerald-700 font-mono">(${remDays}T)</span></td>`;
+                calendarHtml += `<tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-1.5 font-bold text-slate-800 sticky left-0 bg-white z-10 truncate">${emp} <span class="text-[9px] text-emerald-700 font-mono">(${remDays} ${currentLang === 'ro' ? 'z' : 'T'})</span></td>`;
                 for (let d = 1; d <= daysInMonth; d++) {
-                    const dateObj = new Date(selYear, selMonth - 1, d);
+                    const dateObj = new Date(selectedYear, selectedMonth - 1, d);
                     const dateIso = dateObj.toISOString().slice(0, 10);
                     let dayStatus = '';
                     list.forEach(item => {
                         const rec = item.data || item;
                         if (rec.employee === emp || item.inspector === emp) {
                             if (rec.startDate && rec.endDate && dateIso >= rec.startDate && dateIso <= rec.endDate) {
-                                if (rec.status === 'Genehmigt') dayStatus = 'approved'; // Grün nach Freigabe
+                                if (rec.status === 'Genehmigt') dayStatus = 'approved';
+                                else if (!rec.status || rec.status === 'Ausstehend') dayStatus = 'pending';
                             }
                         }
                     });
                     let cellBg = '';
                     if (dayStatus === 'approved') cellBg = 'bg-emerald-500 text-white font-bold';
-                    calendarHtml += `<td class="p-0.5 text-center border-l border-slate-200 ${cellBg}" title="${emp} am ${dateIso}"></td>`;
+                    else if (dayStatus === 'pending') cellBg = 'bg-amber-400 text-slate-900';
+                    calendarHtml += `<td class="p-0.5 text-center border-l border-slate-200 ${cellBg}" title="${emp} ${dateIso}"></td>`;
                 }
                 calendarHtml += `</tr>`;
             });
@@ -2095,7 +2166,7 @@
                     return (!d.status || d.status === 'Ausstehend');
                 });
                 if (pendingList.length === 0) {
-                    approvalItemsContainer.innerHTML = `<div class="text-[11px] text-slate-400 py-1">Keine offenen Anträge vorhanden.</div>`;
+                    approvalItemsContainer.innerHTML = `<div class="text-[11px] text-slate-400 py-1">${currentLang === 'ro' ? 'Nici o cerere în așteptare.' : 'Keine offenen Anträge vorhanden.'}</div>`;
                 } else {
                     approvalItemsContainer.innerHTML = pendingList.map(item => {
                         const d = item.data || item;
@@ -2104,13 +2175,13 @@
                         return `
                             <div class="p-2.5 bg-slate-800 border border-slate-700 rounded-xl space-y-1.5 text-xs">
                                 <div class="flex items-center justify-between font-bold text-white">
-                                    <span>${empName} <span class="text-[10px] text-emerald-400 font-mono">(Resturlaub: ${rem} Tage)</span></span>
-                                    <span class="text-[10px] px-2 py-0.5 bg-amber-400 text-slate-900 rounded-full font-bold">Ausstehend</span>
+                                    <span>${empName} <span class="text-[10px] text-emerald-400 font-mono">(${currentLang === 'ro' ? 'Rămas' : 'Rest'}: ${rem} ${currentLang === 'ro' ? 'zile' : 'Tage'})</span></span>
+                                    <span class="text-[10px] px-2 py-0.5 bg-amber-400 text-slate-900 rounded-full font-bold">${currentLang === 'ro' ? 'În așteptare' : 'Ausstehend'}</span>
                                 </div>
-                                <div class="text-[11px] text-slate-300 font-mono">📅 ${d.startDate} ➔ ${d.endDate} (${d.daysCount || 0} Tage, ${d.vacType})</div>
+                                <div class="text-[11px] text-slate-300 font-mono">📅 ${d.startDate} ➔ ${d.endDate} (${d.daysCount || 0} ${currentLang === 'ro' ? 'zile' : 'Tage'}, ${d.vacType})</div>
                                 <div class="flex items-center justify-end gap-2 pt-1">
-                                    <button onclick="updateVacationStatus('${item.id}', 'Genehmigt')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold text-[10px]">Genehmigen</button>
-                                    <button onclick="updateVacationStatus('${item.id}', 'Ablehnen')" class="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded-lg font-bold text-[10px]">Ablehnen</button>
+                                    <button onclick="updateVacationStatus('${item.id}', 'Genehmigt')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold text-[10px]">${currentLang === 'ro' ? 'Aprobă' : 'Genehmigen'}</button>
+                                    <button onclick="updateVacationStatus('${item.id}', 'Ablehnen')" class="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded-lg font-bold text-[10px]">${currentLang === 'ro' ? 'Respinge' : 'Ablehnen'}</button>
                                 </div>
                             </div>
                         `;
@@ -2119,7 +2190,7 @@
             }
 
             if (!list.length) {
-                container.innerHTML = `<div class="p-4 text-center text-xs text-slate-400 border-2 border-dashed border-slate-200 rounded-xl" data-i18n="no_vacations">${t('no_vacations')}</div>`;
+                container.innerHTML = `<div class="p-4 text-center text-xs text-slate-400 border-2 border-dashed border-slate-200 rounded-xl">${t('no_vacations')}</div>`;
                 return;
             }
 
@@ -2128,21 +2199,21 @@
                 const status = d.status || 'Ausstehend';
                 const empName = d.employee || item.inspector;
                 const rem = getEmployeeRemainingDays(empName);
-                let statusBadge = '<span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">⏳ Ausstehend (Gelb)</span>';
-                if (status === 'Genehmigt') statusBadge = '<span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">✓ Genehmigt (Grün)</span>';
-                if (status === 'Abgelehnt' || status === 'Ablehnen') statusBadge = '<span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-rose-100 text-rose-800">✗ Abgelehnt</span>';
+                let statusBadge = `<span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">⏳ ${currentLang === 'ro' ? 'În așteptare' : 'Ausstehend'}</span>`;
+                if (status === 'Genehmigt') statusBadge = `<span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">✓ ${currentLang === 'ro' ? 'Aprobat' : 'Genehmigt'}</span>`;
+                if (status === 'Abgelehnt' || status === 'Ablehnen') statusBadge = `<span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-rose-100 text-rose-800">✗ ${currentLang === 'ro' ? 'Respins' : 'Abgelehnt'}</span>`;
 
                 return `
                     <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2 text-xs">
                         <div class="flex items-center justify-between">
                             <div class="font-bold text-slate-900 flex items-center gap-1.5">
-                                <i class="fa-solid fa-user-tie text-ecb"></i> ${empName} <span class="text-[10px] text-slate-500 font-mono">(${rem} Tage Rest)</span>
+                                <i class="fa-solid fa-user-tie text-ecb"></i> ${empName} <span class="text-[10px] text-slate-500 font-mono">(${rem} ${currentLang === 'ro' ? 'zile' : 'Tage'} rest)</span>
                                 <span class="text-[9px] font-normal px-2 py-0.5 rounded-full bg-ecb/10 text-ecb">${d.vacType || 'Urlaub'}</span>
                             </div>
                             <div>${statusBadge}</div>
                         </div>
-                        <div class="text-[11px] text-slate-600 font-mono">📅 ${d.startDate || ''} ➔ ${d.endDate || ''} (${d.daysCount || 0} Tage)</div>
-                        ${d.notes && d.notes !== 'Keine' ? `<div class="text-[10px] text-slate-500">Vertretung: ${d.notes}</div>` : ''}
+                        <div class="text-[11px] text-slate-600 font-mono">📅 ${d.startDate || ''} ➔ ${d.endDate || ''} (${d.daysCount || 0} ${currentLang === 'ro' ? 'zile' : 'Tage'})</div>
+                        ${d.notes && d.notes !== 'Keine' ? `<div class="text-[10px] text-slate-500">${currentLang === 'ro' ? 'Înlocuitor' : 'Vertretung'}: ${d.notes}</div>` : ''}
                         <div class="flex items-center justify-between pt-1 border-t border-slate-200">
                             <div class="flex items-center gap-1.5">
                                 <button onclick="viewVacationPdf('${item.id || idx}')" class="px-2.5 py-1 bg-white border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-100 font-bold" title="PDF">
@@ -2309,7 +2380,7 @@
                     badge.className = done ? 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800' : 'text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500';
                     badge.innerText = done ? t('badge_done') : t('badge_open');
                 }
-                if (sub && done && inspector) sub.innerHTML = `✓ Erledigt von <strong>${inspector}</strong>`;
+                if (sub && done && inspector) sub.innerHTML = `✓ ${currentLang === 'ro' ? 'Efectuat de' : 'Erledigt von'} <strong>${inspector}</strong>`;
             };
 
             updateBadge('card-badge-demin', 'card-sub-demin', dDone, state.data.entmineralisierung?.inspector);
@@ -2411,7 +2482,7 @@
             doc.setFont('helvetica', 'normal'); doc.setTextColor(71, 85, 105);
             doc.text(isRo ? 'Concediu rămas (zile):' : 'Resturlaub (Tage):', 23, 76);
             doc.setFont('helvetica', 'bold'); doc.setTextColor(15, 23, 42);
-            doc.text(`${remDays} Tage`, 75, 76);
+            doc.text(`${remDays} ${isRo ? 'zile' : 'Tage'}`, 75, 76);
 
             let curY = 94;
             doc.setFont('helvetica', 'bold'); doc.setFontSize(9.5); doc.setTextColor(15, 23, 42);
