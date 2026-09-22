@@ -4,20 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
-    <!-- iPhone & Android PWA Einstellungen -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="ECB Kontroll App">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#5ea63b">
     
-    <!-- App Icons mit originalem ECB Logo -->
     <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' rx='44' fill='%235ea63b'/%3E%3Ctext x='50%25' y='48%25' dominant-baseline='central' text-anchor='middle' font-family='sans-serif' font-style='italic' font-weight='bold' font-size='68' fill='white'%3Eecb%3C/text%3E%3Cpath d='M25 145 C65 118, 120 152, 175 118 C152 154, 98 162, 25 145 Z' fill='white'/%3E%3C/svg%3E">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' rx='44' fill='%235ea63b'/%3E%3Ctext x='50%25' y='48%25' dominant-baseline='central' text-anchor='middle' font-family='sans-serif' font-style='italic' font-weight='bold' font-size='68' fill='white'%3Eecb%3C/text%3E%3Cpath d='M25 145 C65 118, 120 152, 175 118 C152 154, 98 162, 25 145 Z' fill='white'/%3E%3C/svg%3E">
 
     <title>ECB Kontroll App</title>
     
-    <!-- Tailwind CSS, FontAwesome, jsPDF -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -37,7 +34,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-    <!-- Google Firebase SDK (Echtzeit Cloud-Datenbank) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
@@ -90,7 +86,7 @@
                     <span id="lang-label" class="text-[11px]">RO</span>
                 </button>
 
-                <button onclick="openSettingsModal()" class="w-8 h-8 rounded-full flex items-center justify-center text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors" title="Einstellungen & Dropbox">
+                <button onclick="openSettingsModal()" class="w-8 h-8 rounded-full flex items-center justify-center text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors" title="Einstellungen">
                     <i class="fa-solid fa-sliders text-sm"></i>
                 </button>
             </div>
@@ -99,9 +95,7 @@
 
     <main class="flex-1 max-w-md w-full mx-auto px-4 py-3 space-y-3.5 pb-24">
 
-        <!-- ==================================================== -->
-        <!-- REITER 1: START / ÜBERSICHT -->
-        <!-- ==================================================== -->
+        <!-- START VIEW -->
         <section id="view-start" class="view-panel space-y-3.5">
             <div class="pt-0.5 flex items-center justify-between">
                 <div>
@@ -128,7 +122,7 @@
                 </div>
             </div>
 
-            <!-- Tagesstatus Pill (0 / 4) -->
+            <!-- Tagesstatus Pill -->
             <div class="bg-white rounded-2xl p-3 border border-slate-200/90 flex items-center justify-between shadow-xs">
                 <div class="flex items-center gap-2">
                     <span id="daily-status-dot" class="w-2.5 h-2.5 rounded-full bg-slate-300"></span>
@@ -149,9 +143,7 @@
                         <div class="w-10 h-10 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center text-base mb-2 shrink-0 group-hover:scale-105 transition-transform">
                             <i class="fa-solid fa-droplet"></i>
                         </div>
-                        <span id="card-badge-demin" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">
-                            Offen
-                        </span>
+                        <span id="card-badge-demin" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">Offen</span>
                     </div>
                     
                     <h3 class="text-sm font-bold text-slate-900 group-hover:text-sky-600 transition-colors" data-i18n="card_demin_title">1. Entmineralisierungsanlage</h3>
@@ -169,9 +161,7 @@
                         <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-base mb-2 shrink-0 group-hover:scale-105 transition-transform">
                             <i class="fa-solid fa-tree"></i>
                         </div>
-                        <span id="card-badge-outdoor" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">
-                            Offen
-                        </span>
+                        <span id="card-badge-outdoor" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">Offen</span>
                     </div>
                     
                     <h3 class="text-sm font-bold text-slate-900 group-hover:text-emerald-700 transition-colors" data-i18n="card_outdoor_title">2. Außenbereich</h3>
@@ -189,9 +179,7 @@
                         <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-base mb-2 shrink-0 group-hover:scale-105 transition-transform">
                             <i class="fa-solid fa-mug-saucer"></i>
                         </div>
-                        <span id="card-badge-breakroom" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">
-                            Offen
-                        </span>
+                        <span id="card-badge-breakroom" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">Offen</span>
                     </div>
                     
                     <h3 class="text-sm font-bold text-slate-900 group-hover:text-amber-700 transition-colors" data-i18n="card_breakroom_title">3. Pausenraum</h3>
@@ -209,9 +197,7 @@
                         <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-base mb-2 shrink-0 group-hover:scale-105 transition-transform">
                             <i class="fa-solid fa-truck"></i>
                         </div>
-                        <span id="card-badge-vehicle" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">
-                            Offen
-                        </span>
+                        <span id="card-badge-vehicle" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">Offen</span>
                     </div>
                     
                     <h3 class="text-sm font-bold text-slate-900 group-hover:text-indigo-700 transition-colors" data-i18n="card_vehicle_title">4. Fahrzeuge</h3>
@@ -242,17 +228,13 @@
             </div>
         </section>
 
-        <!-- ==================================================== -->
-        <!-- REITER 2: ENTMINERALISIERUNGSANLAGE FORMULAR -->
-        <!-- ==================================================== -->
+        <!-- DEMIN VIEW -->
         <section id="view-demin" class="view-panel hidden space-y-3.5">
             <div class="flex items-center justify-between">
                 <button onclick="switchView('start')" class="text-xs font-bold text-slate-600 hover:text-slate-900 flex items-center gap-1.5 py-1">
                     <i class="fa-solid fa-arrow-left text-sm"></i> <span data-i18n="back_btn">Zurück</span>
                 </button>
-                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-100" data-i18n="step1_of_4">
-                    Bereich 1
-                </span>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-100" data-i18n="step1_of_4">Bereich 1</span>
             </div>
 
             <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs space-y-3.5">
@@ -268,39 +250,28 @@
 
                 <form id="form-demin" onsubmit="saveDemin(event)" class="space-y-3.5">
                     <div>
-                        <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1" data-i18n="label_inspector">
-                            Name des Prüfers *
-                        </label>
+                        <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1" data-i18n="label_inspector">Name des Prüfers *</label>
                         <input type="text" id="demin-inspector" required placeholder="Vor- und Nachname" data-i18n-ph="ph_name"
                                class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-sky-500 outline-none">
                     </div>
 
                     <div class="grid grid-cols-2 gap-2.5">
                         <div>
-                            <label class="block text-[11px] font-bold text-slate-700 mb-1" data-i18n="label_cond">
-                                Leitwert (&micro;S/cm)
-                            </label>
+                            <label class="block text-[11px] font-bold text-slate-700 mb-1" data-i18n="label_cond">Leitwert (&micro;S/cm)</label>
                             <input type="number" step="0.1" id="demin-cond" placeholder="z. B. 0.8" data-i18n-ph="ph_cond"
                                    class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-sky-500 outline-none">
                         </div>
                         <div>
-                            <label class="block text-[11px] font-bold text-slate-700 mb-1" data-i18n="label_press">
-                                Druck (bar)
-                            </label>
+                            <label class="block text-[11px] font-bold text-slate-700 mb-1" data-i18n="label_press">Druck (bar)</label>
                             <input type="number" step="0.1" id="demin-press" placeholder="z. B. 3.5" data-i18n-ph="ph_press"
                                    class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-sky-500 outline-none">
                         </div>
                     </div>
 
                     <div class="space-y-2 pt-1">
-                        <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider" data-i18n="label_demin_checks">
-                            Sicht- & Funktionsprüfung
-                        </label>
-
+                        <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider" data-i18n="label_demin_checks">Sicht- & Funktionsprüfung</label>
                         <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
-                            <div class="text-xs font-semibold text-slate-800" data-i18n="check_leak">
-                                Dichtheit der Anlage & Schläuche
-                            </div>
+                            <div class="text-xs font-semibold text-slate-800" data-i18n="check_leak">Dichtheit der Anlage & Schläuche</div>
                             <div class="grid grid-cols-2 gap-2">
                                 <button type="button" onclick="setItemStatus('demin', 'leak', 'ok')" id="btn-demin-leak-ok"
                                         class="status-btn py-1.5 px-2 rounded-lg border text-xs font-bold flex items-center justify-center gap-1.5 bg-emerald-50 border-emerald-500 text-emerald-700 shadow-xs">
@@ -314,9 +285,7 @@
                         </div>
 
                         <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
-                            <div class="text-xs font-semibold text-slate-800" data-i18n="check_filter">
-                                Vorfilter & Patronenzustand
-                            </div>
+                            <div class="text-xs font-semibold text-slate-800" data-i18n="check_filter">Vorfilter & Patronenzustand</div>
                             <div class="grid grid-cols-2 gap-2">
                                 <button type="button" onclick="setItemStatus('demin', 'filter', 'ok')" id="btn-demin-filter-ok"
                                         class="status-btn py-1.5 px-2 rounded-lg border text-xs font-bold flex items-center justify-center gap-1.5 bg-emerald-50 border-emerald-500 text-emerald-700 shadow-xs">
@@ -330,9 +299,7 @@
                         </div>
 
                         <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
-                            <div class="text-xs font-semibold text-slate-800" data-i18n="check_resin">
-                                Harzkapazität
-                            </div>
+                            <div class="text-xs font-semibold text-slate-800" data-i18n="check_resin">Harzkapazität</div>
                             <div class="grid grid-cols-2 gap-2">
                                 <button type="button" onclick="setItemStatus('demin', 'resin', 'ok')" id="btn-demin-resin-ok"
                                         class="status-btn py-1.5 px-2 rounded-lg border text-xs font-bold flex items-center justify-center gap-1.5 bg-emerald-50 border-emerald-500 text-emerald-700 shadow-xs">
@@ -347,18 +314,14 @@
                     </div>
 
                     <div>
-                        <label class="block text-[11px] font-bold text-slate-700 mb-1" data-i18n="label_demin_notes">
-                            Bemerkungen / Mängelhinweise
-                        </label>
+                        <label class="block text-[11px] font-bold text-slate-700 mb-1" data-i18n="label_demin_notes">Bemerkungen / Mängelhinweise</label>
                         <textarea id="demin-notes" rows="2" placeholder="Optional: Filterwechsel fällig..." data-i18n-ph="ph_demin_notes"
                                   class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-sky-500 outline-none"></textarea>
                     </div>
 
                     <div>
                         <div class="flex items-center justify-between mb-1">
-                            <label class="text-[11px] font-bold text-slate-700 uppercase tracking-wider" data-i18n="label_sig">
-                                Digitale Unterschrift *
-                            </label>
+                            <label class="text-[11px] font-bold text-slate-700 uppercase tracking-wider" data-i18n="label_sig">Digitale Unterschrift *</label>
                             <button type="button" onclick="clearSignature('demin')" class="text-[11px] text-rose-600 hover:text-rose-800 font-semibold">
                                 <i class="fa-solid fa-rotate-left mr-0.5"></i> <span data-i18n="btn_clear">Löschen</span>
                             </button>
@@ -376,17 +339,13 @@
             </div>
         </section>
 
-        <!-- ==================================================== -->
-        <!-- REITER 3: AUSSENBEREICH FORMULAR -->
-        <!-- ==================================================== -->
+        <!-- OUTDOOR VIEW -->
         <section id="view-outdoor" class="view-panel hidden space-y-3.5">
             <div class="flex items-center justify-between">
                 <button onclick="switchView('start')" class="text-xs font-bold text-slate-600 hover:text-slate-900 flex items-center gap-1.5 py-1">
                     <i class="fa-solid fa-arrow-left text-sm"></i> <span data-i18n="back_btn">Zurück</span>
                 </button>
-                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100" data-i18n="step2_of_4">
-                    Bereich 2
-                </span>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100" data-i18n="step2_of_4">Bereich 2</span>
             </div>
 
             <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs space-y-3.5">
@@ -402,20 +361,14 @@
 
                 <form id="form-outdoor" onsubmit="saveOutdoor(event)" class="space-y-3.5">
                     <div>
-                        <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1" data-i18n="label_inspector">
-                            Name des Prüfers *
-                        </label>
+                        <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1" data-i18n="label_inspector">Name des Prüfers *</label>
                         <input type="text" id="outdoor-inspector" required placeholder="Vor- und Nachname" data-i18n-ph="ph_name"
                                class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-emerald-500 outline-none">
                     </div>
 
                     <div>
-                        <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1" data-i18n="label_photo">
-                            Aktuelles Live-Foto des Außenbereichs *
-                        </label>
-
+                        <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1" data-i18n="label_photo">Aktuelles Live-Foto des Außenbereichs *</label>
                         <input type="file" id="camera-input-outdoor" accept="image/*" capture="environment" class="hidden" onchange="handlePhoto(event, 'outdoor')">
-
                         <div id="photo-btns-outdoor">
                             <button type="button" onclick="document.getElementById('camera-input-outdoor').click()" 
                                     class="w-full py-3 px-3 bg-emerald-50 hover:bg-emerald-100 active:scale-[0.99] border-2 border-dashed border-emerald-300 rounded-xl text-xs font-bold text-emerald-800 flex items-center justify-center gap-2 transition-all shadow-xs">
@@ -423,7 +376,6 @@
                                 <span data-i18n="btn_take_photo">Aktuelles Foto mit Kamera aufnehmen</span>
                             </button>
                         </div>
-
                         <div id="photo-preview-box-outdoor" class="hidden relative rounded-xl overflow-hidden border border-slate-200 mt-2 bg-slate-900">
                             <img id="photo-preview-img-outdoor" src="" alt="Kontrollfoto" class="w-full h-40 object-cover">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
@@ -437,14 +389,10 @@
                     </div>
 
                     <div class="space-y-2 pt-1">
-                        <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider" data-i18n="label_outdoor_checks">
-                            Zustandskriterien
-                        </label>
+                        <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider" data-i18n="label_outdoor_checks">Zustandskriterien</label>
 
                         <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
-                            <div class="text-xs font-semibold text-slate-800" data-i18n="check_trash_cigs">
-                                Mülleimer geleert und Zigarettenstummel entsorgt
-                            </div>
+                            <div class="text-xs font-semibold text-slate-800" data-i18n="check_trash_cigs">Mülleimer geleert und Zigarettenstummel entsorgt</div>
                             <div class="grid grid-cols-2 gap-2">
                                 <button type="button" onclick="setItemStatus('outdoor', 'trash', 'ok')" id="btn-outdoor-trash-ok"
                                         class="status-btn py-1.5 px-2 rounded-lg border text-xs font-bold flex items-center justify-center gap-1.5 bg-emerald-50 border-emerald-500 text-emerald-700 shadow-xs">
@@ -458,9 +406,7 @@
                         </div>
 
                         <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
-                            <div class="text-xs font-semibold text-slate-800" data-i18n="check_tables_cans">
-                                Kein Essen auf den Tischen, leere Dosen entsorgt
-                            </div>
+                            <div class="text-xs font-semibold text-slate-800" data-i18n="check_tables_cans">Kein Essen auf den Tischen, leere Dosen entsorgt</div>
                             <div class="grid grid-cols-2 gap-2">
                                 <button type="button" onclick="setItemStatus('outdoor', 'tables', 'ok')" id="btn-outdoor-tables-ok"
                                         class="status-btn py-1.5 px-2 rounded-lg border text-xs font-bold flex items-center justify-center gap-1.5 bg-emerald-50 border-emerald-500 text-emerald-700 shadow-xs">
@@ -474,9 +420,7 @@
                         </div>
 
                         <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
-                            <div class="text-xs font-semibold text-slate-800" data-i18n="check_outdoor_grounds">
-                                Sauberkeit der Flächen, Abläufe & Zufahrtswege frei
-                            </div>
+                            <div class="text-xs font-semibold text-slate-800" data-i18n="check_outdoor_grounds">Sauberkeit der Flächen, Abläufe & Zufahrtswege frei</div>
                             <div class="grid grid-cols-2 gap-2">
                                 <button type="button" onclick="setItemStatus('outdoor', 'grounds', 'ok')" id="btn-outdoor-grounds-ok"
                                         class="status-btn py-1.5 px-2 rounded-lg border text-xs font-bold flex items-center justify-center gap-1.5 bg-emerald-50 border-emerald-500 text-emerald-700 shadow-xs">
@@ -491,18 +435,14 @@
                     </div>
 
                     <div>
-                        <label class="block text-[11px] font-bold text-slate-700 mb-1" data-i18n="label_outdoor_notes">
-                            Besondere Vorkommnisse / Mängel
-                        </label>
+                        <label class="block text-[11px] font-bold text-slate-700 mb-1" data-i18n="label_outdoor_notes">Besondere Vorkommnisse / Mängel</label>
                         <textarea id="outdoor-notes" rows="2" placeholder="Optional: Mängel oder Reinigungsbedarf..." data-i18n-ph="ph_outdoor_notes"
                                   class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-emerald-500 outline-none"></textarea>
                     </div>
 
                     <div>
                         <div class="flex items-center justify-between mb-1">
-                            <label class="text-[11px] font-bold text-slate-700 uppercase tracking-wider" data-i18n="label_sig">
-                                Digitale Unterschrift *
-                            </label>
+                            <label class="text-[11px] font-bold text-slate-700 uppercase tracking-wider" data-i18n="label_sig">Digitale Unterschrift *</label>
                             <button type="button" onclick="clearSignature('outdoor')" class="text-[11px] text-rose-600 hover:text-rose-800 font-semibold">
                                 <i class="fa-solid fa-rotate-left mr-0.5"></i> <span data-i18n="btn_clear">Löschen</span>
                             </button>
@@ -520,17 +460,13 @@
             </div>
         </section>
 
-        <!-- ==================================================== -->
-        <!-- REITER 4: PAUSENRAUM FORMULAR -->
-        <!-- ==================================================== -->
+        <!-- BREAKROOM VIEW -->
         <section id="view-breakroom" class="view-panel hidden space-y-3.5">
             <div class="flex items-center justify-between">
                 <button onclick="switchView('start')" class="text-xs font-bold text-slate-600 hover:text-slate-900 flex items-center gap-1.5 py-1">
                     <i class="fa-solid fa-arrow-left text-sm"></i> <span data-i18n="back_btn">Zurück</span>
                 </button>
-                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-100" data-i18n="step3_of_4">
-                    Bereich 3
-                </span>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-100" data-i18n="step3_of_4">Bereich 3</span>
             </div>
 
             <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs space-y-3.5">
@@ -546,20 +482,14 @@
 
                 <form id="form-breakroom" onsubmit="saveBreakroom(event)" class="space-y-3.5">
                     <div>
-                        <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1" data-i18n="label_inspector">
-                            Name des Prüfers *
-                        </label>
+                        <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1" data-i18n="label_inspector">Name des Prüfers *</label>
                         <input type="text" id="breakroom-inspector" required placeholder="Vor- und Nachname" data-i18n-ph="ph_name"
                                class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-amber-500 outline-none">
                     </div>
 
                     <div>
-                        <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1" data-i18n="label_photo_breakroom">
-                            Foto des Pausenraums (Zustand / Spüle / Müll)
-                        </label>
-
+                        <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1" data-i18n="label_photo_breakroom">Foto des Pausenraums (Zustand / Spüle / Müll)</label>
                         <input type="file" id="camera-input-breakroom" accept="image/*" capture="environment" class="hidden" onchange="handlePhoto(event, 'breakroom')">
-
                         <div id="photo-btns-breakroom">
                             <button type="button" onclick="document.getElementById('camera-input-breakroom').click()" 
                                     class="w-full py-2.5 px-3 bg-amber-50 hover:bg-amber-100 active:scale-[0.99] border-2 border-dashed border-amber-300 rounded-xl text-xs font-bold text-amber-800 flex items-center justify-center gap-2 transition-all shadow-xs">
@@ -567,7 +497,6 @@
                                 <span data-i18n="btn_take_photo_breakroom">Foto mit Kamera aufnehmen</span>
                             </button>
                         </div>
-
                         <div id="photo-preview-box-breakroom" class="hidden relative rounded-xl overflow-hidden border border-slate-200 mt-2 bg-slate-900">
                             <img id="photo-preview-img-breakroom" src="" alt="Pausenraumfoto" class="w-full h-40 object-cover">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
@@ -581,14 +510,10 @@
                     </div>
 
                     <div class="space-y-2 pt-1">
-                        <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider" data-i18n="label_breakroom_checks">
-                            Hygiene & Ordnung
-                        </label>
+                        <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider" data-i18n="label_breakroom_checks">Hygiene & Ordnung</label>
 
                         <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
-                            <div class="text-xs font-semibold text-slate-800" data-i18n="check_br_surfaces">
-                                Tische, Arbeitsflächen & Spüle sauber
-                            </div>
+                            <div class="text-xs font-semibold text-slate-800" data-i18n="check_br_surfaces">Tische, Arbeitsflächen & Spüle sauber</div>
                             <div class="grid grid-cols-2 gap-2">
                                 <button type="button" onclick="setItemStatus('breakroom', 'surfaces', 'ok')" id="btn-breakroom-surfaces-ok"
                                         class="status-btn py-1.5 px-2 rounded-lg border text-xs font-bold flex items-center justify-center gap-1.5 bg-emerald-50 border-emerald-500 text-emerald-700 shadow-xs">
@@ -602,9 +527,7 @@
                         </div>
 
                         <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
-                            <div class="text-xs font-semibold text-slate-800" data-i18n="check_br_appliances">
-                                Kühlschrank & Küchengeräte sauber / leer
-                            </div>
+                            <div class="text-xs font-semibold text-slate-800" data-i18n="check_br_appliances">Kühlschrank & Küchengeräte sauber / leer</div>
                             <div class="grid grid-cols-2 gap-2">
                                 <button type="button" onclick="setItemStatus('breakroom', 'appliances', 'ok')" id="btn-breakroom-appliances-ok"
                                         class="status-btn py-1.5 px-2 rounded-lg border text-xs font-bold flex items-center justify-center gap-1.5 bg-emerald-50 border-emerald-500 text-emerald-700 shadow-xs">
@@ -618,9 +541,7 @@
                         </div>
 
                         <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
-                            <div class="text-xs font-semibold text-slate-800" data-i18n="check_br_trash">
-                                Mülleimer geleert & Mülltrennung i.O.
-                            </div>
+                            <div class="text-xs font-semibold text-slate-800" data-i18n="check_br_trash">Mülleimer geleert & Mülltrennung i.O.</div>
                             <div class="grid grid-cols-2 gap-2">
                                 <button type="button" onclick="setItemStatus('breakroom', 'trash', 'ok')" id="btn-breakroom-trash-ok"
                                         class="status-btn py-1.5 px-2 rounded-lg border text-xs font-bold flex items-center justify-center gap-1.5 bg-emerald-50 border-emerald-500 text-emerald-700 shadow-xs">
@@ -634,9 +555,7 @@
                         </div>
 
                         <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
-                            <div class="text-xs font-semibold text-slate-800" data-i18n="check_br_floor">
-                                Fußboden sauber / gekehrt / gewischt
-                            </div>
+                            <div class="text-xs font-semibold text-slate-800" data-i18n="check_br_floor">Fußboden sauber / gekehrt / gewischt</div>
                             <div class="grid grid-cols-2 gap-2">
                                 <button type="button" onclick="setItemStatus('breakroom', 'floor', 'ok')" id="btn-breakroom-floor-ok"
                                         class="status-btn py-1.5 px-2 rounded-lg border text-xs font-bold flex items-center justify-center gap-1.5 bg-emerald-50 border-emerald-500 text-emerald-700 shadow-xs">
@@ -651,18 +570,14 @@
                     </div>
 
                     <div>
-                        <label class="block text-[11px] font-bold text-slate-700 mb-1" data-i18n="label_breakroom_notes">
-                            Bemerkungen / Reinigungsbedarf
-                        </label>
+                        <label class="block text-[11px] font-bold text-slate-700 mb-1" data-i18n="label_breakroom_notes">Bemerkungen / Reinigungsbedarf</label>
                         <textarea id="breakroom-notes" rows="2" placeholder="Optional: Verbrauchsmaterial fehlt..." data-i18n-ph="ph_breakroom_notes"
                                   class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-amber-500 outline-none"></textarea>
                     </div>
 
                     <div>
                         <div class="flex items-center justify-between mb-1">
-                            <label class="text-[11px] font-bold text-slate-700 uppercase tracking-wider" data-i18n="label_sig">
-                                Digitale Unterschrift *
-                            </label>
+                            <label class="text-[11px] font-bold text-slate-700 uppercase tracking-wider" data-i18n="label_sig">Digitale Unterschrift *</label>
                             <button type="button" onclick="clearSignature('breakroom')" class="text-[11px] text-rose-600 hover:text-rose-800 font-semibold">
                                 <i class="fa-solid fa-rotate-left mr-0.5"></i> <span data-i18n="btn_clear">Löschen</span>
                             </button>
@@ -680,17 +595,13 @@
             </div>
         </section>
 
-        <!-- ==================================================== -->
-        <!-- REITER 5: FAHRZEUGE FORMULAR -->
-        <!-- ==================================================== -->
+        <!-- VEHICLE VIEW -->
         <section id="view-vehicle" class="view-panel hidden space-y-3.5">
             <div class="flex items-center justify-between">
                 <button onclick="switchView('start')" class="text-xs font-bold text-slate-600 hover:text-slate-900 flex items-center gap-1.5 py-1">
                     <i class="fa-solid fa-arrow-left text-sm"></i> <span data-i18n="back_btn">Zurück</span>
                 </button>
-                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100" data-i18n="step4_of_4">
-                    Bereich 4
-                </span>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100" data-i18n="step4_of_4">Bereich 4</span>
             </div>
 
             <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs space-y-3.5">
@@ -706,37 +617,27 @@
 
                 <form id="form-vehicle" onsubmit="saveVehicle(event)" class="space-y-3.5">
                     <div>
-                        <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1" data-i18n="label_inspector">
-                            Name des Prüfers *
-                        </label>
+                        <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1" data-i18n="label_inspector">Name des Prüfers *</label>
                         <input type="text" id="vehicle-inspector" required placeholder="Vor- und Nachname" data-i18n-ph="ph_name"
                                class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-indigo-500 outline-none">
                     </div>
 
                     <div class="grid grid-cols-2 gap-2.5">
                         <div>
-                            <label class="block text-[11px] font-bold text-slate-700 mb-1" data-i18n="label_vehicle_plate">
-                                Fahrzeug / Kennzeichen *
-                            </label>
+                            <label class="block text-[11px] font-bold text-slate-700 mb-1" data-i18n="label_vehicle_plate">Fahrzeug / Kennzeichen *</label>
                             <input type="text" id="vehicle-plate" required placeholder="z. B. HP-EC 101" data-i18n-ph="ph_plate"
                                    class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-indigo-500 outline-none">
                         </div>
                         <div>
-                            <label class="block text-[11px] font-bold text-slate-700 mb-1" data-i18n="label_vehicle_km">
-                                Kilometerstand (km) *
-                            </label>
+                            <label class="block text-[11px] font-bold text-slate-700 mb-1" data-i18n="label_vehicle_km">Kilometerstand (km) *</label>
                             <input type="number" id="vehicle-km" required placeholder="z. B. 124500" data-i18n-ph="ph_km"
                                    class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-indigo-500 outline-none">
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1" data-i18n="label_photo_vehicle">
-                            Foto des Fahrzeugs (Zustand / Tacho / Schäden)
-                        </label>
-
+                        <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1" data-i18n="label_photo_vehicle">Foto des Fahrzeugs (Zustand / Tacho / Schäden)</label>
                         <input type="file" id="camera-input-vehicle" accept="image/*" capture="environment" class="hidden" onchange="handlePhoto(event, 'vehicle')">
-
                         <div id="photo-btns-vehicle">
                             <button type="button" onclick="document.getElementById('camera-input-vehicle').click()" 
                                     class="w-full py-2.5 px-3 bg-indigo-50 hover:bg-indigo-100 active:scale-[0.99] border-2 border-dashed border-indigo-300 rounded-xl text-xs font-bold text-indigo-800 flex items-center justify-center gap-2 transition-all shadow-xs">
@@ -744,7 +645,6 @@
                                 <span data-i18n="btn_take_photo_vehicle">Fahrzeugfoto mit Kamera aufnehmen</span>
                             </button>
                         </div>
-
                         <div id="photo-preview-box-vehicle" class="hidden relative rounded-xl overflow-hidden border border-slate-200 mt-2 bg-slate-900">
                             <img id="photo-preview-img-vehicle" src="" alt="Fahrzeugfoto" class="w-full h-40 object-cover">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
@@ -758,14 +658,10 @@
                     </div>
 
                     <div class="space-y-2 pt-1">
-                        <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider" data-i18n="label_vehicle_checks">
-                            Fahrzeugzustand & Verkehrssicherheit
-                        </label>
+                        <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider" data-i18n="label_vehicle_checks">Fahrzeugzustand & Verkehrssicherheit</label>
 
                         <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
-                            <div class="text-xs font-semibold text-slate-800" data-i18n="check_veh_clean">
-                                Fahrzeug sauber (Fahrerkabine & Außen sauber)
-                            </div>
+                            <div class="text-xs font-semibold text-slate-800" data-i18n="check_veh_clean">Fahrzeug sauber (Fahrerkabine & Außen sauber)</div>
                             <div class="grid grid-cols-2 gap-2">
                                 <button type="button" onclick="setItemStatus('vehicle', 'clean', 'ok')" id="btn-vehicle-clean-ok"
                                         class="status-btn py-1.5 px-2 rounded-lg border text-xs font-bold flex items-center justify-center gap-1.5 bg-emerald-50 border-emerald-500 text-emerald-700 shadow-xs">
@@ -779,9 +675,7 @@
                         </div>
 
                         <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
-                            <div class="text-xs font-semibold text-slate-800" data-i18n="check_veh_condition">
-                                Fahrzeugzustand & Beleuchtung / Blinker in Ordnung
-                            </div>
+                            <div class="text-xs font-semibold text-slate-800" data-i18n="check_veh_condition">Fahrzeugzustand & Beleuchtung / Blinker in Ordnung</div>
                             <div class="grid grid-cols-2 gap-2">
                                 <button type="button" onclick="setItemStatus('vehicle', 'condition', 'ok')" id="btn-vehicle-condition-ok"
                                         class="status-btn py-1.5 px-2 rounded-lg border text-xs font-bold flex items-center justify-center gap-1.5 bg-emerald-50 border-emerald-500 text-emerald-700 shadow-xs">
@@ -795,9 +689,7 @@
                         </div>
 
                         <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
-                            <div class="text-xs font-semibold text-slate-800" data-i18n="check_veh_tire_pressure">
-                                Reifendruck prüfen und korrigieren
-                            </div>
+                            <div class="text-xs font-semibold text-slate-800" data-i18n="check_veh_tire_pressure">Reifendruck prüfen und korrigieren</div>
                             <div class="grid grid-cols-2 gap-2">
                                 <button type="button" onclick="setItemStatus('vehicle', 'tirePressure', 'ok')" id="btn-vehicle-tirePressure-ok"
                                         class="status-btn py-1.5 px-2 rounded-lg border text-xs font-bold flex items-center justify-center gap-1.5 bg-emerald-50 border-emerald-500 text-emerald-700 shadow-xs">
@@ -811,9 +703,7 @@
                         </div>
 
                         <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
-                            <div class="text-xs font-semibold text-slate-800" data-i18n="check_veh_warnings">
-                                Keine Warnleuchten / Keine neuen Kratzer oder Dellen
-                            </div>
+                            <div class="text-xs font-semibold text-slate-800" data-i18n="check_veh_warnings">Keine Warnleuchten / Keine neuen Kratzer oder Dellen</div>
                             <div class="grid grid-cols-2 gap-2">
                                 <button type="button" onclick="setItemStatus('vehicle', 'warnings', 'ok')" id="btn-vehicle-warnings-ok"
                                         class="status-btn py-1.5 px-2 rounded-lg border text-xs font-bold flex items-center justify-center gap-1.5 bg-emerald-50 border-emerald-500 text-emerald-700 shadow-xs">
@@ -828,18 +718,14 @@
                     </div>
 
                     <div>
-                        <label class="block text-[11px] font-bold text-slate-700 mb-1" data-i18n="label_vehicle_notes">
-                            Mängel / Schäden / Werkstattbedarf
-                        </label>
+                        <label class="block text-[11px] font-bold text-slate-700 mb-1" data-i18n="label_vehicle_notes">Mängel / Schäden / Werkstattbedarf</label>
                         <textarea id="vehicle-notes" rows="2" placeholder="Optional: Steinschlag, Kratzer..." data-i18n-ph="ph_vehicle_notes"
                                   class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-indigo-500 outline-none"></textarea>
                     </div>
 
                     <div>
                         <div class="flex items-center justify-between mb-1">
-                            <label class="text-[11px] font-bold text-slate-700 uppercase tracking-wider" data-i18n="label_sig">
-                                Digitale Unterschrift *
-                            </label>
+                            <label class="text-[11px] font-bold text-slate-700 uppercase tracking-wider" data-i18n="label_sig">Digitale Unterschrift *</label>
                             <button type="button" onclick="clearSignature('vehicle')" class="text-[11px] text-rose-600 hover:text-rose-800 font-semibold">
                                 <i class="fa-solid fa-rotate-left mr-0.5"></i> <span data-i18n="btn_clear">Löschen</span>
                             </button>
@@ -857,9 +743,7 @@
             </div>
         </section>
 
-        <!-- ==================================================== -->
-        <!-- REITER 6: URLAUBSPLAN & URLAUBSANTRAG -->
-        <!-- ==================================================== -->
+        <!-- VACATION VIEW -->
         <section id="view-vacation" class="view-panel hidden space-y-3.5">
             <div class="flex items-center justify-between">
                 <div>
@@ -874,10 +758,80 @@
                 </button>
             </div>
 
-            <!-- ANZEIGE DER TEAM-URLAUBE -->
+            <!-- LEITUNG / MANAGER LOGIN BOX (COLLAPSIBLE) -->
+            <div class="bg-slate-900 text-white rounded-2xl p-3.5 shadow-md space-y-2.5">
+                <div onclick="toggleManagerLogin()" class="flex items-center justify-between cursor-pointer select-none">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs">
+                            <i class="fa-solid fa-lock" id="manager-lock-icon"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xs font-bold" data-i18n="manager_login_title">Führungskraft-Freigabe</h3>
+                            <p class="text-[10px] text-slate-400" id="manager-status-text">Anträge genehmigen / ablehnen</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div id="manager-badge" class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-slate-800 text-slate-400 border border-slate-700">
+                            Gesperrt
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform" id="manager-chevron"></i>
+                    </div>
+                </div>
+
+                <div id="manager-login-dropdown" class="hidden pt-2 border-t border-slate-800 space-y-2.5">
+                    <div id="manager-login-form" class="flex items-center gap-2">
+                        <input type="password" id="manager-pwd-input" placeholder="Passwort eingeben..." class="flex-1 px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-xl text-xs text-white outline-none focus:border-emerald-500">
+                        <button type="button" onclick="verifyManagerLogin()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-xs">
+                            Entsperren
+                        </button>
+                    </div>
+
+                    <div id="manager-pending-list" class="space-y-2 hidden">
+                        <div class="text-[11px] font-bold text-slate-300 uppercase tracking-wider pt-1">Offene Anträge zur Prüfung:</div>
+                        <div id="manager-approval-items" class="space-y-2"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MONATSKALENDER & MATRIX ANSICHT -->
+            <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs space-y-3">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-calendar-days text-ecb"></i> <span data-i18n="monthly_calendar_title">Monatskalender & Team-Übersicht</span>
+                    </h3>
+                    <div class="flex items-center gap-1.5">
+                        <select id="vacation-month-select" onchange="renderVacationList()" class="bg-slate-100 border border-slate-200 text-slate-800 text-[11px] font-bold rounded-lg px-2 py-1 outline-none">
+                            <option value="2026-01">Januar 2026</option>
+                            <option value="2026-02">Februar 2026</option>
+                            <option value="2026-03">März 2026</option>
+                            <option value="2026-04">April 2026</option>
+                            <option value="2026-05">Mai 2026</option>
+                            <option value="2026-06">Juni 2026</option>
+                            <option value="2026-07">Juli 2026</option>
+                            <option value="2026-08" selected>August 2026</option>
+                            <option value="2026-09">September 2026</option>
+                            <option value="2026-10">Oktober 2026</option>
+                            <option value="2026-11">November 2026</option>
+                            <option value="2026-12">Dezember 2026</option>
+                        </select>
+                        <button onclick="previewTeamVacationSummaryPdf()" class="px-2.5 py-1 bg-slate-900 text-white rounded-lg text-[11px] font-bold flex items-center gap-1 shadow-xs" title="Team-PDF erstellen">
+                            <i class="fa-solid fa-file-pdf text-rose-400"></i> PDF
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3 text-[10px] text-slate-500 pt-1">
+                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span> Genehmigt (Grün)</span>
+                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span> Beantragt / Offen (Gelb)</span>
+                </div>
+
+                <div id="monthly-calendar-grid" class="overflow-x-auto no-scrollbar pb-1"></div>
+            </div>
+
+            <!-- LISTE DER ANTRÄGE & FREIGABEN -->
             <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs space-y-3">
                 <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                    <i class="fa-solid fa-calendar-days text-ecb"></i> <span data-i18n="team_vacation_title">Team Urlaubsplan (Cloud Live)</span>
+                    <i class="fa-solid fa-list-check text-ecb"></i> <span data-i18n="team_vacation_title">Urlaubsanträge & Status</span>
                 </h3>
 
                 <div id="vacation-list-container" class="space-y-2">
@@ -888,9 +842,7 @@
             </div>
         </section>
 
-        <!-- ==================================================== -->
-        <!-- REITER 7: HISTORIE & KATEGORIE-ORDNER -->
-        <!-- ==================================================== -->
+        <!-- HISTORY VIEW -->
         <section id="view-history" class="view-panel hidden space-y-3.5">
             <div class="flex items-center justify-between">
                 <div>
@@ -905,7 +857,6 @@
                 </button>
             </div>
 
-            <!-- KATEGORIE ORDNER FILTER (TABS) -->
             <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 pt-0.5">
                 <button onclick="setHistoryFilter('all')" id="hist-filter-all" class="hist-filter-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-white shadow-xs">
                     📁 <span data-i18n="filter_all">Alle</span> (<span id="count-all">0</span>)
@@ -945,39 +896,33 @@
 
     </main>
 
-    <!-- UNTERE NAVIGATION (7 TABS) -->
+    <!-- BOTTOM NAVIGATION -->
     <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 safe-bottom shadow-lg">
         <div class="max-w-md mx-auto grid grid-cols-7 px-0.5 pt-1.5 text-center">
             <button onclick="switchView('start')" id="nav-btn-start" class="nav-item flex flex-col items-center justify-center py-1 text-sky-600 transition-colors">
                 <i class="fa-solid fa-house text-sm mb-0.5"></i>
                 <span class="text-[8px] font-bold" data-i18n="nav_start">Start</span>
             </button>
-
             <button onclick="switchView('demin')" id="nav-btn-demin" class="nav-item flex flex-col items-center justify-center py-1 text-slate-400 hover:text-slate-700 transition-colors">
                 <i class="fa-solid fa-droplet text-sm mb-0.5"></i>
                 <span class="text-[8px] font-medium" data-i18n="nav_demin">Entmin.</span>
             </button>
-
             <button onclick="switchView('outdoor')" id="nav-btn-outdoor" class="nav-item flex flex-col items-center justify-center py-1 text-slate-400 hover:text-slate-700 transition-colors">
                 <i class="fa-solid fa-tree text-sm mb-0.5"></i>
                 <span class="text-[8px] font-medium" data-i18n="nav_outdoor">Außen</span>
             </button>
-
             <button onclick="switchView('breakroom')" id="nav-btn-breakroom" class="nav-item flex flex-col items-center justify-center py-1 text-slate-400 hover:text-slate-700 transition-colors">
                 <i class="fa-solid fa-mug-saucer text-sm mb-0.5"></i>
                 <span class="text-[8px] font-medium" data-i18n="nav_breakroom">Pause</span>
             </button>
-
             <button onclick="switchView('vehicle')" id="nav-btn-vehicle" class="nav-item flex flex-col items-center justify-center py-1 text-slate-400 hover:text-slate-700 transition-colors">
                 <i class="fa-solid fa-truck text-sm mb-0.5"></i>
                 <span class="text-[8px] font-medium" data-i18n="nav_vehicle">KFZ</span>
             </button>
-
             <button onclick="switchView('vacation')" id="nav-btn-vacation" class="nav-item flex flex-col items-center justify-center py-1 text-slate-400 hover:text-slate-700 transition-colors">
                 <i class="fa-solid fa-umbrella-beach text-sm mb-0.5"></i>
                 <span class="text-[8px] font-medium" data-i18n="nav_vacation">Urlaub</span>
             </button>
-
             <button onclick="switchView('history')" id="nav-btn-history" class="nav-item flex flex-col items-center justify-center py-1 text-slate-400 hover:text-slate-700 transition-colors">
                 <i class="fa-solid fa-folder-tree text-sm mb-0.5"></i>
                 <span class="text-[8px] font-medium" data-i18n="nav_history">Ordner</span>
@@ -985,7 +930,7 @@
         </div>
     </nav>
 
-    <!-- URALT/NEU URLAUBSANTRAG MODAL -->
+    <!-- VACATION MODAL -->
     <div id="modal-vacation" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-3">
         <div class="bg-white rounded-2xl max-w-sm w-full p-4 shadow-2xl space-y-3 max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between pb-2 border-b border-slate-100">
@@ -999,9 +944,7 @@
 
             <form id="form-vacation-request" onsubmit="submitVacationRequest(event)" class="space-y-3">
                 <div>
-                    <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1" data-i18n="vac_label_name">
-                        Mitarbeiter *
-                    </label>
+                    <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1" data-i18n="vac_label_name">Mitarbeiter *</label>
                     <select id="vac-employee" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-ecb outline-none font-bold">
                         <option value="">-- Mitarbeiter wählen --</option>
                         <option value="Neymar">Neymar</option>
@@ -1016,23 +959,17 @@
 
                 <div class="grid grid-cols-2 gap-2">
                     <div>
-                        <label class="block text-[11px] font-bold text-slate-700 mb-1" data-i18n="vac_label_start">
-                            Von Datum *
-                        </label>
+                        <label class="block text-[11px] font-bold text-slate-700 mb-1" data-i18n="vac_label_start">Von Datum *</label>
                         <input type="date" id="vac-start" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-ecb outline-none">
                     </div>
                     <div>
-                        <label class="block text-[11px] font-bold text-slate-700 mb-1" data-i18n="vac_label_end">
-                            Bis Datum *
-                        </label>
+                        <label class="block text-[11px] font-bold text-slate-700 mb-1" data-i18n="vac_label_end">Bis Datum *</label>
                         <input type="date" id="vac-end" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-ecb outline-none">
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-[11px] font-bold text-slate-700 mb-1" data-i18n="vac_label_type">
-                        Art des Urlaubs
-                    </label>
+                    <label class="block text-[11px] font-bold text-slate-700 mb-1" data-i18n="vac_label_type">Art des Urlaubs</label>
                     <select id="vac-type" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-ecb outline-none">
                         <option value="Erholungsurlaub">Erholungsurlaub / Urlaub</option>
                         <option value="Sonderurlaub">Sonderurlaub</option>
@@ -1041,17 +978,21 @@
                 </div>
 
                 <div>
-                    <label class="block text-[11px] font-bold text-slate-700 mb-1" data-i18n="vac_label_notes">
-                        Bemerkung / Vertretung
-                    </label>
+                    <label class="block text-[11px] font-bold text-slate-700 mb-1" data-i18n="vac_label_lang">PDF-Sprache / Limba PDF</label>
+                    <select id="vac-lang" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-ecb outline-none font-bold">
+                        <option value="de">Deutsch 🇩🇪</option>
+                        <option value="ro">Română 🇷🇴</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-700 mb-1" data-i18n="vac_label_notes">Bemerkung / Vertretung</label>
                     <textarea id="vac-notes" rows="2" placeholder="Optional: Vertretung durch..." class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-ecb outline-none"></textarea>
                 </div>
 
                 <div>
                     <div class="flex items-center justify-between mb-1">
-                        <label class="text-[11px] font-bold text-slate-700 uppercase tracking-wider" data-i18n="label_sig">
-                            Unterschrift Antragsteller *
-                        </label>
+                        <label class="text-[11px] font-bold text-slate-700 uppercase tracking-wider" data-i18n="label_sig">Unterschrift Antragsteller *</label>
                         <button type="button" onclick="clearSignature('vacation')" class="text-[11px] text-rose-600 hover:text-rose-800 font-semibold">
                             <i class="fa-solid fa-rotate-left mr-0.5"></i> <span data-i18n="btn_clear">Löschen</span>
                         </button>
@@ -1068,7 +1009,7 @@
         </div>
     </div>
 
-    <!-- CLOUD DIAGNOSE MODAL -->
+    <!-- CLOUD DIAGNOSTIC MODAL -->
     <div id="modal-cloud" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-3">
         <div class="bg-white rounded-2xl max-w-sm w-full p-4 shadow-2xl space-y-3">
             <div class="flex items-center justify-between pb-2 border-b border-slate-100">
@@ -1079,20 +1020,14 @@
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
-
-            <div id="cloud-diagnostic-content" class="text-xs space-y-2 text-slate-700">
-                Lade Status...
-            </div>
-
+            <div id="cloud-diagnostic-content" class="text-xs space-y-2 text-slate-700">Lade Status...</div>
             <div class="pt-2 border-t border-slate-100">
-                <button onclick="closeModal('modal-cloud')" class="w-full py-2 bg-slate-900 text-white rounded-xl font-bold text-xs">
-                    Schließen
-                </button>
+                <button onclick="closeModal('modal-cloud')" class="w-full py-2 bg-slate-900 text-white rounded-xl font-bold text-xs">Schließen</button>
             </div>
         </div>
     </div>
 
-    <!-- VERSAND MODAL -->
+    <!-- DISPATCH MODAL -->
     <div id="modal-dispatch" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-3">
         <div class="bg-white rounded-2xl max-w-sm w-full p-4 shadow-2xl space-y-3 max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between pb-2 border-b border-slate-100">
@@ -1117,9 +1052,7 @@
                     <span class="text-xs font-black text-emerald-950 flex items-center gap-1.5">
                         <i class="fa-solid fa-cloud-arrow-up text-ecb"></i> <span data-i18n="direct_send_title">Sofort an pb@ecb-system.de</span>
                     </span>
-                    <span class="text-[9px] bg-ecb text-white px-2 py-0.5 rounded-full font-bold" data-i18n="badge_recommended">
-                        Empfohlen
-                    </span>
+                    <span class="text-[9px] bg-ecb text-white px-2 py-0.5 rounded-full font-bold" data-i18n="badge_recommended">Empfohlen</span>
                 </div>
                 <p class="text-[11px] text-slate-600 leading-snug" data-i18n="direct_send_desc">
                     Sendet das <strong>offizielle PDF-Dokument</strong> direkt per Mail und archiviert es im passenden Dropbox-Ordner.
@@ -1151,7 +1084,7 @@
         </div>
     </div>
 
-    <!-- PDF VORSCHAU MODAL -->
+    <!-- PDF PREVIEW MODAL -->
     <div id="modal-pdf" class="fixed inset-0 bg-black/80 z-50 hidden flex flex-col items-center justify-center p-3">
         <div class="bg-white rounded-2xl max-w-lg w-full p-4 shadow-2xl flex flex-col max-h-[92vh]">
             <div class="flex items-center justify-between pb-3 border-b border-slate-200 mb-2">
@@ -1161,7 +1094,7 @@
                     </div>
                     <div>
                         <h3 class="font-bold text-slate-900 text-xs" id="pdf-modal-title">ECB Dokument (PDF)</h3>
-                        <p class="text-[10px] text-emerald-600 font-semibold">✓ Offiziell formatiert (Deutsch)</p>
+                        <p class="text-[10px] text-emerald-600 font-semibold">✓ Offiziell formatiert (Deutsch/Română)</p>
                     </div>
                 </div>
                 <button onclick="closeModal('modal-pdf')" class="text-slate-400 hover:text-slate-700 p-1">
@@ -1184,7 +1117,7 @@
         </div>
     </div>
 
-    <!-- EINSTELLUNGEN & DROPBOX MODAL -->
+    <!-- SETTINGS MODAL -->
     <div id="modal-settings" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-3">
         <div class="bg-white rounded-2xl max-w-sm w-full p-4 shadow-2xl space-y-3">
             <div class="flex items-center justify-between pb-2 border-b border-slate-100">
@@ -1231,12 +1164,8 @@
             </div>
 
             <div class="flex gap-2 pt-2">
-                <button onclick="saveSettingsKeys()" class="flex-1 py-2 bg-ecb hover:bg-ecb-dark text-white rounded-xl font-bold text-xs shadow-xs" data-i18n="btn_save">
-                    Speichern
-                </button>
-                <button onclick="closeModal('modal-settings')" class="px-3 py-2 bg-slate-100 text-slate-700 rounded-xl font-bold text-xs" data-i18n="btn_close">
-                    Schließen
-                </button>
+                <button onclick="saveSettingsKeys()" class="flex-1 py-2 bg-ecb hover:bg-ecb-dark text-white rounded-xl font-bold text-xs shadow-xs" data-i18n="btn_save">Speichern</button>
+                <button onclick="closeModal('modal-settings')" class="px-3 py-2 bg-slate-100 text-slate-700 rounded-xl font-bold text-xs" data-i18n="btn_close">Schließen</button>
             </div>
         </div>
     </div>
@@ -1250,10 +1179,12 @@
     <script>
         const RECIPIENT_EMAIL = "pb@ecb-system.de";
         const DEFAULT_KEY_1 = "92e7e675-69a2-4557-8441-2c2b262e83ba";
+        const MANAGER_PASSWORD_HASH = "ECB1688!";
+        let isManagerAuthenticated = false;
+        let managerTimeoutTimer = null;
 
-        // ====================================================
-        // GOOGLE FIREBASE CONFIGURATION (ECK-KONTROLL-APP)
-        // ====================================================
+        const TEAM_EMPLOYEES = ["Neymar", "Vasi", "Maria", "Livio", "Mario", "Mirel", "Bogdanie"];
+
         const firebaseConfig = {
             apiKey: "AIzaSyDPmUJhS6ohvvb71jirGhaKH2cXsIjPTLk",
             authDomain: "eck-kontroll-app.firebaseapp.com",
@@ -1265,11 +1196,7 @@
         };
 
         let db = null;
-        let firebaseStatus = {
-            connected: false,
-            error: null,
-            count: 0
-        };
+        let firebaseStatus = { connected: false, error: null, count: 0 };
 
         try {
             if (!firebase.apps.length) {
@@ -1280,9 +1207,6 @@
             firebaseStatus.error = e.message || String(e);
         }
 
-        // ==========================================
-        // Mehrsprachigkeit (DEUTSCH & RUMÄNISCH)
-        // ==========================================
         const translations = {
             de: {
                 app_title: "ECB Kontroll App",
@@ -1368,17 +1292,20 @@
                 vacation_title: "Urlaubsplan & Antrag",
                 vacation_sub: "Gemeinsamer Cloud-Urlaubsplan",
                 btn_new_vacation: "Urlaub beantragen",
-                team_vacation_title: "Team Urlaubsplan (Cloud Live)",
+                team_vacation_title: "Urlaubsanträge & Status",
+                monthly_calendar_title: "Monatskalender & Team-Übersicht",
+                manager_login_title: "Führungskraft-Freigabe",
                 no_vacations: "Keine Urlaube eingetragen.",
                 vacation_modal_title: "Urlaubsantrag erfassen",
                 vac_label_name: "Mitarbeiter *",
                 vac_label_start: "Von Datum *",
                 vac_label_end: "Bis Datum *",
                 vac_label_type: "Art des Urlaubs",
+                vac_label_lang: "PDF-Sprache / Limba PDF",
                 vac_label_notes: "Bemerkung / Vertretung",
                 vac_btn_save_send: "Urlaub speichern & PDF-Antrag senden",
                 history_title: "Historie & Ordner",
-                history_sub: "Google Firebase Cloud-Archiv",
+                history_sub: "Arhivă Google Firebase Cloud",
                 btn_daily_pdf: "Tages-PDF",
                 filter_all: "Alle",
                 filter_demin: "Entmineral.",
@@ -1386,8 +1313,8 @@
                 filter_breakroom: "Pause",
                 filter_vehicle: "KFZ",
                 filter_vacation: "Urlaub",
-                no_history: "Noch keine Kontrollberichte in diesem Ordner gespeichert.",
-                btn_csv: "CSV Export",
+                no_history: "Niciun raport în acest dosar până acum.",
+                btn_csv: "Export CSV",
                 btn_clear_history: "Verlauf leeren",
                 nav_start: "Start",
                 nav_demin: "Entmin.",
@@ -1503,13 +1430,16 @@
                 vacation_title: "Planificare Concediu & Cerere",
                 vacation_sub: "Planificator concedii Cloud în echipă",
                 btn_new_vacation: "Cerere concediu",
-                team_vacation_title: "Plan Concedii Echipă (Cloud Live)",
+                team_vacation_title: "Cereri & Status Concedii",
+                monthly_calendar_title: "Calendar lunar & Prezentare generală echipă",
+                manager_login_title: "Aprobare Conducere",
                 no_vacations: "Niciun concediu înregistrat momentan.",
                 vacation_modal_title: "Înregistrare cerere concediu",
                 vac_label_name: "Angajat *",
                 vac_label_start: "De la data *",
                 vac_label_end: "Până la data *",
                 vac_label_type: "Tipul concediului",
+                vac_label_lang: "Limba PDF / PDF-Sprache",
                 vac_label_notes: "Mențiuni / Înlocuitor",
                 vac_btn_save_send: "Salvează concediul & trimite cererea PDF",
                 history_title: "Istoric & Dosare",
@@ -1605,40 +1535,19 @@
             }
         }
 
-        // ==========================================
-        // Zustandsspeicher
-        // ==========================================
         const state = {
             todayKey: new Date().toISOString().slice(0, 10),
-            data: {
-                entmineralisierung: null,
-                aussenbereich: null,
-                pausenraum: null,
-                fahrzeuge: null
-            },
+            data: { entmineralisierung: null, aussenbereich: null, pausenraum: null, fahrzeuge: null },
             statusDemin: { leak: 'ok', filter: 'ok', resin: 'ok' },
             statusOutdoor: { trash: 'ok', tables: 'ok', grounds: 'ok' },
             statusBreakroom: { surfaces: 'ok', appliances: 'ok', trash: 'ok', floor: 'ok' },
             statusVehicle: { clean: 'ok', condition: 'ok', tirePressure: 'ok', warnings: 'ok' },
             signatures: { demin: null, outdoor: null, breakroom: null, vehicle: null, vacation: null },
             photos: { outdoor: null, breakroom: null, vehicle: null },
-            currentDispatchContext: {
-                type: 'Gesamtbericht',
-                data: null,
-                subject: '',
-                body: '',
-                categoryFolder: 'Tagesberichte'
-            }
+            currentDispatchContext: { type: 'Gesamtbericht', data: null, subject: '', body: '', categoryFolder: 'Tagesberichte' }
         };
 
-        let pads = {
-            demin: null,
-            outdoor: null,
-            breakroom: null,
-            vehicle: null,
-            vacation: null
-        };
-
+        let pads = { demin: null, outdoor: null, breakroom: null, vehicle: null, vacation: null };
         let activePdfBlob = null;
         let activePdfUrl = null;
         let cloudHistory = [];
@@ -1646,26 +1555,16 @@
         let currentHistoryFilter = 'all';
 
         function setItemStatus(domain, key, status) {
-            if (domain === 'demin') {
-                state.statusDemin[key] = status;
-                updateButtonUi(`btn-demin-${key}-ok`, `btn-demin-${key}-fail`, status);
-            } else if (domain === 'outdoor') {
-                state.statusOutdoor[key] = status;
-                updateButtonUi(`btn-outdoor-${key}-ok`, `btn-outdoor-${key}-fail`, status);
-            } else if (domain === 'breakroom') {
-                state.statusBreakroom[key] = status;
-                updateButtonUi(`btn-breakroom-${key}-ok`, `btn-breakroom-${key}-fail`, status);
-            } else if (domain === 'vehicle') {
-                state.statusVehicle[key] = status;
-                updateButtonUi(`btn-vehicle-${key}-ok`, `btn-vehicle-${key}-fail`, status);
-            }
+            if (domain === 'demin') { state.statusDemin[key] = status; updateButtonUi(`btn-demin-${key}-ok`, `btn-demin-${key}-fail`, status); }
+            else if (domain === 'outdoor') { state.statusOutdoor[key] = status; updateButtonUi(`btn-outdoor-${key}-ok`, `btn-outdoor-${key}-fail`, status); }
+            else if (domain === 'breakroom') { state.statusBreakroom[key] = status; updateButtonUi(`btn-breakroom-${key}-ok`, `btn-breakroom-${key}-fail`, status); }
+            else if (domain === 'vehicle') { state.statusVehicle[key] = status; updateButtonUi(`btn-vehicle-${key}-ok`, `btn-vehicle-${key}-fail`, status); }
         }
 
         function updateButtonUi(okBtnId, failBtnId, status) {
             const okBtn = document.getElementById(okBtnId);
             const failBtn = document.getElementById(failBtnId);
             if (!okBtn || !failBtn) return;
-
             if (status === 'ok') {
                 okBtn.className = 'status-btn py-1.5 px-2 rounded-lg border text-xs font-bold flex items-center justify-center gap-1.5 bg-emerald-50 border-emerald-500 text-emerald-700 shadow-xs';
                 failBtn.className = 'status-btn py-1.5 px-2 rounded-lg border text-xs font-bold flex items-center justify-center gap-1.5 bg-white border-slate-200 text-slate-500 hover:text-rose-600';
@@ -1684,7 +1583,6 @@
                 this.setup();
                 this.bindEvents();
             }
-
             setup() {
                 const rect = this.canvas.getBoundingClientRect();
                 if (!rect.width || !rect.height) return;
@@ -1699,7 +1597,6 @@
                 this.ctx.lineCap = 'round';
                 this.ctx.lineJoin = 'round';
             }
-
             resize() {
                 const rect = this.canvas.getBoundingClientRect();
                 if (!rect.width || !rect.height) return;
@@ -1707,7 +1604,6 @@
                 const targetW = Math.round(rect.width * dpr);
                 const targetH = Math.round(rect.height * dpr);
                 if (this.canvas.width === targetW && this.canvas.height === targetH) return;
-
                 let cached = null;
                 if (this.hasDrawn) cached = this.canvas.toDataURL();
                 this.setup();
@@ -1717,64 +1613,35 @@
                     img.src = cached;
                 }
             }
-
-            getPos(e) {
-                const rect = this.canvas.getBoundingClientRect();
-                return { x: e.clientX - rect.left, y: e.clientY - rect.top };
-            }
-
+            getPos(e) { const rect = this.canvas.getBoundingClientRect(); return { x: e.clientX - rect.left, y: e.clientY - rect.top }; }
             bindEvents() {
                 this.canvas.addEventListener('pointerdown', (e) => {
                     e.preventDefault();
                     try { this.canvas.setPointerCapture(e.pointerId); } catch(err) {}
-                    this.isDrawing = true;
-                    this.hasDrawn = true;
+                    this.isDrawing = true; this.hasDrawn = true;
                     const pos = this.getPos(e);
-                    this.ctx.beginPath();
-                    this.ctx.arc(pos.x, pos.y, 1.1, 0, Math.PI * 2);
-                    this.ctx.fill();
-                    this.ctx.beginPath();
-                    this.ctx.moveTo(pos.x, pos.y);
+                    this.ctx.beginPath(); this.ctx.arc(pos.x, pos.y, 1.1, 0, Math.PI * 2); this.ctx.fill();
+                    this.ctx.beginPath(); this.ctx.moveTo(pos.x, pos.y);
                 }, { passive: false });
-
                 this.canvas.addEventListener('pointermove', (e) => {
-                    if (!this.isDrawing) return;
-                    e.preventDefault();
-                    const pos = this.getPos(e);
-                    this.ctx.lineTo(pos.x, pos.y);
-                    this.ctx.stroke();
+                    if (!this.isDrawing) return; e.preventDefault();
+                    const pos = this.getPos(e); this.ctx.lineTo(pos.x, pos.y); this.ctx.stroke();
                 }, { passive: false });
-
                 const stop = (e) => {
-                    if (!this.isDrawing) return;
-                    this.isDrawing = false;
-                    this.ctx.closePath();
+                    if (!this.isDrawing) return; this.isDrawing = false; this.ctx.closePath();
                     try { this.canvas.releasePointerCapture(e.pointerId); } catch(err) {}
                 };
-
                 this.canvas.addEventListener('pointerup', stop);
                 this.canvas.addEventListener('pointercancel', stop);
             }
-
-            clear() {
-                const rect = this.canvas.getBoundingClientRect();
-                this.ctx.clearRect(0, 0, rect.width, rect.height);
-                this.hasDrawn = false;
-            }
-
-            isEmpty() {
-                return !this.hasDrawn;
-            }
-
+            clear() { const rect = this.canvas.getBoundingClientRect(); this.ctx.clearRect(0, 0, rect.width, rect.height); this.hasDrawn = false; }
+            isEmpty() { return !this.hasDrawn; }
             loadDataUrl(dataUrl) {
-                if (!dataUrl) return;
-                this.hasDrawn = true;
+                if (!dataUrl) return; this.hasDrawn = true;
                 const img = new Image();
                 img.onload = () => {
                     const rect = this.canvas.getBoundingClientRect();
-                    if (rect.width > 0 && rect.height > 0) {
-                        this.ctx.drawImage(img, 0, 0, rect.width, rect.height);
-                    }
+                    if (rect.width > 0 && rect.height > 0) this.ctx.drawImage(img, 0, 0, rect.width, rect.height);
                 };
                 img.src = dataUrl;
             }
@@ -1793,13 +1660,8 @@
             updateDashboard();
         });
 
-        window.addEventListener('resize', () => {
-            Object.values(pads).forEach(p => { if (p) p.resize(); });
-        });
+        window.addEventListener('resize', () => { Object.values(pads).forEach(p => { if (p) p.resize(); }); });
 
-        // ====================================================
-        // GOOGLE FIREBASE ECHTZEIT-SYNCHRONISATION
-        // ====================================================
         function setupFirebaseRealtimeListener() {
             const indicator = document.getElementById('cloud-indicator');
             const indicatorLabel = document.getElementById('cloud-indicator-label');
@@ -1815,86 +1677,53 @@
                 return;
             }
 
-            db.collection('kontrollen')
-                .orderBy('createdAt', 'desc')
-                .limit(100)
-                .onSnapshot((snapshot) => {
-                    const items = [];
-                    snapshot.forEach(doc => {
-                        items.push({ id: doc.id, ...doc.data() });
-                    });
-                    cloudHistory = items;
-                    firebaseStatus.connected = true;
-                    firebaseStatus.error = null;
-                    firebaseStatus.count = items.length;
+            db.collection('kontrollen').orderBy('createdAt', 'desc').limit(100).onSnapshot((snapshot) => {
+                const items = [];
+                snapshot.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
+                cloudHistory = items;
+                firebaseStatus.connected = true; firebaseStatus.error = null; firebaseStatus.count = items.length;
+                try { localStorage.setItem('ecb_app_history_v3', JSON.stringify(items)); } catch(e){}
+                renderHistoryView();
+                syncTodayControlsFromCloud(items);
 
-                    try { localStorage.setItem('ecb_app_history_v3', JSON.stringify(items)); } catch(e){}
-                    renderHistoryView();
-                    syncTodayControlsFromCloud(items);
+                if (indicator) {
+                    indicator.className = 'flex items-center text-[9px] text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 cursor-pointer';
+                    if (indicatorLabel) indicatorLabel.innerText = 'Cloud Live';
+                }
+            }, (error) => {
+                firebaseStatus.connected = false; firebaseStatus.error = error.message || String(error);
+                renderHistoryView();
+                if (indicator) {
+                    indicator.className = 'flex items-center text-[9px] text-rose-700 font-semibold bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200 cursor-pointer';
+                    if (indicatorLabel) indicatorLabel.innerText = 'Cloud-Fehler';
+                }
+            });
 
-                    if (indicator) {
-                        indicator.className = 'flex items-center text-[9px] text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 cursor-pointer';
-                        if (indicatorLabel) indicatorLabel.innerText = 'Cloud Live';
-                    }
-                }, (error) => {
-                    firebaseStatus.connected = false;
-                    firebaseStatus.error = error.message || String(error);
-                    renderHistoryView();
-                    if (indicator) {
-                        indicator.className = 'flex items-center text-[9px] text-rose-700 font-semibold bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200 cursor-pointer';
-                        if (indicatorLabel) indicatorLabel.innerText = 'Cloud-Fehler';
-                    }
-                });
-
-            db.collection('urlaube')
-                .orderBy('createdAt', 'desc')
-                .onSnapshot((snapshot) => {
-                    const items = [];
-                    snapshot.forEach(doc => {
-                        items.push({ id: doc.id, ...doc.data() });
-                    });
-                    cloudVacations = items;
-                    try { localStorage.setItem('ecb_app_vacations', JSON.stringify(items)); } catch(e){}
-                    renderVacationList();
-                }, (error) => {
-                    console.warn("Urlaub Firestore Fehler:", error);
-                });
+            db.collection('urlaube').orderBy('createdAt', 'desc').onSnapshot((snapshot) => {
+                const items = [];
+                snapshot.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
+                cloudVacations = items;
+                try { localStorage.setItem('ecb_app_vacations', JSON.stringify(items)); } catch(e){}
+                renderVacationList();
+            }, (error) => { console.warn("Urlaub Firestore Fehler:", error); });
         }
 
         function syncTodayControlsFromCloud(items) {
             const todayStr = new Date().toISOString().slice(0, 10);
             const todayItems = items.filter(i => i.date === todayStr);
             let updated = false;
-
             todayItems.forEach(item => {
-                if (item.type === 'Entmineralisierung' && !state.data.entmineralisierung) {
-                    state.data.entmineralisierung = item.data;
-                    updated = true;
-                }
-                if (item.type === 'Außenbereich' && !state.data.aussenbereich) {
-                    state.data.aussenbereich = item.data;
-                    updated = true;
-                }
-                if (item.type === 'Pausenraum' && !state.data.pausenraum) {
-                    state.data.pausenraum = item.data;
-                    updated = true;
-                }
-                if (item.type === 'Fahrzeuge' && !state.data.fahrzeuge) {
-                    state.data.fahrzeuge = item.data;
-                    updated = true;
-                }
+                if (item.type === 'Entmineralisierung' && !state.data.entmineralisierung) { state.data.entmineralisierung = item.data; updated = true; }
+                if (item.type === 'Außenbereich' && !state.data.aussenbereich) { state.data.aussenbereich = item.data; updated = true; }
+                if (item.type === 'Pausenraum' && !state.data.pausenraum) { state.data.pausenraum = item.data; updated = true; }
+                if (item.type === 'Fahrzeuge' && !state.data.fahrzeuge) { state.data.fahrzeuge = item.data; updated = true; }
             });
-
-            if (updated) {
-                persist();
-                updateDashboard();
-            }
+            if (updated) { persist(); updateDashboard(); }
         }
 
         function showCloudDiagnostic() {
             const modalContent = document.getElementById('cloud-diagnostic-content');
             if (!modalContent) return;
-
             if (firebaseStatus.connected) {
                 modalContent.innerHTML = `
                     <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-xl space-y-1.5">
@@ -1946,35 +1775,27 @@
             if (viewName === 'vacation') renderVacationList();
             if (viewName === 'start') updateDashboard();
 
-            setTimeout(() => {
-                if (pads[viewName]) pads[viewName].resize();
-            }, 60);
-
+            setTimeout(() => { if (pads[viewName]) pads[viewName].resize(); }, 60);
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function handlePhoto(e, domain) {
             const file = e.target.files && e.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
             reader.onload = (evt) => {
                 const img = new Image();
                 img.onload = () => {
                     const maxDim = 800;
-                    let w = img.width;
-                    let h = img.height;
+                    let w = img.width, h = img.height;
                     if (w > maxDim || h > maxDim) {
                         if (w > h) { h = Math.round((h * maxDim) / w); w = maxDim; }
                         else { w = Math.round((w * maxDim) / h); h = maxDim; }
                     }
-                    const c = document.createElement('canvas');
-                    c.width = w; c.height = h;
-                    const ctx = c.getContext('2d');
-                    ctx.drawImage(img, 0, 0, w, h);
+                    const c = document.createElement('canvas'); c.width = w; c.height = h;
+                    const ctx = c.getContext('2d'); ctx.drawImage(img, 0, 0, w, h);
                     const compressed = c.toDataURL('image/jpeg', 0.65);
                     state.photos[domain] = compressed;
-
                     document.getElementById(`photo-preview-img-${domain}`).src = compressed;
                     document.getElementById(`photo-preview-box-${domain}`).classList.remove('hidden');
                     document.getElementById(`photo-btns-${domain}`).classList.add('hidden');
@@ -1993,12 +1814,7 @@
             document.getElementById(`camera-input-${domain}`).value = '';
         }
 
-        function clearSignature(type) {
-            if (pads[type]) {
-                pads[type].clear();
-                state.signatures[type] = null;
-            }
-        }
+        function clearSignature(type) { if (pads[type]) { pads[type].clear(); state.signatures[type] = null; } }
 
         function saveDemin(e) {
             e.preventDefault();
@@ -2012,18 +1828,13 @@
                 inspector: document.getElementById('demin-inspector').value.trim(),
                 conductivity: document.getElementById('demin-cond').value.trim() || 'Nicht gemessen',
                 pressure: document.getElementById('demin-press').value.trim() || 'Nicht gemessen',
-                statusLeak: state.statusDemin.leak,
-                statusFilter: state.statusDemin.filter,
-                statusResin: state.statusDemin.resin,
+                statusLeak: state.statusDemin.leak, statusFilter: state.statusDemin.filter, statusResin: state.statusDemin.resin,
                 notes: document.getElementById('demin-notes').value.trim() || 'Keine Auffälligkeiten',
-                timestamp: timeFormatted,
-                signature: sig
+                timestamp: timeFormatted, signature: sig
             };
 
             state.data.entmineralisierung = rec;
-            persist();
-            addHistory('Entmineralisierung', rec);
-            updateDashboard();
+            persist(); addHistory('Entmineralisierung', rec); updateDashboard();
             showToast(t('toast_saved'));
             triggerSingleDispatch('Entmineralisierung', rec);
         }
@@ -2039,19 +1850,13 @@
 
             const rec = {
                 inspector: document.getElementById('outdoor-inspector').value.trim(),
-                statusTrash: state.statusOutdoor.trash,
-                statusTables: state.statusOutdoor.tables,
-                statusGrounds: state.statusOutdoor.grounds,
+                statusTrash: state.statusOutdoor.trash, statusTables: state.statusOutdoor.tables, statusGrounds: state.statusOutdoor.grounds,
                 notes: document.getElementById('outdoor-notes').value.trim() || 'Keine Mängel',
-                photo: state.photos.outdoor,
-                signature: sig,
-                timestamp: timeFormatted
+                photo: state.photos.outdoor, signature: sig, timestamp: timeFormatted
             };
 
             state.data.aussenbereich = rec;
-            persist();
-            addHistory('Außenbereich', rec);
-            updateDashboard();
+            persist(); addHistory('Außenbereich', rec); updateDashboard();
             showToast(t('toast_saved'));
             triggerSingleDispatch('Außenbereich', rec);
         }
@@ -2066,20 +1871,14 @@
 
             const rec = {
                 inspector: document.getElementById('breakroom-inspector').value.trim(),
-                statusSurfaces: state.statusBreakroom.surfaces,
-                statusAppliances: state.statusBreakroom.appliances,
-                statusTrash: state.statusBreakroom.trash,
-                statusFloor: state.statusBreakroom.floor,
+                statusSurfaces: state.statusBreakroom.surfaces, statusAppliances: state.statusBreakroom.appliances,
+                statusTrash: state.statusBreakroom.trash, statusFloor: state.statusBreakroom.floor,
                 notes: document.getElementById('breakroom-notes').value.trim() || 'Keine Mängel',
-                photo: state.photos.breakroom,
-                signature: sig,
-                timestamp: timeFormatted
+                photo: state.photos.breakroom, signature: sig, timestamp: timeFormatted
             };
 
             state.data.pausenraum = rec;
-            persist();
-            addHistory('Pausenraum', rec);
-            updateDashboard();
+            persist(); addHistory('Pausenraum', rec); updateDashboard();
             showToast(t('toast_saved'));
             triggerSingleDispatch('Pausenraum', rec);
         }
@@ -2096,20 +1895,14 @@
                 inspector: document.getElementById('vehicle-inspector').value.trim(),
                 plate: document.getElementById('vehicle-plate').value.trim(),
                 km: document.getElementById('vehicle-km').value.trim(),
-                statusClean: state.statusVehicle.clean,
-                statusCondition: state.statusVehicle.condition,
-                statusTirePressure: state.statusVehicle.tirePressure,
-                statusWarnings: state.statusVehicle.warnings,
+                statusClean: state.statusVehicle.clean, statusCondition: state.statusVehicle.condition,
+                statusTirePressure: state.statusVehicle.tirePressure, statusWarnings: state.statusVehicle.warnings,
                 notes: document.getElementById('vehicle-notes').value.trim() || 'Keine Mängel',
-                photo: state.photos.vehicle,
-                signature: sig,
-                timestamp: timeFormatted
+                photo: state.photos.vehicle, signature: sig, timestamp: timeFormatted
             };
 
             state.data.fahrzeuge = rec;
-            persist();
-            addHistory('Fahrzeuge', rec);
-            updateDashboard();
+            persist(); addHistory('Fahrzeuge', rec); updateDashboard();
             showToast(t('toast_saved'));
             triggerSingleDispatch('Fahrzeuge', rec);
         }
@@ -2121,42 +1914,96 @@
             setTimeout(() => { if (pads.vacation) pads.vacation.resize(); }, 50);
         }
 
+        function toggleManagerLogin() {
+            const dropdown = document.getElementById('manager-login-dropdown');
+            const chevron = document.getElementById('manager-chevron');
+            if (dropdown.classList.contains('hidden')) {
+                dropdown.classList.remove('hidden');
+                if (chevron) chevron.className = 'fa-solid fa-chevron-up text-xs text-slate-400';
+            } else {
+                dropdown.classList.add('hidden');
+                if (chevron) chevron.className = 'fa-solid fa-chevron-down text-xs text-slate-400';
+            }
+        }
+
+        function verifyManagerLogin() {
+            const pwd = document.getElementById('manager-pwd-input').value.trim();
+            if (pwd === MANAGER_PASSWORD_HASH) {
+                isManagerAuthenticated = true;
+                document.getElementById('manager-badge').className = 'text-[10px] font-bold px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40';
+                document.getElementById('manager-badge').innerText = 'Aktiviert';
+                document.getElementById('manager-login-form').classList.add('hidden');
+                document.getElementById('manager-pending-list').classList.remove('hidden');
+                document.getElementById('manager-lock-icon').className = 'fa-solid fa-lock-open';
+                document.getElementById('manager-status-text').innerText = 'Offene Anträge verwalten';
+                showToast(currentLang === 'ro' ? 'Autentificat cu succes!' : 'Erfolgreich angemeldet!');
+                renderVacationList();
+                
+                if (managerTimeoutTimer) clearTimeout(managerTimeoutTimer);
+                managerTimeoutTimer = setTimeout(() => {
+                    lockManagerSession();
+                    showToast(currentLang === 'ro' ? 'Sesiune blocată automat (inactivitate).' : 'Sitzung automatisch gesperrt (Inaktivität).');
+                }, 120000);
+            } else {
+                showToast(currentLang === 'ro' ? 'Parolă incorectă!' : 'Falsches Passwort!');
+            }
+        }
+
+        function lockManagerSession() {
+            if (managerTimeoutTimer) { clearTimeout(managerTimeoutTimer); managerTimeoutTimer = null; }
+            isManagerAuthenticated = false;
+            const badge = document.getElementById('manager-badge');
+            if (badge) {
+                badge.className = 'text-[10px] font-bold px-2.5 py-1 rounded-full bg-slate-800 text-slate-400 border border-slate-700';
+                badge.innerText = 'Gesperrt';
+            }
+            const loginForm = document.getElementById('manager-login-form');
+            if (loginForm) loginForm.classList.remove('hidden');
+            const pendingList = document.getElementById('manager-pending-list');
+            if (pendingList) pendingList.classList.add('hidden');
+            const dropdown = document.getElementById('manager-login-dropdown');
+            if (dropdown) dropdown.classList.add('hidden');
+            const chevron = document.getElementById('manager-chevron');
+            if (chevron) chevron.className = 'fa-solid fa-chevron-down text-xs text-slate-400';
+            const pwdInput = document.getElementById('manager-pwd-input');
+            if (pwdInput) pwdInput.value = '';
+            const lockIcon = document.getElementById('manager-lock-icon');
+            if (lockIcon) lockIcon.className = 'fa-solid fa-lock';
+            const statusText = document.getElementById('manager-status-text');
+            if (statusText) statusText.innerText = 'Anträge genehmigen / ablehnen';
+        }
+
         function submitVacationRequest(e) {
             e.preventDefault();
-            if (!pads.vacation || pads.vacation.isEmpty()) {
-                showToast(t('toast_need_sig'));
-                return;
-            }
+            if (!pads.vacation || pads.vacation.isEmpty()) { showToast(t('toast_need_sig')); return; }
 
             const employee = document.getElementById('vac-employee').value;
             const startDate = document.getElementById('vac-start').value;
             const endDate = document.getElementById('vac-end').value;
             const vacType = document.getElementById('vac-type').value;
+            const pdfLang = document.getElementById('vac-lang').value;
             const notes = document.getElementById('vac-notes').value.trim() || 'Keine';
             const sig = pads.vacation.canvas.toDataURL('image/png');
 
+            const startD = new Date(startDate);
+            const endD = new Date(endDate);
+            const diffDays = Math.max(1, Math.round((endD - startD) / (1000 * 60 * 60 * 24)) + 1);
+
             const now = new Date();
             const rec = {
-                employee: employee,
-                startDate: startDate,
-                endDate: endDate,
-                vacType: vacType,
-                notes: notes,
-                signature: sig,
+                employee: employee, startDate: startDate, endDate: endDate, daysCount: diffDays, vacType: vacType, pdfLang: pdfLang, notes: notes,
+                signature: sig, status: 'Ausstehend', approvedBy: null,
                 timestamp: now.toLocaleDateString('de-DE') + ' · ' + now.toLocaleTimeString('de-DE')
             };
 
             const newEntry = {
                 date: now.toISOString().slice(0, 10),
-                timestamp: rec.timestamp,
-                createdAt: Date.now(),
-                type: 'Urlaub',
-                inspector: employee,
-                data: rec
+                timestamp: rec.timestamp, createdAt: Date.now(),
+                type: 'Urlaub', inspector: employee, data: rec
             };
 
             if (db) {
-                db.collection('urlaube').add(newEntry).catch(err => console.warn("Urlaub Cloud-Fehler:", err));
+                db.collection('urlaube').add(newEntry).catch(err => console.warn(err));
                 db.collection('kontrollen').add(newEntry).catch(err => {});
             }
 
@@ -2164,17 +2011,112 @@
             renderVacationList();
             closeModal('modal-vacation');
             showToast(t('toast_saved'));
-
             triggerSingleDispatch('Urlaub', rec);
+        }
+
+        function getEmployeeRemainingDays(empName) {
+            let used = 0;
+            const list = cloudVacations.length > 0 ? cloudVacations : (function() {
+                try { return JSON.parse(localStorage.getItem('ecb_app_vacations') || '[]'); } catch(e) { return []; }
+            })();
+            list.forEach(item => {
+                const d = item.data || item;
+                if ((d.employee === empName || item.inspector === empName) && d.status === 'Genehmigt') {
+                    used += (d.daysCount || 0);
+                }
+            });
+            return Math.max(0, 24 - used);
+        }
+
+        function updateVacationStatus(docId, newStatus) {
+            if (!isManagerAuthenticated) { showToast(currentLang === 'ro' ? 'Introduceți parola!' : 'Bitte erst als Führungskraft einloggen!'); return; }
+            const item = cloudVacations.find(i => i.id === docId);
+            if (!item) return;
+
+            item.data.status = newStatus;
+            item.data.approvedBy = 'Führungskraft';
+
+            if (db && item.id) {
+                db.collection('urlaube').doc(item.id).update({ 'data.status': newStatus, 'data.approvedBy': 'Führungskraft' }).catch(err => console.warn(err));
+            }
+
+            lockManagerSession();
+            renderVacationList();
+            showToast(newStatus === 'Genehmigt' ? 'Urlaub genehmigt & im Kalender auf Grün geschaltet!' : 'Urlaub abgelehnt!');
         }
 
         function renderVacationList() {
             const container = document.getElementById('vacation-list-container');
-            if (!container) return;
+            const calendarGrid = document.getElementById('monthly-calendar-grid');
+            const approvalItemsContainer = document.getElementById('manager-approval-items');
+            if (!container || !calendarGrid) return;
 
             const list = cloudVacations.length > 0 ? cloudVacations : (function() {
                 try { return JSON.parse(localStorage.getItem('ecb_app_vacations') || '[]'); } catch(e) { return []; }
             })();
+
+            const selectedMonthStr = document.getElementById('vacation-month-select')?.value || '2026-08';
+            const [selYear, selMonth] = selectedMonthStr.split('-').map(Number);
+            const daysInMonth = new Date(selYear, selMonth, 0).getDate();
+
+            let calendarHtml = `<table class="w-full border-collapse text-[10px]"><thead><tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200"><th class="p-1.5 text-left sticky left-0 bg-slate-100 z-10 w-28">Mitarbeiter (Rest)</th>`;
+            for (let d = 1; d <= daysInMonth; d++) {
+                calendarHtml += `<th class="p-0.5 text-center font-mono w-5 border-l border-slate-200">${d}</th>`;
+            }
+            calendarHtml += `</tr></thead><tbody>`;
+
+            TEAM_EMPLOYEES.forEach(emp => {
+                const remDays = getEmployeeRemainingDays(emp);
+                calendarHtml += `<tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-1.5 font-bold text-slate-800 sticky left-0 bg-white z-10 truncate">${emp} <span class="text-[9px] text-emerald-700 font-mono">(${remDays}T)</span></td>`;
+                for (let d = 1; d <= daysInMonth; d++) {
+                    const dateObj = new Date(selYear, selMonth - 1, d);
+                    const dateIso = dateObj.toISOString().slice(0, 10);
+                    let dayStatus = '';
+                    list.forEach(item => {
+                        const rec = item.data || item;
+                        if (rec.employee === emp || item.inspector === emp) {
+                            if (rec.startDate && rec.endDate && dateIso >= rec.startDate && dateIso <= rec.endDate) {
+                                if (rec.status === 'Genehmigt') dayStatus = 'approved'; // Grün nach Freigabe
+                            }
+                        }
+                    });
+                    let cellBg = '';
+                    if (dayStatus === 'approved') cellBg = 'bg-emerald-500 text-white font-bold';
+                    calendarHtml += `<td class="p-0.5 text-center border-l border-slate-200 ${cellBg}" title="${emp} am ${dateIso}"></td>`;
+                }
+                calendarHtml += `</tr>`;
+            });
+            calendarHtml += `</tbody></table>`;
+            calendarGrid.innerHTML = calendarHtml;
+
+            if (approvalItemsContainer) {
+                const pendingList = list.filter(item => {
+                    const d = item.data || item;
+                    return (!d.status || d.status === 'Ausstehend');
+                });
+                if (pendingList.length === 0) {
+                    approvalItemsContainer.innerHTML = `<div class="text-[11px] text-slate-400 py-1">Keine offenen Anträge vorhanden.</div>`;
+                } else {
+                    approvalItemsContainer.innerHTML = pendingList.map(item => {
+                        const d = item.data || item;
+                        const empName = d.employee || item.inspector;
+                        const rem = getEmployeeRemainingDays(empName);
+                        return `
+                            <div class="p-2.5 bg-slate-800 border border-slate-700 rounded-xl space-y-1.5 text-xs">
+                                <div class="flex items-center justify-between font-bold text-white">
+                                    <span>${empName} <span class="text-[10px] text-emerald-400 font-mono">(Resturlaub: ${rem} Tage)</span></span>
+                                    <span class="text-[10px] px-2 py-0.5 bg-amber-400 text-slate-900 rounded-full font-bold">Ausstehend</span>
+                                </div>
+                                <div class="text-[11px] text-slate-300 font-mono">📅 ${d.startDate} ➔ ${d.endDate} (${d.daysCount || 0} Tage, ${d.vacType})</div>
+                                <div class="flex items-center justify-end gap-2 pt-1">
+                                    <button onclick="updateVacationStatus('${item.id}', 'Genehmigt')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold text-[10px]">Genehmigen</button>
+                                    <button onclick="updateVacationStatus('${item.id}', 'Ablehnen')" class="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded-lg font-bold text-[10px]">Ablehnen</button>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            }
 
             if (!list.length) {
                 container.innerHTML = `<div class="p-4 text-center text-xs text-slate-400 border-2 border-dashed border-slate-200 rounded-xl" data-i18n="no_vacations">${t('no_vacations')}</div>`;
@@ -2183,25 +2125,31 @@
 
             container.innerHTML = list.map((item, idx) => {
                 const d = item.data || item;
+                const status = d.status || 'Ausstehend';
+                const empName = d.employee || item.inspector;
+                const rem = getEmployeeRemainingDays(empName);
+                let statusBadge = '<span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">⏳ Ausstehend (Gelb)</span>';
+                if (status === 'Genehmigt') statusBadge = '<span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">✓ Genehmigt (Grün)</span>';
+                if (status === 'Abgelehnt' || status === 'Ablehnen') statusBadge = '<span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-rose-100 text-rose-800">✗ Abgelehnt</span>';
+
                 return `
-                    <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between text-xs">
-                        <div class="space-y-0.5">
+                    <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2 text-xs">
+                        <div class="flex items-center justify-between">
                             <div class="font-bold text-slate-900 flex items-center gap-1.5">
-                                <i class="fa-solid fa-user-tie text-ecb"></i> ${d.employee || item.inspector}
+                                <i class="fa-solid fa-user-tie text-ecb"></i> ${empName} <span class="text-[10px] text-slate-500 font-mono">(${rem} Tage Rest)</span>
                                 <span class="text-[9px] font-normal px-2 py-0.5 rounded-full bg-ecb/10 text-ecb">${d.vacType || 'Urlaub'}</span>
                             </div>
-                            <div class="text-[11px] text-slate-600 font-mono">
-                                📅 ${d.startDate || ''} ➔ ${d.endDate || ''}
-                            </div>
-                            ${d.notes && d.notes !== 'Keine' ? `<div class="text-[10px] text-slate-500">Vertretung: ${d.notes}</div>` : ''}
+                            <div>${statusBadge}</div>
                         </div>
-                        <div class="flex items-center gap-1.5">
-                            <button onclick="viewVacationPdf('${item.id || idx}')" class="px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-100 font-bold" title="PDF anzeigen">
-                                <i class="fa-solid fa-file-pdf text-rose-500"></i>
-                            </button>
-                            <button onclick="deleteVacationEntry('${item.id || idx}')" class="px-2 py-1.5 text-rose-500 hover:text-rose-700">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
+                        <div class="text-[11px] text-slate-600 font-mono">📅 ${d.startDate || ''} ➔ ${d.endDate || ''} (${d.daysCount || 0} Tage)</div>
+                        ${d.notes && d.notes !== 'Keine' ? `<div class="text-[10px] text-slate-500">Vertretung: ${d.notes}</div>` : ''}
+                        <div class="flex items-center justify-between pt-1 border-t border-slate-200">
+                            <div class="flex items-center gap-1.5">
+                                <button onclick="viewVacationPdf('${item.id || idx}')" class="px-2.5 py-1 bg-white border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-100 font-bold" title="PDF">
+                                    <i class="fa-solid fa-file-pdf text-rose-500"></i> PDF (${(d.pdfLang || 'de').toUpperCase()})
+                                </button>
+                                <button onclick="deleteVacationEntry('${item.id || idx}')" class="px-2 py-1 text-rose-500 hover:text-rose-700"><i class="fa-solid fa-trash-can"></i></button>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -2226,19 +2174,20 @@
             let item = list.find(i => i.id === key);
             if (!item && !isNaN(key)) item = list[parseInt(key)];
             if (!item) return;
-
-            state.currentDispatchContext = {
-                type: 'Urlaub',
-                data: item.data || item,
-                subject: `[ECB Urlaubsantrag] ${item.inspector || item.data?.employee}`,
-                body: '',
-                categoryFolder: 'Urlaub'
-            };
-
+            state.currentDispatchContext = { type: 'Urlaub', data: item.data || item, subject: `[ECB Urlaubsantrag] ${item.inspector || item.data?.employee}`, body: '', categoryFolder: 'Urlaub' };
             await getPreparedPdfBlob(state.currentDispatchContext);
             const frame = document.getElementById('pdf-viewer-frame');
             if (frame && activePdfUrl) frame.src = activePdfUrl;
             document.getElementById('pdf-modal-title').innerText = `ECB Urlaubsantrag: ${item.inspector || item.data?.employee}`;
+            openModal('modal-pdf');
+        }
+
+        async function previewTeamVacationSummaryPdf() {
+            state.currentDispatchContext = { type: 'TeamUrlaubUebersicht', data: cloudVacations, subject: `[ECB] Team-Urlaubsübersicht`, body: 'Team-Urlaubsplan als PDF.', categoryFolder: 'Urlaub' };
+            await getPreparedPdfBlob(state.currentDispatchContext);
+            const frame = document.getElementById('pdf-viewer-frame');
+            if (frame && activePdfUrl) frame.src = activePdfUrl;
+            document.getElementById('pdf-modal-title').innerText = `ECB Team-Urlaubsübersicht (PDF)`;
             openModal('modal-pdf');
         }
 
@@ -2248,22 +2197,13 @@
             let body = `ECB REINIGUNGSSYSTEME - PROTOKOLL: ${type.toUpperCase()}\nDatum / Zeit: ${rec.timestamp}\n========================================\n\n`;
 
             if (type === 'Urlaub') {
-                subject = `[ECB Urlaubsantrag] ${rec.employee} (${rec.startDate} bis ${rec.endDate})`;
-                body = `ECB REINIGUNGSSYSTEME - URLAUBSANTRAG\nMitarbeiter: ${rec.employee}\nZeitraum: ${rec.startDate} bis ${rec.endDate}\nArt: ${rec.vacType}\nBemerkung: ${rec.notes}\n\nAntrag digital unterschrieben und übermittelt.`;
-            } else if (type === 'Entmineralisierung') {
-                body += `Leitwert: ${rec.conductivity} µS/cm\nDruck: ${rec.pressure} bar\nBemerkung: ${rec.notes}\n\n`;
-            } else if (type === 'Außenbereich' || type === 'Pausenraum' || type === 'Fahrzeuge') {
+                subject = `[ECB Urlaubsantrag] ${rec.employee} (${rec.startDate} bis ${rec.endDate}) - Status: ${rec.status}`;
+                body = `ECB REINIGUNGSSYSTEME - URLAUBSANTRAG\nMitarbeiter: ${rec.employee}\nZeitraum: ${rec.startDate} bis ${rec.endDate} (${rec.daysCount} Tage)\nResturlaub: ${getEmployeeRemainingDays(rec.employee)} Tage\nArt: ${rec.vacType}\nStatus: ${rec.status}\nBemerkung: ${rec.notes}`;
+            } else {
                 body += `Prüfer: ${rec.inspector}\nBemerkung: ${rec.notes}\n\n`;
             }
 
-            state.currentDispatchContext = {
-                type: type,
-                data: rec,
-                subject: subject,
-                body: body,
-                categoryFolder: type === 'Urlaub' ? 'Urlaub' : type
-            };
-
+            state.currentDispatchContext = { type: type, data: rec, subject: subject, body: body, categoryFolder: type === 'Urlaub' ? 'Urlaub' : type };
             document.getElementById('dispatch-title').innerText = currentLang === 'ro' ? `Trimite protocol: ${type}` : `Protokoll: ${type} versenden`;
             const msgEl = document.getElementById('dispatch-status-msg');
             if (msgEl) msgEl.className = 'hidden';
@@ -2285,28 +2225,16 @@
             if (d.pausenraum) body += `3. PAUSENRAUM: ${d.pausenraum.inspector}\n`;
             if (d.fahrzeuge) body += `4. FAHRZEUGE: ${d.fahrzeuge.inspector} (KFZ: ${d.fahrzeuge.plate})\n`;
 
-            state.currentDispatchContext = {
-                type: 'Gesamtbericht',
-                data: d,
-                subject: subject,
-                body: body,
-                categoryFolder: 'Tagesberichte'
-            };
-
-            document.getElementById('dispatch-title').innerText = currentLang === 'ro' ? 'Trimite raportul zilnic general' : 'Tagesgesamtbericht versenden';
-            const msgEl = document.getElementById('dispatch-status-msg');
-            if (msgEl) msgEl.className = 'hidden';
+            state.currentDispatchContext = { type: 'Gesamtbericht', data: d, subject: subject, body: body, categoryFolder: 'Tagesberichte' };
+            document.getElementById('dispatch-title').innerText = currentLang === 'ro' ? 'Trimite raportul zilnic' : 'Tagesgesamtbericht versenden';
             openModal('modal-dispatch');
         }
 
         function persist() {
             try {
                 localStorage.setItem('ecb_app_data_v4_' + state.todayKey, JSON.stringify({
-                    data: state.data,
-                    statusDemin: state.statusDemin,
-                    statusOutdoor: state.statusOutdoor,
-                    statusBreakroom: state.statusBreakroom,
-                    statusVehicle: state.statusVehicle
+                    data: state.data, statusDemin: state.statusDemin, statusOutdoor: state.statusOutdoor,
+                    statusBreakroom: state.statusBreakroom, statusVehicle: state.statusVehicle
                 }));
             } catch(e) {}
         }
@@ -2420,9 +2348,6 @@
             }
         }
 
-        // ==========================================
-        // PDF-GENERATOR
-        // ==========================================
         function buildPdfDocumentForContext(ctx) {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
@@ -2432,67 +2357,130 @@
 
             if (ctx.type === 'Urlaub') {
                 return buildVacationPdf(doc, ctx.data, dateStr, timeStr);
-            } else if (ctx.type === 'Gesamtbericht') {
-                return buildCompletePdf(doc, dateStr, timeStr);
+            } else if (ctx.type === 'TeamUrlaubUebersicht') {
+                return buildTeamVacationSummaryPdf(doc, cloudVacations, dateStr, timeStr);
             } else {
                 return buildSingleSectionPdf(doc, ctx.type, ctx.data, dateStr, timeStr);
             }
         }
 
         function buildVacationPdf(doc, rec, dateStr, timeStr) {
-            renderPdfHeader(doc, 'OFFIZIELLER URLAUBSANTRAG', dateStr, timeStr);
+            const isRo = (rec.pdfLang === 'ro');
+            const titleText = isRo ? 'CERERE OFICIALĂ DE CONCEDIU' : 'OFFIZIELLER URLAUBSANTRAG';
+            renderPdfHeader(doc, titleText, dateStr, timeStr);
 
-            doc.setDrawColor(226, 232, 240);
-            doc.setLineWidth(0.4);
+            doc.setDrawColor(226, 232, 240); doc.setLineWidth(0.4);
             doc.roundedRect(15, 36, 180, 234, 3, 3, 'S');
 
             doc.setFillColor(248, 250, 252);
             doc.roundedRect(15, 36, 180, 10, 3, 3, 'F');
-            doc.setFont('helvetica', 'bold');
-            doc.setFontSize(10);
-            doc.setTextColor(15, 23, 42);
-            doc.text('URLAUBS- UND FREISTELLUNGSANTRAG', 19, 42.5);
+            doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(15, 23, 42);
+            doc.text(isRo ? 'CERERE DE CONCEDIU ȘI ÎNVOIRE' : 'URLAUBS- UND FREISTELLUNGSANTRAG', 19, 42.5);
+
+            const statusText = rec.status || 'Ausstehend';
+            if (statusText === 'Genehmigt') {
+                doc.setFillColor(220, 252, 231); doc.setDrawColor(34, 197, 94);
+                doc.roundedRect(140, 52, 45, 12, 2, 2, 'FD');
+                doc.setFont('helvetica', 'bold'); doc.setFontSize(8); doc.setTextColor(22, 101, 52);
+                doc.text(isRo ? '✓ APROBAT' : '✓ GENEHMIGT', 162.5, 59, { align: 'center' });
+            } else if (statusText === 'Abgelehnt' || statusText === 'Ablehnen') {
+                doc.setFillColor(254, 226, 226); doc.setDrawColor(239, 68, 68);
+                doc.roundedRect(140, 52, 45, 12, 2, 2, 'FD');
+                doc.setFont('helvetica', 'bold'); doc.setFontSize(8); doc.setTextColor(153, 27, 27);
+                doc.text(isRo ? '✗ RESPINS' : '✗ ABGELEHNT', 162.5, 59, { align: 'center' });
+            } else {
+                doc.setFillColor(254, 243, 199); doc.setDrawColor(245, 158, 11);
+                doc.roundedRect(140, 52, 45, 12, 2, 2, 'FD');
+                doc.setFont('helvetica', 'bold'); doc.setFontSize(8); doc.setTextColor(146, 64, 14);
+                doc.text(isRo ? '⏳ ÎN AȘTEPTARE' : '⏳ AUSSTEHEND', 162.5, 59, { align: 'center' });
+            }
 
             doc.setFillColor(241, 245, 249);
-            doc.roundedRect(19, 52, 172, 22, 2, 2, 'F');
-            doc.setFont('helvetica', 'normal');
-            doc.setFontSize(9);
-            doc.setTextColor(71, 85, 105);
-            doc.text('Antragsteller (Mitarbeiter):', 23, 60);
-            doc.setFont('helvetica', 'bold');
-            doc.setTextColor(15, 23, 42);
-            doc.text(rec.employee || '-', 70, 60);
+            doc.roundedRect(19, 52, 115, 28, 2, 2, 'F');
+            doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(71, 85, 105);
+            doc.text(isRo ? 'Solicitant (Angajat):' : 'Antragsteller (Mitarbeiter):', 23, 60);
+            doc.setFont('helvetica', 'bold'); doc.setTextColor(15, 23, 42);
+            doc.text(rec.employee || '-', 75, 60);
 
-            doc.setFont('helvetica', 'normal');
-            doc.setTextColor(71, 85, 105);
-            doc.text('Art des Antrags:', 23, 68);
-            doc.setFont('helvetica', 'bold');
-            doc.setTextColor(94, 166, 59);
-            doc.text(rec.vacType || 'Erholungsurlaub', 70, 68);
+            doc.setFont('helvetica', 'normal'); doc.setTextColor(71, 85, 105);
+            doc.text(isRo ? 'Tipul cererii:' : 'Art des Antrags:', 23, 68);
+            doc.setFont('helvetica', 'bold'); doc.setTextColor(94, 166, 59);
+            doc.text(rec.vacType || 'Erholungsurlaub', 75, 68);
 
-            let curY = 88;
-            doc.setFont('helvetica', 'bold');
-            doc.setFontSize(9.5);
-            doc.setTextColor(15, 23, 42);
-            doc.text('GEPLAFTER ZEITRAUM:', 23, curY);
+            const remDays = getEmployeeRemainingDays(rec.employee);
+            doc.setFont('helvetica', 'normal'); doc.setTextColor(71, 85, 105);
+            doc.text(isRo ? 'Concediu rămas (zile):' : 'Resturlaub (Tage):', 23, 76);
+            doc.setFont('helvetica', 'bold'); doc.setTextColor(15, 23, 42);
+            doc.text(`${remDays} Tage`, 75, 76);
+
+            let curY = 94;
+            doc.setFont('helvetica', 'bold'); doc.setFontSize(9.5); doc.setTextColor(15, 23, 42);
+            doc.text(isRo ? 'PERIOADA PLANIFICATĂ:' : 'GEPLANTER ZEITRAUM:', 23, curY);
 
             curY += 10;
-            doc.setFont('helvetica', 'normal');
-            doc.setFontSize(9);
-            doc.text(`Von Datum: ${rec.startDate || '-'}`, 23, curY);
-            doc.text(`Bis Datum: ${rec.endDate || '-'}`, 115, curY);
+            doc.setFont('helvetica', 'normal'); doc.setFontSize(9);
+            doc.text(`${isRo ? 'De la data' : 'Von Datum'}: ${rec.startDate || '-'}`, 23, curY);
+            doc.text(`${isRo ? 'Până la data' : 'Bis Datum'}: ${rec.endDate || '-'} (${rec.daysCount || 0} ${isRo ? 'zile' : 'Tage'})`, 105, curY);
 
             curY += 18;
-            doc.text(`Vertretung / Bemerkung: ${rec.notes || 'Keine'}`, 23, curY);
+            doc.text(`${isRo ? 'Mențiune / Înlocuitor' : 'Vertretung / Bemerkung'}: ${rec.notes || 'Keine'}`, 23, curY);
 
             doc.setDrawColor(203, 213, 225);
             doc.roundedRect(23, 145, 164, 85, 2, 2, 'S');
-            doc.setFontSize(8);
-            doc.setTextColor(100, 116, 139);
-            doc.text('DIGITALE UNTERSCHRIFT DES ANTRAGSTELLERS', 105, 152, { align: 'center' });
-            if (rec.signature) {
-                try { doc.addImage(rec.signature, 'PNG', 35, 160, 140, 65); } catch(err){}
-            }
+            doc.setFontSize(8); doc.setTextColor(100, 116, 139);
+            doc.text(isRo ? 'SEMNĂTURA DIGITALĂ A SOLICITANTULUI' : 'DIGITALE UNTERSCHRIFT DES ANTRAGSTELLERS', 105, 152, { align: 'center' });
+            if (rec.signature) { try { doc.addImage(rec.signature, 'PNG', 35, 160, 140, 65); } catch(err){} }
+
+            renderPdfFooter(doc, 1, 1);
+            return doc;
+        }
+
+        function buildTeamVacationSummaryPdf(doc, list, dateStr, timeStr) {
+            renderPdfHeader(doc, 'TEAM-URLAUBSÜBERSICHT & RESTURLAUB', dateStr, timeStr);
+            doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.setTextColor(15, 23, 42);
+            doc.text('Übersicht Resturlaub & Team-Anträge', 15, 40);
+
+            let startY = 48;
+            doc.setFillColor(241, 245, 249);
+            doc.rect(15, startY, 180, 8, 'F');
+            doc.setFont('helvetica', 'bold'); doc.setFontSize(8.5); doc.setTextColor(71, 85, 105);
+            doc.text('Mitarbeiter', 19, startY + 5.5);
+            doc.text('Resturlaub', 75, startY + 5.5);
+            doc.text('Zeitraum', 110, startY + 5.5);
+            doc.text('Status', 165, startY + 5.5);
+
+            startY += 8;
+            doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5);
+
+            TEAM_EMPLOYEES.forEach(emp => {
+                if (startY > 260) { doc.addPage(); startY = 20; }
+                const rem = getEmployeeRemainingDays(emp);
+                const empLeaves = list.filter(i => {
+                    const d = i.data || i;
+                    return (d.employee === emp || i.inspector === emp);
+                });
+
+                if (empLeaves.length === 0) {
+                    doc.text(emp, 19, startY + 6);
+                    doc.text(`${rem} Tage`, 75, startY + 6);
+                    doc.text('Kein Urlaub eingetragen', 110, startY + 6);
+                    doc.text('-', 165, startY + 6);
+                    doc.setDrawColor(226, 232, 240);
+                    doc.line(15, startY + 9, 195, startY + 9);
+                    startY += 10;
+                } else {
+                    empLeaves.forEach(item => {
+                        const d = item.data || item;
+                        doc.text(emp, 19, startY + 6);
+                        doc.text(`${rem} Tage`, 75, startY + 6);
+                        doc.text(`${d.startDate} bis ${d.endDate}`, 110, startY + 6);
+                        doc.text(d.status || 'Ausstehend', 165, startY + 6);
+                        doc.setDrawColor(226, 232, 240);
+                        doc.line(15, startY + 9, 195, startY + 9);
+                        startY += 10;
+                    });
+                }
+            });
 
             renderPdfFooter(doc, 1, 1);
             return doc;
@@ -2500,100 +2488,61 @@
 
         function buildSingleSectionPdf(doc, type, rec, dateStr, timeStr) {
             renderPdfHeader(doc, `EINZELPROTOKOLL: ${type.toUpperCase()}`, dateStr, timeStr);
-            doc.setDrawColor(226, 232, 240);
-            doc.setLineWidth(0.4);
+            doc.setDrawColor(226, 232, 240); doc.setLineWidth(0.4);
             doc.roundedRect(15, 36, 180, 234, 3, 3, 'S');
 
             doc.setFillColor(248, 250, 252);
             doc.roundedRect(15, 36, 180, 10, 3, 3, 'F');
-            doc.setFont('helvetica', 'bold');
-            doc.setFontSize(10);
-            doc.setTextColor(15, 23, 42);
+            doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(15, 23, 42);
             doc.text(`OFFIZIELLES KONTROLLPROTOKOLL - ${type.toUpperCase()}`, 19, 42.5);
 
             doc.setFillColor(241, 245, 249);
             doc.roundedRect(19, 50, 172, 16, 2, 2, 'F');
-            doc.setFont('helvetica', 'normal');
-            doc.setFontSize(8.5);
-            doc.setTextColor(71, 85, 105);
+            doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); doc.setTextColor(71, 85, 105);
             doc.text('Prüfer: ', 23, 57);
-            doc.setFont('helvetica', 'bold');
-            doc.setTextColor(15, 23, 42);
+            doc.setFont('helvetica', 'bold'); doc.setTextColor(15, 23, 42);
             doc.text(rec.inspector || '-', 38, 57);
 
-            doc.setFont('helvetica', 'normal');
-            doc.setTextColor(71, 85, 105);
+            doc.setFont('helvetica', 'normal'); doc.setTextColor(71, 85, 105);
             doc.text('Erfasst am: ', 23, 62.5);
-            doc.setFont('helvetica', 'bold');
-            doc.setTextColor(15, 23, 42);
+            doc.setFont('helvetica', 'bold'); doc.setTextColor(15, 23, 42);
             doc.text(rec.timestamp || '-', 43, 62.5);
 
             let curY = 78;
-            doc.setFont('helvetica', 'normal');
-            doc.setFontSize(8.5);
-            doc.setTextColor(71, 85, 105);
+            doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); doc.setTextColor(71, 85, 105);
             doc.text('Notizen / Bemerkungen: ' + (rec.notes || 'Keine Auffälligkeiten'), 23, curY);
 
-            doc.setDrawColor(203, 213, 225);
-            doc.roundedRect(23, 115, 164, 110, 2, 2, 'S');
-            doc.setFontSize(8);
-            doc.setTextColor(100, 116, 139);
-            doc.text('DIGITALE FREIGABE-UNTERSCHRIFT', 105, 122, { align: 'center' });
-            if (rec.signature) {
-                try { doc.addImage(rec.signature, 'PNG', 35, 130, 140, 85); } catch(err){}
+            if (rec.photo) {
+                try { doc.addImage(rec.photo, 'JPEG', 23, 90, 80, 60); } catch(err){}
             }
 
+            doc.setDrawColor(203, 213, 225);
+            doc.roundedRect(23, 165, 164, 90, 2, 2, 'S');
+            doc.setFontSize(8); doc.setTextColor(100, 116, 139);
+            doc.text('DIGITALE FREIGABE-UNTERSCHRIFT', 105, 172, { align: 'center' });
+            if (rec.signature) { try { doc.addImage(rec.signature, 'PNG', 35, 178, 140, 70); } catch(err){} }
+
             renderPdfFooter(doc, 1, 1);
             return doc;
-        }
-
-        function buildCompletePdf(doc, dateStr, timeStr) {
-            renderPdfHeader(doc, 'GESAMT-WARTUNGSPROTOKOLL', dateStr, timeStr);
-            renderCompletePage1(doc, state.data);
-            renderPdfFooter(doc, 1, 1);
-            return doc;
-        }
-
-        function renderCompletePage1(doc, sourceData) {
-            let curY = 42;
-            ['entmineralisierung', 'aussenbereich', 'pausenraum', 'fahrzeuge'].forEach((key, idx) => {
-                const item = sourceData[key];
-                doc.setFont('helvetica', 'bold');
-                doc.setFontSize(9);
-                doc.setTextColor(15, 23, 42);
-                doc.text(`${idx + 1}. ${key.toUpperCase()}: ${item ? 'Erledigt von ' + item.inspector : 'Offen'}`, 19, curY);
-                curY += 12;
-            });
         }
 
         function renderPdfHeader(doc, subtitle, dateStr, timeStr) {
             doc.setFillColor(94, 166, 59);
             doc.roundedRect(15, 12, 24, 16, 3, 3, 'F');
-            doc.setTextColor(255, 255, 255);
-            doc.setFont('helvetica', 'bolditalic');
-            doc.setFontSize(14);
+            doc.setTextColor(255, 255, 255); doc.setFont('helvetica', 'bolditalic'); doc.setFontSize(14);
             doc.text('ecb', 27, 21, { align: 'center' });
 
-            doc.setTextColor(94, 166, 59);
-            doc.setFont('helvetica', 'bold');
-            doc.setFontSize(8.5);
+            doc.setTextColor(94, 166, 59); doc.setFont('helvetica', 'bold'); doc.setFontSize(8.5);
             doc.text('ECB REINIGUNGSSYSTEME', 43, 16.5);
 
-            doc.setTextColor(28, 25, 23);
-            doc.setFont('helvetica', 'bold');
-            doc.setFontSize(12);
+            doc.setTextColor(28, 25, 23); doc.setFont('helvetica', 'bold'); doc.setFontSize(12);
             doc.text(subtitle, 43, 22.5);
 
-            doc.setFont('helvetica', 'bold');
-            doc.setFontSize(7.5);
-            doc.setTextColor(94, 166, 59);
+            doc.setFont('helvetica', 'bold'); doc.setFontSize(7.5); doc.setTextColor(94, 166, 59);
             doc.text('MELDUNG AN:', 195, 16, { align: 'right' });
-            doc.setFontSize(8.5);
-            doc.setTextColor(28, 25, 23);
+            doc.setFontSize(8.5); doc.setTextColor(28, 25, 23);
             doc.text(RECIPIENT_EMAIL, 195, 20, { align: 'right' });
-            doc.setFont('helvetica', 'normal');
-            doc.setFontSize(7.5);
-            doc.setTextColor(100, 116, 139);
+            doc.setFont('helvetica', 'normal'); doc.setFontSize(7.5); doc.setTextColor(100, 116, 139);
             doc.text(`Datum: ${dateStr} • ${timeStr} Uhr`, 195, 24.5, { align: 'right' });
 
             doc.setFillColor(94, 166, 59);
@@ -2603,8 +2552,7 @@
         function renderPdfFooter(doc, pageNum, totalPages) {
             doc.setDrawColor(226, 232, 240);
             doc.line(15, 276, 195, 276);
-            doc.setFontSize(7);
-            doc.setTextColor(148, 163, 184);
+            doc.setFontSize(7); doc.setTextColor(148, 163, 184);
             doc.text(`ECB Reinigungssysteme • Dokument (${pageNum} von ${totalPages})`, 15, 281);
             doc.text(`Meldung an ${RECIPIENT_EMAIL} • Erstellt mit ECB Kontroll App`, 195, 281, { align: 'right' });
         }
@@ -2787,9 +2735,7 @@
                 data: rec
             };
 
-            if (db) {
-                db.collection('kontrollen').add(newEntry).catch(err => {});
-            }
+            if (db) db.collection('kontrollen').add(newEntry).catch(err => {});
 
             cloudHistory.unshift(newEntry);
             try { localStorage.setItem('ecb_app_history_v3', JSON.stringify(cloudHistory)); } catch(e){}
@@ -2867,21 +2813,13 @@
 
         function findHistoryItem(key) {
             const list = getHistory();
-            let item = list.find(i => i.id === key);
-            if (!item && !isNaN(key)) item = list[parseInt(key)];
-            return item;
+            return list.find(i => i.id === key) || list[parseInt(key)];
         }
 
         async function viewHistoryItemPdf(key) {
             const item = findHistoryItem(key);
             if (!item) return;
-            state.currentDispatchContext = {
-                type: item.type,
-                data: item.data,
-                subject: `[ECB] ${item.type} - ${item.date}`,
-                body: '',
-                categoryFolder: item.type
-            };
+            state.currentDispatchContext = { type: item.type, data: item.data, subject: `[ECB] ${item.type} - ${item.date}`, body: '', categoryFolder: item.type };
             await getPreparedPdfBlob(state.currentDispatchContext);
             const frame = document.getElementById('pdf-viewer-frame');
             if (frame && activePdfUrl) frame.src = activePdfUrl;
