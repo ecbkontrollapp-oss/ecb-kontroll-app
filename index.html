@@ -44,7 +44,7 @@
             user-select: none;
         }
         .safe-bottom {
-            padding-bottom: max(0.85rem, env(safe-area-inset-bottom));
+            padding-bottom: max(1.2rem, env(safe-area-inset-bottom));
         }
         .status-btn {
             transition: all 0.15s ease-in-out;
@@ -60,40 +60,45 @@
 </head>
 <body class="h-full bg-slate-50 text-slate-800 flex flex-col font-sans select-none antialiased">
 
-    <header class="sticky top-0 z-30 bg-white border-b border-slate-200/80 px-4 py-2 shadow-xs">
+    <header class="sticky top-0 z-30 bg-white border-b border-slate-200/80 px-4 py-2.5 shadow-xs">
         <div class="max-w-md mx-auto flex items-center justify-between">
             <div class="flex items-center gap-2.5">
-                <div class="w-9 h-9 rounded-xl bg-ecb flex flex-col items-center justify-center text-white shadow-xs p-1 cursor-pointer" onclick="switchView('start')">
-                    <span class="font-black italic text-sm leading-none tracking-tight">ecb</span>
-                    <svg class="w-6 h-1.5 mt-0.5" viewBox="0 0 100 24" fill="white">
+                <div class="w-10 h-10 rounded-xl bg-ecb flex flex-col items-center justify-center text-white shadow-xs p-1 cursor-pointer" onclick="switchView('start')">
+                    <span class="font-black italic text-base leading-none tracking-tight">ecb</span>
+                    <svg class="w-7 h-2 mt-0.5" viewBox="0 0 100 24" fill="white">
                         <path d="M0 16 C30 6, 65 24, 100 8 C85 24, 50 26, 0 16 Z"/>
                     </svg>
                 </div>
                 <div>
-                    <div class="flex items-center gap-1.5">
-                        <h1 class="text-xs font-bold text-slate-900 tracking-tight leading-none" data-i18n="app_title">ECB Kontroll App</h1>
-                        <button onclick="showCloudDiagnostic()" id="cloud-indicator" class="flex items-center text-[9px] text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 transition-colors" title="Google Firebase Status">
-                            <i class="fa-solid fa-cloud text-[8px] mr-1"></i> <span id="cloud-indicator-label">Cloud Live</span>
-                        </button>
-                    </div>
+                    <h1 class="text-xs font-bold text-slate-900 tracking-tight leading-none" data-i18n="app_title">ECB Kontroll App</h1>
                     <span class="text-[9px] text-slate-400" data-i18n="app_sub">Reinigungssysteme</span>
                 </div>
             </div>
             
             <div class="flex items-center gap-2">
-                <button onclick="toggleLanguage()" id="lang-btn" class="flex items-center gap-1 px-2 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs font-bold text-slate-700 transition-colors shadow-2xs">
-                    <span id="lang-flag" class="text-xs">🇷🇴</span>
-                    <span id="lang-label" class="text-[11px]">RO</span>
+                <!-- CLOUD INDICATOR & ATTENDANCE BUTTON -->
+                <button onclick="showCloudDiagnostic()" id="cloud-indicator" class="flex items-center text-[8px] text-emerald-700 font-semibold bg-emerald-50 px-1.5 py-1 rounded-lg border border-emerald-200 transition-colors" title="Google Firebase Status">
+                    <i class="fa-solid fa-cloud text-[7px] mr-1"></i> <span id="cloud-indicator-label">Cloud</span>
                 </button>
 
-                <button onclick="openSettingsModal()" class="w-8 h-8 rounded-full flex items-center justify-center text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors" title="Einstellungen">
+                <button onclick="openAttendanceModal()" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-xs font-bold text-emerald-800 transition-colors shadow-2xs" title="Wer ist heute da?">
+                    <i class="fa-solid fa-users text-emerald-600 text-sm"></i>
+                    <span data-i18n="attendance_btn">Anwesende</span>
+                </button>
+
+                <button onclick="toggleLanguage()" id="lang-btn" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs font-bold text-slate-700 transition-colors shadow-2xs">
+                    <span id="lang-flag" class="text-2xl leading-none">🇷🇴</span>
+                    <span id="lang-label" class="text-xs">RO</span>
+                </button>
+
+                <button onclick="openSettingsModal()" class="w-9 h-9 rounded-full flex items-center justify-center text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors" title="Einstellungen">
                     <i class="fa-solid fa-sliders text-sm"></i>
                 </button>
             </div>
         </div>
     </header>
 
-    <main class="flex-1 max-w-md w-full mx-auto px-4 py-3 space-y-3.5 pb-24">
+    <main class="flex-1 max-w-md w-full mx-auto px-4 py-3 space-y-3.5 pb-28">
 
         <!-- START VIEW -->
         <section id="view-start" class="view-panel space-y-3.5">
@@ -107,14 +112,14 @@
             </div>
 
             <!-- SCHNELLSTART: URLAUBSPLAN VERKNÜPFUNG -->
-            <div onclick="switchView('vacation')" class="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl p-3.5 text-white shadow-md flex items-center justify-between cursor-pointer hover:opacity-95 transition-all">
+            <div onclick="switchView('vacation')" class="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl p-4 text-white shadow-md flex items-center justify-between cursor-pointer hover:opacity-95 transition-all">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-lg">
+                    <div class="w-11 h-11 rounded-xl bg-white/20 flex items-center justify-center text-xl">
                         🏖️
                     </div>
                     <div>
-                        <h3 class="text-xs font-bold tracking-tight" data-i18n="vacation_title">Urlaubsplan & Antrag</h3>
-                        <p class="text-[10px] text-emerald-100 font-medium" data-i18n="vacation_sub">Team-Urlaube in der Cloud verwalten</p>
+                        <h3 class="text-sm font-bold tracking-tight" data-i18n="vacation_title">Urlaubsplan & Antrag</h3>
+                        <p class="text-[11px] text-emerald-100 font-medium" data-i18n="vacation_sub">Team-Urlaube in der Cloud verwalten</p>
                     </div>
                 </div>
                 <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-xs">
@@ -753,21 +758,21 @@
                         <span data-i18n="vacation_sub">Gemeinsamer Cloud-Urlaubsplan</span>
                     </p>
                 </div>
-                <button onclick="openNewVacationModal()" class="px-3 py-2 bg-ecb hover:bg-ecb-dark text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs">
+                <button onclick="openNewVacationModal()" class="px-3.5 py-2.5 bg-ecb hover:bg-ecb-dark text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs">
                     <i class="fa-solid fa-plus"></i> <span data-i18n="btn_new_vacation">Urlaub beantragen</span>
                 </button>
             </div>
 
             <!-- LEITUNG / MANAGER LOGIN BOX -->
-            <div class="bg-slate-900 text-white rounded-2xl p-3.5 shadow-md space-y-2.5">
+            <div class="bg-slate-900 text-white rounded-2xl p-4 shadow-md space-y-3">
                 <div onclick="toggleManagerLogin()" class="flex items-center justify-between cursor-pointer select-none">
-                    <div class="flex items-center gap-2">
-                        <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm">
                             <i class="fa-solid fa-lock" id="manager-lock-icon"></i>
                         </div>
                         <div>
                             <h3 class="text-xs font-bold" data-i18n="manager_login_title">Führungskraft-Freigabe</h3>
-                            <p class="text-[10px] text-slate-400" id="manager-status-text" data-i18n="manager_click_unlock">Klicken zum Entsperren</p>
+                            <p class="text-[10px] text-slate-400" id="manager-status-text" data-i18n="manager_click_unlock">Klicken zum Entsperren mit Passwort</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -778,15 +783,15 @@
                     </div>
                 </div>
 
-                <div id="manager-login-dropdown" class="hidden pt-2 border-t border-slate-800 space-y-2.5">
+                <div id="manager-login-dropdown" class="hidden pt-3 border-t border-slate-800 space-y-3">
                     <div id="manager-login-form" class="flex items-center gap-2">
-                        <input type="password" id="manager-pwd-input" placeholder="Passwort..." data-i18n-ph="manager_pwd_ph" class="flex-1 px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-xl text-xs text-white outline-none focus:border-emerald-500">
-                        <button type="button" onclick="verifyManagerLogin()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-xs" data-i18n="manager_btn_unlock">
+                        <input type="password" id="manager-pwd-input" placeholder="Passwort..." data-i18n-ph="manager_pwd_ph" class="flex-1 px-3 py-2 bg-slate-800 border border-slate-700 rounded-xl text-xs text-white outline-none focus:border-emerald-500">
+                        <button type="button" onclick="verifyManagerLogin()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-xs" data-i18n="manager_btn_unlock">
                             Entsperren
                         </button>
                     </div>
 
-                    <div id="manager-pending-list" class="space-y-2 hidden">
+                    <div id="manager-pending-list" class="space-y-2.5 hidden">
                         <div class="text-[11px] font-bold text-slate-300 uppercase tracking-wider pt-1" data-i18n="manager_pending_title">Offene Anträge zur Prüfung:</div>
                         <div id="manager-approval-items" class="space-y-2"></div>
                     </div>
@@ -800,10 +805,10 @@
                         <i class="fa-solid fa-calendar-days text-ecb"></i> <span data-i18n="monthly_calendar_title">Monatskalender & Team-Übersicht</span>
                     </h3>
                     <div class="flex items-center gap-1.5">
-                        <select id="vacation-year-select" onchange="renderVacationList()" class="bg-slate-100 border border-slate-200 text-slate-800 text-[11px] font-bold rounded-lg px-2 py-1 outline-none">
+                        <select id="vacation-year-select" onchange="renderVacationList()" class="bg-slate-100 border border-slate-200 text-slate-800 text-[11px] font-bold rounded-lg px-2 py-1.5 outline-none">
                             <!-- Dynamische Jahre bis 2050 -->
                         </select>
-                        <select id="vacation-month-select" onchange="renderVacationList()" class="bg-slate-100 border border-slate-200 text-slate-800 text-[11px] font-bold rounded-lg px-2 py-1 outline-none">
+                        <select id="vacation-month-select" onchange="renderVacationList()" class="bg-slate-100 border border-slate-200 text-slate-800 text-[11px] font-bold rounded-lg px-2 py-1.5 outline-none">
                             <option value="01" data-i18n="month_jan">Januar</option>
                             <option value="02" data-i18n="month_feb">Februar</option>
                             <option value="03" data-i18n="month_mar">März</option>
@@ -811,24 +816,28 @@
                             <option value="05" data-i18n="month_may">Mai</option>
                             <option value="06" data-i18n="month_jun">Juni</option>
                             <option value="07" data-i18n="month_jul">Juli</option>
-                            <option value="08" selected data-i18n="month_aug">August</option>
+                            <option value="08" data-i18n="month_aug">August</option>
                             <option value="09" data-i18n="month_sep">September</option>
                             <option value="10" data-i18n="month_oct">Oktober</option>
                             <option value="11" data-i18n="month_nov">November</option>
                             <option value="12" data-i18n="month_dec">Dezember</option>
                         </select>
-                        <button onclick="previewTeamVacationSummaryPdf()" class="px-2.5 py-1 bg-slate-900 text-white rounded-lg text-[11px] font-bold flex items-center gap-1 shadow-xs" title="Team-PDF erstellen">
+                        <button onclick="previewTeamVacationSummaryPdf()" class="px-3 py-1.5 bg-slate-900 text-white rounded-lg text-[11px] font-bold flex items-center gap-1 shadow-xs" title="Team-PDF erstellen">
                             <i class="fa-solid fa-file-pdf text-rose-400"></i> PDF
                         </button>
                     </div>
                 </div>
 
-                <div class="flex items-center gap-3 text-[10px] text-slate-500 pt-1">
-                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span> <span data-i18n="legend_approved">Genehmigt (Grün)</span></span>
-                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span> <span data-i18n="legend_pending">Beantragt / Offen (Gelb)</span></span>
+                <!-- VERBESSERTE LEGENDE MIT UNTERSCHIEDLICHEN FARBEN -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] text-slate-600 pt-1">
+                    <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span> <span data-i18n="legend_approved">Genehmigt</span></span>
+                    <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-400 inline-block"></span> <span data-i18n="legend_pending">Beantragt / Offen</span></span>
+                    <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-rose-400 inline-block"></span> <span data-i18n="legend_holiday">Feiertage</span></span>
+                    <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-indigo-500 inline-block"></span> <span data-i18n="legend_sunday">Sonntage</span></span>
                 </div>
 
-                <div id="monthly-calendar-grid" class="overflow-x-auto no-scrollbar pb-1"></div>
+                <!-- VERGRÖSSERTER TEAM-KALENDER -->
+                <div id="monthly-calendar-grid" class="overflow-x-auto no-scrollbar pb-1 text-sm"></div>
             </div>
 
             <!-- LISTE DER ANTRÄGE & FREIGABEN -->
@@ -855,28 +864,28 @@
                         <span data-i18n="history_sub">Google Firebase Cloud-Archiv</span>
                     </p>
                 </div>
-                <button onclick="previewActivePdf(true)" class="px-2.5 py-1.5 bg-slate-900 text-white rounded-xl text-xs font-bold flex items-center gap-1 shadow-xs">
+                <button onclick="previewActivePdf(true)" class="px-3 py-2 bg-slate-900 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs">
                     <i class="fa-solid fa-file-pdf text-rose-400"></i> <span data-i18n="btn_daily_pdf">Tages-PDF</span>
                 </button>
             </div>
 
             <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 pt-0.5">
-                <button onclick="setHistoryFilter('all')" id="hist-filter-all" class="hist-filter-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-white shadow-xs">
+                <button onclick="setHistoryFilter('all')" id="hist-filter-all" class="hist-filter-btn shrink-0 px-3 py-2 rounded-xl text-xs font-bold bg-slate-900 text-white shadow-xs">
                     📁 <span data-i18n="filter_all">Alle</span> (<span id="count-all">0</span>)
                 </button>
-                <button onclick="setHistoryFilter('Entmineralisierung')" id="hist-filter-demin" class="hist-filter-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-white border border-slate-200 text-slate-600 hover:bg-slate-100">
+                <button onclick="setHistoryFilter('Entmineralisierung')" id="hist-filter-demin" class="hist-filter-btn shrink-0 px-3 py-2 rounded-xl text-xs font-bold bg-white border border-slate-200 text-slate-600 hover:bg-slate-100">
                     💧 <span data-i18n="filter_demin">Entmineral.</span> (<span id="count-demin">0</span>)
                 </button>
-                <button onclick="setHistoryFilter('Außenbereich')" id="hist-filter-outdoor" class="hist-filter-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-white border border-slate-200 text-slate-600 hover:bg-slate-100">
+                <button onclick="setHistoryFilter('Außenbereich')" id="hist-filter-outdoor" class="hist-filter-btn shrink-0 px-3 py-2 rounded-xl text-xs font-bold bg-white border border-slate-200 text-slate-600 hover:bg-slate-100">
                     🌳 <span data-i18n="filter_outdoor">Außen</span> (<span id="count-outdoor">0</span>)
                 </button>
-                <button onclick="setHistoryFilter('Pausenraum')" id="hist-filter-breakroom" class="hist-filter-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-white border border-slate-200 text-slate-600 hover:bg-slate-100">
+                <button onclick="setHistoryFilter('Pausenraum')" id="hist-filter-breakroom" class="hist-filter-btn shrink-0 px-3 py-2 rounded-xl text-xs font-bold bg-white border border-slate-200 text-slate-600 hover:bg-slate-100">
                     ☕ <span data-i18n="filter_breakroom">Pause</span> (<span id="count-breakroom">0</span>)
                 </button>
-                <button onclick="setHistoryFilter('Fahrzeuge')" id="hist-filter-vehicle" class="hist-filter-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-white border border-slate-200 text-slate-600 hover:bg-slate-100">
+                <button onclick="setHistoryFilter('Fahrzeuge')" id="hist-filter-vehicle" class="hist-filter-btn shrink-0 px-3 py-2 rounded-xl text-xs font-bold bg-white border border-slate-200 text-slate-600 hover:bg-slate-100">
                     🚚 <span data-i18n="filter_vehicle">KFZ</span> (<span id="count-vehicle">0</span>)
                 </button>
-                <button onclick="setHistoryFilter('Urlaub')" id="hist-filter-vacation" class="hist-filter-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-white border border-slate-200 text-slate-600 hover:bg-slate-100">
+                <button onclick="setHistoryFilter('Urlaub')" id="hist-filter-vacation" class="hist-filter-btn shrink-0 px-3 py-2 rounded-xl text-xs font-bold bg-white border border-slate-200 text-slate-600 hover:bg-slate-100">
                     🏖️ <span data-i18n="filter_vacation">Urlaub</span> (<span id="count-vacation">0</span>)
                 </button>
             </div>
@@ -899,36 +908,28 @@
 
     </main>
 
-    <!-- BOTTOM NAVIGATION -->
+    <!-- VERGRÖSSERTE UNTERE NAVIGATION -->
     <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 safe-bottom shadow-lg">
-        <div class="max-w-md mx-auto grid grid-cols-7 px-0.5 pt-1.5 text-center">
+        <div class="max-w-md mx-auto grid grid-cols-5 px-2 pt-3 pb-4 text-center">
             <button onclick="switchView('start')" id="nav-btn-start" class="nav-item flex flex-col items-center justify-center py-1 text-sky-600 transition-colors">
-                <i class="fa-solid fa-house text-sm mb-0.5"></i>
-                <span class="text-[8px] font-bold" data-i18n="nav_start">Start</span>
+                <i class="fa-solid fa-house text-2xl mb-1"></i>
+                <span class="text-xs font-bold" data-i18n="nav_start">Start</span>
             </button>
             <button onclick="switchView('demin')" id="nav-btn-demin" class="nav-item flex flex-col items-center justify-center py-1 text-slate-400 hover:text-slate-700 transition-colors">
-                <i class="fa-solid fa-droplet text-sm mb-0.5"></i>
-                <span class="text-[8px] font-medium" data-i18n="nav_demin">Entmin.</span>
+                <i class="fa-solid fa-droplet text-2xl mb-1"></i>
+                <span class="text-xs font-medium" data-i18n="nav_demin">Entmin.</span>
             </button>
             <button onclick="switchView('outdoor')" id="nav-btn-outdoor" class="nav-item flex flex-col items-center justify-center py-1 text-slate-400 hover:text-slate-700 transition-colors">
-                <i class="fa-solid fa-tree text-sm mb-0.5"></i>
-                <span class="text-[8px] font-medium" data-i18n="nav_outdoor">Außen</span>
-            </button>
-            <button onclick="switchView('breakroom')" id="nav-btn-breakroom" class="nav-item flex flex-col items-center justify-center py-1 text-slate-400 hover:text-slate-700 transition-colors">
-                <i class="fa-solid fa-mug-saucer text-sm mb-0.5"></i>
-                <span class="text-[8px] font-medium" data-i18n="nav_breakroom">Pause</span>
-            </button>
-            <button onclick="switchView('vehicle')" id="nav-btn-vehicle" class="nav-item flex flex-col items-center justify-center py-1 text-slate-400 hover:text-slate-700 transition-colors">
-                <i class="fa-solid fa-truck text-sm mb-0.5"></i>
-                <span class="text-[8px] font-medium" data-i18n="nav_vehicle">KFZ</span>
+                <i class="fa-solid fa-tree text-2xl mb-1"></i>
+                <span class="text-xs font-medium" data-i18n="nav_outdoor">Außen</span>
             </button>
             <button onclick="switchView('vacation')" id="nav-btn-vacation" class="nav-item flex flex-col items-center justify-center py-1 text-slate-400 hover:text-slate-700 transition-colors">
-                <i class="fa-solid fa-umbrella-beach text-sm mb-0.5"></i>
-                <span class="text-[8px] font-medium" data-i18n="nav_vacation">Urlaub</span>
+                <i class="fa-solid fa-umbrella-beach text-2xl mb-1"></i>
+                <span class="text-xs font-medium" data-i18n="nav_vacation">Urlaub</span>
             </button>
             <button onclick="switchView('history')" id="nav-btn-history" class="nav-item flex flex-col items-center justify-center py-1 text-slate-400 hover:text-slate-700 transition-colors">
-                <i class="fa-solid fa-folder-tree text-sm mb-0.5"></i>
-                <span class="text-[8px] font-medium" data-i18n="nav_history">Ordner</span>
+                <i class="fa-solid fa-folder-tree text-2xl mb-1"></i>
+                <span class="text-xs font-medium" data-i18n="nav_history">Ordner</span>
             </button>
         </div>
     </nav>
@@ -1012,20 +1013,22 @@
         </div>
     </div>
 
-    <!-- CLOUD DIAGNOSTIC MODAL -->
-    <div id="modal-cloud" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-3">
+    <!-- ATTENDANCE MODAL -->
+    <div id="modal-attendance" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-3">
         <div class="bg-white rounded-2xl max-w-sm w-full p-4 shadow-2xl space-y-3">
             <div class="flex items-center justify-between pb-2 border-b border-slate-100">
                 <h3 class="font-bold text-slate-900 text-sm flex items-center gap-1.5">
-                    <i class="fa-solid fa-cloud text-emerald-600"></i> Cloud-Status & Diagnose
+                    <i class="fa-solid fa-users text-ecb"></i> <span data-i18n="attendance_modal_title">Wer ist heute da? (Live-Status)</span>
                 </h3>
-                <button onclick="closeModal('modal-cloud')" class="text-slate-400 hover:text-slate-600 p-1">
+                <button onclick="closeModal('modal-attendance')" class="text-slate-400 hover:text-slate-600 p-1">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
-            <div id="cloud-diagnostic-content" class="text-xs space-y-2 text-slate-700">Lade Status...</div>
+            <div id="attendance-list-container" class="space-y-2 max-h-[60vh] overflow-y-auto">
+                <!-- Dynamisch -->
+            </div>
             <div class="pt-2 border-t border-slate-100">
-                <button onclick="closeModal('modal-cloud')" class="w-full py-2 bg-slate-900 text-white rounded-xl font-bold text-xs">Schließen</button>
+                <button onclick="closeModal('modal-attendance')" class="w-full py-2 bg-slate-900 text-white rounded-xl font-bold text-xs" data-i18n="btn_close">Schließen</button>
             </div>
         </div>
     </div>
@@ -1173,8 +1176,26 @@
         </div>
     </div>
 
+    <!-- CLOUD DIAGNOSTIC MODAL -->
+    <div id="modal-cloud" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-3">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-4 shadow-2xl space-y-3">
+            <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                <h3 class="font-bold text-slate-900 text-sm flex items-center gap-1.5">
+                    <i class="fa-solid fa-cloud text-ecb"></i> Cloud-Diagnose
+                </h3>
+                <button onclick="closeModal('modal-cloud')" class="text-slate-400 hover:text-slate-600 p-1">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div id="cloud-diagnostic-content"></div>
+            <div class="pt-2">
+                <button onclick="closeModal('modal-cloud')" class="w-full py-2 bg-slate-900 text-white rounded-xl font-bold text-xs">Schließen</button>
+            </div>
+        </div>
+    </div>
+
     <!-- TOAST NOTIFICATION -->
-    <div id="toast" class="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white px-4 py-2 rounded-full shadow-2xl text-xs font-medium opacity-0 pointer-events-none transition-opacity duration-300 flex items-center gap-2">
+    <div id="toast" class="fixed bottom-28 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white px-4 py-2 rounded-full shadow-2xl text-xs font-medium opacity-0 pointer-events-none transition-opacity duration-300 flex items-center gap-2">
         <i class="fa-solid fa-circle-check text-emerald-400"></i>
         <span id="toast-text">Meldung</span>
     </div>
@@ -1214,10 +1235,10 @@
             de: {
                 app_title: "ECB Kontroll App",
                 app_sub: "Reinigungssysteme",
-                overview_title: "Übersicht",
-                overview_desc: "Tägliche Kontrollen einzeln erfassen, unterschreiben und sofort melden.",
-                daily_status_label: "Tagesstatus:",
-                send_all_btn: "Gesamt-PDF",
+                attendance_btn: "Anwesende",
+                attendance_modal_title: "Wer ist heute da? (Live-Status)",
+                status_working: "Anwesend (Im Dienst)",
+                status_on_leave: "Im Urlaub / Abwesend",
                 card_demin_title: "1. Entmineralisierungsanlage",
                 card_demin_desc: "Tägliche Kontrolle & Messwerte",
                 card_outdoor_title: "2. Außenbereich",
@@ -1298,7 +1319,7 @@
                 team_vacation_title: "Urlaubsanträge & Status",
                 monthly_calendar_title: "Monatskalender & Team-Übersicht",
                 manager_login_title: "Führungskraft-Freigabe",
-                manager_click_unlock: "Klicken zum Entsperren",
+                manager_click_unlock: "Klicken zum Entsperren mit Passwort",
                 manager_locked: "Gesperrt",
                 manager_unlocked: "Aktiviert",
                 manager_pwd_ph: "Passwort...",
@@ -1333,8 +1354,6 @@
                 nav_start: "Start",
                 nav_demin: "Entmin.",
                 nav_outdoor: "Außen",
-                nav_breakroom: "Pause",
-                nav_vehicle: "KFZ",
                 nav_vacation: "Urlaub",
                 nav_history: "Ordner",
                 direct_send_title: "Sofort an pb@ecb-system.de",
@@ -1357,8 +1376,10 @@
                 btn_close: "Schließen",
                 badge_done: "✓ Erledigt",
                 badge_open: "Offen",
-                legend_approved: "Genehmigt (Grün)",
-                legend_pending: "Beantragt / Offen (Gelb)",
+                legend_approved: "Genehmigt",
+                legend_pending: "Beantragt / Offen",
+                legend_holiday: "Feiertage",
+                legend_sunday: "Sonntage",
                 month_jan: "Januar",
                 month_feb: "Februar",
                 month_mar: "März",
@@ -1371,18 +1392,18 @@
                 month_oct: "Oktober",
                 month_nov: "November",
                 month_dec: "Dezember",
-                toast_saved: "Salvat în Cloud & gata de trimitere!",
-                toast_need_sig: "Vă rugăm să semnați digital!",
-                toast_need_photo: "Vă rugăm să faceți o fotografie!",
-                toast_sent: "Transmis cu succes!"
+                toast_saved: "Gespeichert & gesendet!",
+                toast_need_sig: "Bitte unterschreiben!",
+                toast_need_photo: "Bitte Foto aufnehmen!",
+                toast_sent: "Erfolgreich gesendet!"
             },
             ro: {
                 app_title: "Aplicație Control ECB",
                 app_sub: "Sisteme de Curățare",
-                overview_title: "Prezentare Generală",
-                overview_desc: "Înregistrați controalele individual, semnați și trimiteți imediat.",
-                daily_status_label: "Statusul zilei:",
-                send_all_btn: "PDF General",
+                attendance_btn: "Prezență",
+                attendance_modal_title: "Cine este prezent azi? (Status Live)",
+                status_working: "Prezent (La serviciu)",
+                status_on_leave: "În concediu / Absent",
                 card_demin_title: "1. Demineralizare",
                 card_demin_desc: "Control zilnic & valori măsurate",
                 card_outdoor_title: "2. Zona Exterioară",
@@ -1463,7 +1484,7 @@
                 team_vacation_title: "Cereri & Status Concedii",
                 monthly_calendar_title: "Calendar lunar & Prezentare generală echipă",
                 manager_login_title: "Aprobare Conducere",
-                manager_click_unlock: "Apăsați pentru deblocare",
+                manager_click_unlock: "Apăsați pentru deblocare cu parolă",
                 manager_locked: "Blocat",
                 manager_unlocked: "Activat",
                 manager_pwd_ph: "Parolă...",
@@ -1494,25 +1515,23 @@
                 filter_vacation: "Concediu",
                 no_history: "Niciun raport în acest dosar până acum.",
                 btn_csv: "Export CSV",
-                btn_clear_history: "Golește istoricul",
+                btn_clear_history: "Șterge istoricul",
                 nav_start: "Start",
                 nav_demin: "Demin.",
                 nav_outdoor: "Exterior",
-                nav_breakroom: "Pauză",
-                nav_vehicle: "KFZ",
                 nav_vacation: "Concediu",
                 nav_history: "Dosare",
-                direct_send_title: "Trimite direct la pb@ecb-system.de",
+                direct_send_title: "Trimite imediat la pb@ecb-system.de",
                 badge_recommended: "Recomandat",
-                direct_send_desc: "Trimite <strong>documentul oficial PDF</strong> la pb@ecb-system.de și îl arhivează în Dropbox.",
-                btn_send_now: "Trimite documentul acum",
-                mail_app_title: "Deschide în aplicația Mail cu PDF",
+                direct_send_desc: "Trimite <strong>documentul PDF oficial</strong> direct prin e-mail și îl arhivează în folderul Dropbox potrivit.",
+                btn_send_now: "Trimite protocolul acum",
+                mail_app_title: "În aplicația de mail cu PDF atașat",
                 btn_open_mail_app: "Deschide în Apple Mail / Gmail",
-                btn_view_pdf: "Vizualizează PDF",
+                btn_view_pdf: "Vezi PDF",
                 btn_download: "Salvează",
                 btn_fullscreen: "Ecran complet",
                 settings_title: "Setări & Cloud",
-                firebase_live_sync: "Sincronizare Google Firebase",
+                firebase_live_sync: "Sincronizare Google Firebase Live",
                 badge_status: "Status",
                 lang_selection_label: "Limba aplicației / App-Sprache",
                 btn_switch_lang: "Schimbă",
@@ -1520,10 +1539,12 @@
                 dropbox_test_btn: "Testează conexiunea Dropbox",
                 btn_save: "Salvează",
                 btn_close: "Închide",
-                badge_done: "✓ Finalizat",
+                badge_done: "✓ Efectuat",
                 badge_open: "Deschis",
-                legend_approved: "Aprobat (Verde)",
-                legend_pending: "În așteptare (Galben)",
+                legend_approved: "Aprobat",
+                legend_pending: "Solicitat / În așteptare",
+                legend_holiday: "Sărbători legale",
+                legend_sunday: "Duminici",
                 month_jan: "Ianuarie",
                 month_feb: "Februarie",
                 month_mar: "Martie",
@@ -1536,10 +1557,10 @@
                 month_oct: "Octombrie",
                 month_nov: "Noiembrie",
                 month_dec: "Decembrie",
-                toast_saved: "Salvat în Cloud & gata de trimitere!",
-                toast_need_sig: "Vă rugăm să semnați digital!",
-                toast_need_photo: "Vă rugăm să faceți o fotografie!",
-                toast_sent: "Transmis cu succes!"
+                toast_saved: "Salvat & trimis!",
+                toast_need_sig: "Vă rugăm semnați!",
+                toast_need_photo: "Vă rugăm faceți o poză!",
+                toast_sent: "Trimis cu succes!"
             }
         };
 
@@ -1712,13 +1733,20 @@
             pads.vacation = new SignaturePad('canvas-vacation');
 
             const yearSelect = document.getElementById('vacation-year-select');
+            const monthSelect = document.getElementById('vacation-month-select');
+            const currentD = new Date();
+            const currentY = currentD.getFullYear();
+            const currentM = String(currentD.getMonth() + 1).padStart(2, '0');
+
             if (yearSelect) {
-                const currentY = new Date().getFullYear();
                 let opts = '';
                 for (let y = 2024; y <= 2050; y++) {
                     opts += `<option value="${y}" ${y === currentY ? 'selected' : ''}>${y}</option>`;
                 }
                 yearSelect.innerHTML = opts;
+            }
+            if (monthSelect) {
+                monthSelect.value = currentM;
             }
 
             applyTranslations();
@@ -1736,8 +1764,8 @@
             if (!db) {
                 firebaseStatus.connected = false;
                 if (indicator) {
-                    indicator.className = 'flex items-center text-[9px] text-rose-700 font-semibold bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200 cursor-pointer';
-                    if (indicatorLabel) indicatorLabel.innerText = 'Nicht initialisiert';
+                    indicator.className = 'flex items-center text-[8px] text-rose-700 font-semibold bg-rose-50 px-1.5 py-1 rounded-lg border border-rose-200 cursor-pointer';
+                    if (indicatorLabel) indicatorLabel.innerText = 'Offline';
                 }
                 renderHistoryView();
                 renderVacationList();
@@ -1754,15 +1782,15 @@
                 syncTodayControlsFromCloud(items);
 
                 if (indicator) {
-                    indicator.className = 'flex items-center text-[9px] text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 cursor-pointer';
-                    if (indicatorLabel) indicatorLabel.innerText = 'Cloud Live';
+                    indicator.className = 'flex items-center text-[8px] text-emerald-700 font-semibold bg-emerald-50 px-1.5 py-1 rounded-lg border border-emerald-200 cursor-pointer';
+                    if (indicatorLabel) indicatorLabel.innerText = 'Live';
                 }
             }, (error) => {
                 firebaseStatus.connected = false; firebaseStatus.error = error.message || String(error);
                 renderHistoryView();
                 if (indicator) {
-                    indicator.className = 'flex items-center text-[9px] text-rose-700 font-semibold bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200 cursor-pointer';
-                    if (indicatorLabel) indicatorLabel.innerText = 'Cloud-Fehler';
+                    indicator.className = 'flex items-center text-[8px] text-rose-700 font-semibold bg-rose-50 px-1.5 py-1 rounded-lg border border-rose-200 cursor-pointer';
+                    if (indicatorLabel) indicatorLabel.innerText = 'Fehler';
                 }
             });
 
@@ -1828,18 +1856,25 @@
             document.querySelectorAll('.nav-item').forEach(btn => {
                 btn.className = 'nav-item flex flex-col items-center justify-center py-1 text-slate-400 hover:text-slate-700 transition-colors';
                 const textSpan = btn.querySelector('span');
-                if (textSpan) textSpan.className = 'text-[8px] font-medium';
+                if (textSpan) textSpan.className = 'text-xs font-medium';
             });
 
             const activeBtn = document.getElementById('nav-btn-' + viewName);
             if (activeBtn) {
                 activeBtn.className = 'nav-item flex flex-col items-center justify-center py-1 text-sky-600 transition-colors';
                 const textSpan = activeBtn.querySelector('span');
-                if (textSpan) textSpan.className = 'text-[8px] font-bold';
+                if (textSpan) textSpan.className = 'text-xs font-bold';
             }
 
             if (viewName === 'history') renderHistoryView();
-            if (viewName === 'vacation') renderVacationList();
+            if (viewName === 'vacation') {
+                const nowD = new Date();
+                const yrSel = document.getElementById('vacation-year-select');
+                const moSel = document.getElementById('vacation-month-select');
+                if (yrSel) yrSel.value = String(nowD.getFullYear());
+                if (moSel) moSel.value = String(nowD.getMonth() + 1).padStart(2, '0');
+                renderVacationList();
+            }
             if (viewName === 'start') updateDashboard();
 
             setTimeout(() => { if (pads[viewName]) pads[viewName].resize(); }, 60);
@@ -2040,7 +2075,24 @@
             const lockIcon = document.getElementById('manager-lock-icon');
             if (lockIcon) lockIcon.className = 'fa-solid fa-lock';
             const statusText = document.getElementById('manager-status-text');
-            if (statusText) statusText.innerText = currentLang === 'ro' ? 'Apăsați pentru deblocare' : 'Klicken zum Entsperren';
+            if (statusText) statusText.innerText = currentLang === 'ro' ? 'Apăsați pentru deblocare cu parolă' : 'Klicken zum Entsperren mit Passwort';
+        }
+
+        // Berechnung der Urlaubstage (ohne Sonntage)
+        function calculateWorkingDays(startDateStr, endDateStr) {
+            const start = new Date(startDateStr);
+            const end = new Date(endDateStr);
+            if (isNaN(start) || isNaN(end) || start > end) return 1;
+            let count = 0;
+            let cur = new Date(start);
+            while (cur <= end) {
+                const dayOfWeek = cur.getDay(); // 0 = Sonntag
+                if (dayOfWeek !== 0) {
+                    count++;
+                }
+                cur.setDate(cur.getDate() + 1);
+            }
+            return Math.max(1, count);
         }
 
         function submitVacationRequest(e) {
@@ -2055,13 +2107,11 @@
             const notes = document.getElementById('vac-notes').value.trim() || 'Keine';
             const sig = pads.vacation.canvas.toDataURL('image/png');
 
-            const startD = new Date(startDate);
-            const endD = new Date(endDate);
-            const diffDays = Math.max(1, Math.round((endD - startD) / (1000 * 60 * 60 * 24)) + 1);
+            const workingDays = calculateWorkingDays(startDate, endDate);
 
             const now = new Date();
             const rec = {
-                employee: employee, startDate: startDate, endDate: endDate, daysCount: diffDays, vacType: vacType, pdfLang: pdfLang, notes: notes,
+                employee: employee, startDate: startDate, endDate: endDate, daysCount: workingDays, vacType: vacType, pdfLang: pdfLang, notes: notes,
                 signature: sig, status: 'Ausstehend', approvedBy: null,
                 timestamp: now.toLocaleDateString('de-DE') + ' · ' + now.toLocaleTimeString('de-DE')
             };
@@ -2073,8 +2123,10 @@
             };
 
             if (db) {
-                db.collection('urlaube').add(newEntry).catch(err => console.warn(err));
-                db.collection('kontrollen').add(newEntry).catch(err => {});
+                db.collection('urlaube').add(newEntry).then(docRef => {
+                    newEntry.id = docRef.id;
+                    db.collection('kontrollen').add({ ...newEntry, vacationDocId: docRef.id }).catch(err => {});
+                }).catch(err => console.warn(err));
             }
 
             cloudVacations.unshift(newEntry);
@@ -2084,22 +2136,41 @@
             triggerSingleDispatch('Urlaub', rec);
         }
 
-        function getEmployeeRemainingDays(empName) {
+        function getEmployeeRemainingDays(empName, targetYear) {
+            const yr = parseInt(targetYear) || new Date().getFullYear();
             let used = 0;
             const list = cloudVacations.length > 0 ? cloudVacations : (function() {
                 try { return JSON.parse(localStorage.getItem('ecb_app_vacations') || '[]'); } catch(e) { return []; }
             })();
             list.forEach(item => {
                 const d = item.data || item;
-                if ((d.employee === empName || item.inspector === empName) && d.status === 'Genehmigt') {
-                    used += (d.daysCount || 0);
+                if ((d.employee === empName || item.inspector === empName) && d.status === 'Genehmigt' && d.startDate) {
+                    const reqYear = new Date(d.startDate).getFullYear();
+                    if (reqYear === yr) {
+                        used += (d.daysCount || calculateWorkingDays(d.startDate, d.endDate));
+                    }
                 }
             });
             return Math.max(0, 24 - used);
         }
 
+        // Feste Feiertage in Baden-Württemberg / Deutschland
+        function getHolidayName(year, month, day) {
+            const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            const fixed = {
+                [`${year}-01-01`]: 'Neujahr',
+                [`${year}-01-06`]: 'Hl. Drei Könige',
+                [`${year}-05-01`]: 'Tag der Arbeit',
+                [`${year}-10-03`]: 'Tag d. Dt. Einheit',
+                [`${year}-11-01`]: 'Allerheiligen',
+                [`${year}-12-25`]: '1. Weihnachtstag',
+                [`${year}-12-26`]: '2. Weihnachtstag'
+            };
+            return fixed[dateStr] || null;
+        }
+
         function updateVacationStatus(docId, newStatus) {
-            const item = cloudVacations.find(i => i.id === docId);
+            const item = cloudVacations.find(i => i.id === docId || i.id === String(docId));
             if (!item) return;
 
             item.data.status = newStatus;
@@ -2107,11 +2178,18 @@
 
             if (db && item.id) {
                 db.collection('urlaube').doc(item.id).update({ 'data.status': newStatus, 'data.approvedBy': 'Führungskraft' }).catch(err => console.warn(err));
+                
+                db.collection('kontrollen').where('vacationDocId', '==', item.id).get().then(snapshot => {
+                    snapshot.forEach(docSnap => {
+                        docSnap.ref.update({ 'data.status': newStatus, 'data.approvedBy': 'Führungskraft', 'data': item.data }).catch(err => {});
+                    });
+                }).catch(err => {});
             }
 
             lockManagerSession();
             renderVacationList();
-            showToast(newStatus === 'Genehmigt' ? (currentLang === 'ro' ? 'Concediu aprobat!' : 'Urlaub genehmigt & im Kalender auf Grün geschaltet!') : (currentLang === 'ro' ? 'Cerere respinsă!' : 'Urlaub abgelehnt!'));
+            renderHistoryView();
+            showToast(newStatus === 'Genehmigt' ? (currentLang === 'ro' ? 'Concediu aprobat & actualizat!' : 'Urlaub genehmigt & im Kalender aktualisiert!') : (currentLang === 'ro' ? 'Cerere respinsă!' : 'Urlaub abgelehnt!'));
         }
 
         function renderVacationList() {
@@ -2127,19 +2205,42 @@
             const selectedYear = parseInt(document.getElementById('vacation-year-select')?.value || new Date().getFullYear());
             const selectedMonth = parseInt(document.getElementById('vacation-month-select')?.value || (new Date().getMonth() + 1));
             const daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
+            const weekdayNames = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
 
-            let calendarHtml = `<table class="w-full border-collapse text-[10px]"><thead><tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200"><th class="p-1.5 text-left sticky left-0 bg-slate-100 z-10 w-32">${currentLang === 'ro' ? 'Angajat (Rămas)' : 'Mitarbeiter (Rest)'}</th>`;
+            // Erweitertes Team-Kalender-Grid (größer, mit Wochentagen unter den Zahlen und Feiertagen)
+            let calendarHtml = `<table class="w-full border-collapse text-base"><thead>`;
+            
+            calendarHtml += `<tr class="bg-slate-100 text-slate-900 font-black border-b border-slate-200">
+                <th class="p-4 text-left sticky left-0 bg-slate-100 z-10 w-64 text-sm uppercase tracking-wider">${currentLang === 'ro' ? 'Angajat (Rămas)' : 'Mitarbeiter (Rest)'}</th>`;
             for (let d = 1; d <= daysInMonth; d++) {
-                calendarHtml += `<th class="p-0.5 text-center font-mono w-5 border-l border-slate-200">${d}</th>`;
+                const dateObj = new Date(selectedYear, selectedMonth - 1, d);
+                const wd = weekdayNames[dateObj.getDay()];
+                const isSunday = (dateObj.getDay() === 0);
+                const holiday = getHolidayName(selectedYear, selectedMonth, d);
+                
+                let headerBg = '';
+                if (holiday) headerBg = 'bg-rose-500/10 text-rose-800';
+                else if (isSunday) headerBg = 'bg-indigo-500/10 text-indigo-800';
+
+                calendarHtml += `<th class="p-1.5 text-center font-mono w-11 text-xs border-l border-slate-200 ${headerBg}" title="${holiday || (isSunday ? 'Sonntag' : '')}">
+                    <div class="font-bold text-xs">${d}</div>
+                    <div class="text-[9px] text-slate-500 font-normal">${wd}</div>
+                </th>`;
             }
             calendarHtml += `</tr></thead><tbody>`;
 
             TEAM_EMPLOYEES.forEach(emp => {
-                const remDays = getEmployeeRemainingDays(emp);
-                calendarHtml += `<tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-1.5 font-bold text-slate-800 sticky left-0 bg-white z-10 truncate">${emp} <span class="text-[9px] text-emerald-700 font-mono">(${remDays} ${currentLang === 'ro' ? 'z' : 'T'})</span></td>`;
+                const remDays = getEmployeeRemainingDays(emp, selectedYear);
+                calendarHtml += `<tr class="border-b border-slate-200 hover:bg-slate-50">
+                    <td class="p-4 font-bold text-slate-900 text-sm sticky left-0 bg-white z-10 truncate shadow-xs">
+                        ${emp} <span class="text-xs text-emerald-700 font-mono font-black ml-1">(${remDays} ${currentLang === 'ro' ? 'z' : 'T'})</span>
+                    </td>`;
                 for (let d = 1; d <= daysInMonth; d++) {
                     const dateObj = new Date(selectedYear, selectedMonth - 1, d);
                     const dateIso = dateObj.toISOString().slice(0, 10);
+                    const isSunday = (dateObj.getDay() === 0);
+                    const holiday = getHolidayName(selectedYear, selectedMonth, d);
+
                     let dayStatus = '';
                     list.forEach(item => {
                         const rec = item.data || item;
@@ -2150,10 +2251,25 @@
                             }
                         }
                     });
+
                     let cellBg = '';
-                    if (dayStatus === 'approved') cellBg = 'bg-emerald-500 text-white font-bold';
-                    else if (dayStatus === 'pending') cellBg = 'bg-amber-400 text-slate-900';
-                    calendarHtml += `<td class="p-0.5 text-center border-l border-slate-200 ${cellBg}" title="${emp} ${dateIso}"></td>`;
+                    let titleText = '';
+
+                    if (dayStatus === 'approved') {
+                        cellBg = 'bg-emerald-500 text-white font-bold';
+                        titleText = `${emp}: Genehmigter Urlaub`;
+                    } else if (dayStatus === 'pending') {
+                        cellBg = 'bg-amber-400 text-slate-900';
+                        titleText = `${emp}: Beantragter Urlaub (Ausstehend)`;
+                    } else if (holiday) {
+                        cellBg = 'bg-rose-400/25';
+                        titleText = holiday;
+                    } else if (isSunday) {
+                        cellBg = 'bg-indigo-500/15';
+                        titleText = 'Sonntag';
+                    }
+
+                    calendarHtml += `<td class="p-1.5 text-center border-l border-slate-200 ${cellBg}" title="${titleText}"></td>`;
                 }
                 calendarHtml += `</tr>`;
             });
@@ -2171,17 +2287,18 @@
                     approvalItemsContainer.innerHTML = pendingList.map(item => {
                         const d = item.data || item;
                         const empName = d.employee || item.inspector;
-                        const rem = getEmployeeRemainingDays(empName);
+                        const reqYear = d.startDate ? new Date(d.startDate).getFullYear() : selectedYear;
+                        const rem = getEmployeeRemainingDays(empName, reqYear);
                         return `
-                            <div class="p-2.5 bg-slate-800 border border-slate-700 rounded-xl space-y-1.5 text-xs">
+                            <div class="p-3 bg-slate-800 border border-slate-700 rounded-xl space-y-2 text-xs">
                                 <div class="flex items-center justify-between font-bold text-white">
                                     <span>${empName} <span class="text-[10px] text-emerald-400 font-mono">(${currentLang === 'ro' ? 'Rămas' : 'Rest'}: ${rem} ${currentLang === 'ro' ? 'zile' : 'Tage'})</span></span>
-                                    <span class="text-[10px] px-2 py-0.5 bg-amber-400 text-slate-900 rounded-full font-bold">${currentLang === 'ro' ? 'În așteptare' : 'Ausstehend'}</span>
+                                    <span class="text-[10px] px-2.5 py-0.5 bg-amber-400 text-slate-900 rounded-full font-bold">${currentLang === 'ro' ? 'În așteptare' : 'Ausstehend'}</span>
                                 </div>
-                                <div class="text-[11px] text-slate-300 font-mono">📅 ${d.startDate} ➔ ${d.endDate} (${d.daysCount || 0} ${currentLang === 'ro' ? 'zile' : 'Tage'}, ${d.vacType})</div>
+                                <div class="text-xs text-slate-300 font-mono">📅 ${d.startDate} ➔ ${d.endDate} (${d.daysCount || calculateWorkingDays(d.startDate, d.endDate)} ${currentLang === 'ro' ? 'zile' : 'Tage'}, ${d.vacType})</div>
                                 <div class="flex items-center justify-end gap-2 pt-1">
-                                    <button onclick="updateVacationStatus('${item.id}', 'Genehmigt')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold text-[10px]">${currentLang === 'ro' ? 'Aprobă' : 'Genehmigen'}</button>
-                                    <button onclick="updateVacationStatus('${item.id}', 'Ablehnen')" class="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded-lg font-bold text-[10px]">${currentLang === 'ro' ? 'Respinge' : 'Ablehnen'}</button>
+                                    <button onclick="updateVacationStatus('${item.id}', 'Genehmigt')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold text-xs">${currentLang === 'ro' ? 'Aprobă' : 'Genehmigen'}</button>
+                                    <button onclick="updateVacationStatus('${item.id}', 'Abgelehnt')" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-lg font-bold text-xs">${currentLang === 'ro' ? 'Respinge' : 'Ablehnen'}</button>
                                 </div>
                             </div>
                         `;
@@ -2198,28 +2315,29 @@
                 const d = item.data || item;
                 const status = d.status || 'Ausstehend';
                 const empName = d.employee || item.inspector;
-                const rem = getEmployeeRemainingDays(empName);
-                let statusBadge = `<span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">⏳ ${currentLang === 'ro' ? 'În așteptare' : 'Ausstehend'}</span>`;
-                if (status === 'Genehmigt') statusBadge = `<span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">✓ ${currentLang === 'ro' ? 'Aprobat' : 'Genehmigt'}</span>`;
-                if (status === 'Abgelehnt' || status === 'Ablehnen') statusBadge = `<span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-rose-100 text-rose-800">✗ ${currentLang === 'ro' ? 'Respins' : 'Abgelehnt'}</span>`;
+                const reqYear = d.startDate ? new Date(d.startDate).getFullYear() : selectedYear;
+                const rem = getEmployeeRemainingDays(empName, reqYear);
+                let statusBadge = `<span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800">⏳ ${currentLang === 'ro' ? 'În așteptare' : 'Ausstehend'}</span>`;
+                if (status === 'Genehmigt') statusBadge = `<span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800">✓ ${currentLang === 'ro' ? 'Aprobat' : 'Genehmigt'}</span>`;
+                if (status === 'Abgelehnt' || status === 'Ablehnen') statusBadge = `<span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800">✗ ${currentLang === 'ro' ? 'Respins' : 'Abgelehnt'}</span>`;
 
                 return `
-                    <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2 text-xs">
+                    <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-2 text-xs">
                         <div class="flex items-center justify-between">
-                            <div class="font-bold text-slate-900 flex items-center gap-1.5">
-                                <i class="fa-solid fa-user-tie text-ecb"></i> ${empName} <span class="text-[10px] text-slate-500 font-mono">(${rem} ${currentLang === 'ro' ? 'zile' : 'Tage'} rest)</span>
-                                <span class="text-[9px] font-normal px-2 py-0.5 rounded-full bg-ecb/10 text-ecb">${d.vacType || 'Urlaub'}</span>
+                            <div class="font-bold text-slate-900 flex items-center gap-1.5 text-xs">
+                                <i class="fa-solid fa-user-tie text-ecb"></i> ${empName} <span class="text-[11px] text-slate-500 font-mono">(${rem} ${currentLang === 'ro' ? 'zile' : 'Tage'} rest)</span>
+                                <span class="text-[10px] font-normal px-2 py-0.5 rounded-full bg-ecb/10 text-ecb">${d.vacType || 'Urlaub'}</span>
                             </div>
                             <div>${statusBadge}</div>
                         </div>
-                        <div class="text-[11px] text-slate-600 font-mono">📅 ${d.startDate || ''} ➔ ${d.endDate || ''} (${d.daysCount || 0} ${currentLang === 'ro' ? 'zile' : 'Tage'})</div>
-                        ${d.notes && d.notes !== 'Keine' ? `<div class="text-[10px] text-slate-500">${currentLang === 'ro' ? 'Înlocuitor' : 'Vertretung'}: ${d.notes}</div>` : ''}
+                        <div class="text-xs text-slate-600 font-mono">📅 ${d.startDate || ''} ➔ ${d.endDate || ''} (${d.daysCount || calculateWorkingDays(d.startDate, d.endDate)} ${currentLang === 'ro' ? 'zile' : 'Tage'})</div>
+                        ${d.notes && d.notes !== 'Keine' ? `<div class="text-[11px] text-slate-500">${currentLang === 'ro' ? 'Înlocuitor' : 'Vertretung'}: ${d.notes}</div>` : ''}
                         <div class="flex items-center justify-between pt-1 border-t border-slate-200">
-                            <div class="flex items-center gap-1.5">
-                                <button onclick="viewVacationPdf('${item.id || idx}')" class="px-2.5 py-1 bg-white border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-100 font-bold" title="PDF">
+                            <div class="flex items-center gap-2">
+                                <button onclick="viewVacationPdf('${item.id || idx}')" class="px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-100 font-bold" title="PDF">
                                     <i class="fa-solid fa-file-pdf text-rose-500"></i> PDF (${(d.pdfLang || 'de').toUpperCase()})
                                 </button>
-                                <button onclick="deleteVacationEntry('${item.id || idx}')" class="px-2 py-1 text-rose-500 hover:text-rose-700"><i class="fa-solid fa-trash-can"></i></button>
+                                <button onclick="deleteVacationEntry('${item.id || idx}')" class="px-2 py-1 text-rose-500 hover:text-rose-700 text-sm"><i class="fa-solid fa-trash-can"></i></button>
                             </div>
                         </div>
                     </div>
@@ -2232,11 +2350,19 @@
             const idx = list.findIndex(i => i.id === key || list.indexOf(i) === parseInt(key));
             if (idx > -1) {
                 const item = list[idx];
-                if (item.id && db) db.collection('urlaube').doc(item.id).delete().catch(() => {});
+                if (item.id) {
+                    if (db) {
+                        db.collection('urlaube').doc(item.id).delete().catch(() => {});
+                        db.collection('kontrollen').where('vacationDocId', '==', item.id).get().then(snapshot => {
+                            snapshot.forEach(docSnap => docSnap.ref.delete().catch(() => {}));
+                        }).catch(() => {});
+                    }
+                }
                 list.splice(idx, 1);
                 localStorage.setItem('ecb_app_vacations', JSON.stringify(list));
                 renderVacationList();
-                showToast(currentLang === 'ro' ? 'Șters.' : 'Gelöscht.');
+                renderHistoryView();
+                showToast(currentLang === 'ro' ? 'Șters din plan & istoric.' : 'Aus Plan & Historie gelöscht.');
             }
         }
 
@@ -2268,8 +2394,9 @@
             let body = `ECB REINIGUNGSSYSTEME - PROTOKOLL: ${type.toUpperCase()}\nDatum / Zeit: ${rec.timestamp}\n========================================\n\n`;
 
             if (type === 'Urlaub') {
+                const yr = rec.startDate ? new Date(rec.startDate).getFullYear() : new Date().getFullYear();
                 subject = `[ECB Urlaubsantrag] ${rec.employee} (${rec.startDate} bis ${rec.endDate}) - Status: ${rec.status}`;
-                body = `ECB REINIGUNGSSYSTEME - URLAUBSANTRAG\nMitarbeiter: ${rec.employee}\nZeitraum: ${rec.startDate} bis ${rec.endDate} (${rec.daysCount} Tage)\nResturlaub: ${getEmployeeRemainingDays(rec.employee)} Tage\nArt: ${rec.vacType}\nStatus: ${rec.status}\nBemerkung: ${rec.notes}`;
+                body = `ECB REINIGUNGSSYSTEME - URLAUBSANTRAG\nMitarbeiter: ${rec.employee}\nZeitraum: ${rec.startDate} bis ${rec.endDate} (${rec.daysCount} Tage)\nResturlaub: ${getEmployeeRemainingDays(rec.employee, yr)} Tage\nArt: ${rec.vacType}\nStatus: ${rec.status}\nBemerkung: ${rec.notes}`;
             } else {
                 body += `Prüfer: ${rec.inspector}\nBemerkung: ${rec.notes}\n\n`;
             }
@@ -2478,7 +2605,8 @@
             doc.setFont('helvetica', 'bold'); doc.setTextColor(94, 166, 59);
             doc.text(rec.vacType || 'Erholungsurlaub', 75, 68);
 
-            const remDays = getEmployeeRemainingDays(rec.employee);
+            const reqYr = rec.startDate ? new Date(rec.startDate).getFullYear() : new Date().getFullYear();
+            const remDays = getEmployeeRemainingDays(rec.employee, reqYr);
             doc.setFont('helvetica', 'normal'); doc.setTextColor(71, 85, 105);
             doc.text(isRo ? 'Concediu rămas (zile):' : 'Resturlaub (Tage):', 23, 76);
             doc.setFont('helvetica', 'bold'); doc.setTextColor(15, 23, 42);
@@ -2491,7 +2619,7 @@
             curY += 10;
             doc.setFont('helvetica', 'normal'); doc.setFontSize(9);
             doc.text(`${isRo ? 'De la data' : 'Von Datum'}: ${rec.startDate || '-'}`, 23, curY);
-            doc.text(`${isRo ? 'Până la data' : 'Bis Datum'}: ${rec.endDate || '-'} (${rec.daysCount || 0} ${isRo ? 'zile' : 'Tage'})`, 105, curY);
+            doc.text(`${isRo ? 'Până la data' : 'Bis Datum'}: ${rec.endDate || '-'} (${rec.daysCount || calculateWorkingDays(rec.startDate, rec.endDate)} ${isRo ? 'zile' : 'Tage'})`, 105, curY);
 
             curY += 18;
             doc.text(`${isRo ? 'Mențiune / Înlocuitor' : 'Vertretung / Bemerkung'}: ${rec.notes || 'Keine'}`, 23, curY);
@@ -2522,10 +2650,11 @@
 
             startY += 8;
             doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5);
+            const currentYear = new Date().getFullYear();
 
             TEAM_EMPLOYEES.forEach(emp => {
                 if (startY > 260) { doc.addPage(); startY = 20; }
-                const rem = getEmployeeRemainingDays(emp);
+                const rem = getEmployeeRemainingDays(emp, currentYear);
                 const empLeaves = list.filter(i => {
                     const d = i.data || i;
                     return (d.employee === emp || i.inspector === emp);
@@ -2816,7 +2945,7 @@
         function setHistoryFilter(category) {
             currentHistoryFilter = category;
             document.querySelectorAll('.hist-filter-btn').forEach(btn => {
-                btn.className = 'hist-filter-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-white border border-slate-200 text-slate-600 hover:bg-slate-100';
+                btn.className = 'hist-filter-btn shrink-0 px-3 py-2 rounded-xl text-xs font-bold bg-white border border-slate-200 text-slate-600 hover:bg-slate-100';
             });
             let id = 'hist-filter-all';
             if (category === 'Entmineralisierung') id = 'hist-filter-demin';
@@ -2825,7 +2954,7 @@
             if (category === 'Fahrzeuge') id = 'hist-filter-vehicle';
             if (category === 'Urlaub') id = 'hist-filter-vacation';
             const btn = document.getElementById(id);
-            if (btn) btn.className = 'hist-filter-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-white shadow-xs';
+            if (btn) btn.className = 'hist-filter-btn shrink-0 px-3 py-2 rounded-xl text-xs font-bold bg-slate-900 text-white shadow-xs';
             renderHistoryView();
         }
 
@@ -2857,7 +2986,7 @@
                 if (item.type === 'Urlaub') iconClass = 'fa-umbrella-beach text-ecb bg-ecb/10';
 
                 return `
-                    <div class="p-3 bg-white border border-slate-200 rounded-2xl shadow-xs space-y-2">
+                    <div class="p-3.5 bg-white border border-slate-200 rounded-2xl shadow-xs space-y-2">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-2.5">
                                 <div class="w-8 h-8 rounded-xl ${iconClass.split(' ')[1]} ${iconClass.split(' ')[2]} flex items-center justify-center text-sm shrink-0">
@@ -2870,12 +2999,12 @@
                             </div>
                             <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">✓ Cloud</span>
                         </div>
-                        <div class="text-[11px] text-slate-600">Name: <strong>${item.inspector || '-'}</strong></div>
+                        <div class="text-xs text-slate-600">Name: <strong>${item.inspector || '-'}</strong></div>
                         <div class="flex items-center justify-between pt-1 border-t border-slate-100 text-xs">
                             <button onclick="viewHistoryItemPdf('${item.id || idx}')" class="text-sky-600 font-bold hover:underline flex items-center gap-1">
                                 <i class="fa-solid fa-file-pdf"></i> PDF ansehen
                             </button>
-                            <button onclick="deleteHistoryEntry('${item.id || idx}')" class="rose-500 hover:text-rose-700 text-xs"><i class="fa-solid fa-trash-can"></i></button>
+                            <button onclick="deleteHistoryEntry('${item.id || idx}')" class="text-rose-500 hover:text-rose-700 text-sm"><i class="fa-solid fa-trash-can"></i></button>
                         </div>
                     </div>
                 `;
@@ -2926,6 +3055,56 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a'); a.href = url; a.download = `ECB-Verlauf.csv`; a.click();
             URL.revokeObjectURL(url);
+        }
+
+        function openAttendanceModal() {
+            const container = document.getElementById('attendance-list-container');
+            if (!container) return;
+
+            const todayIso = new Date().toISOString().slice(0, 10);
+            const list = cloudVacations.length > 0 ? cloudVacations : (function() {
+                try { return JSON.parse(localStorage.getItem('ecb_app_vacations') || '[]'); } catch(e) { return []; }
+            })();
+
+            let html = '';
+            TEAM_EMPLOYEES.forEach(emp => {
+                let isOnLeave = false;
+                let leaveType = '';
+                list.forEach(item => {
+                    const rec = item.data || item;
+                    if ((rec.employee === emp || item.inspector === emp) && rec.status === 'Genehmigt') {
+                        if (rec.startDate && rec.endDate && todayIso >= rec.startDate && todayIso <= rec.endDate) {
+                            isOnLeave = true;
+                            leaveType = rec.vacType || 'Urlaub';
+                        }
+                    }
+                });
+
+                if (isOnLeave) {
+                    html += `
+                        <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-center justify-between text-xs">
+                            <div class="font-bold text-slate-900 flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block"></span>
+                                <span>${emp}</span>
+                            </div>
+                            <span class="text-[11px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full">🏖️ ${t('status_on_leave')} (${leaveType})</span>
+                        </div>
+                    `;
+                } else {
+                    html += `
+                        <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-between text-xs">
+                            <div class="font-bold text-slate-900 flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
+                                <span>${emp}</span>
+                            </div>
+                            <span class="text-[11px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full">🟢 ${t('status_working')}</span>
+                        </div>
+                    `;
+                }
+            });
+
+            container.innerHTML = html;
+            openModal('modal-attendance');
         }
 
         function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
