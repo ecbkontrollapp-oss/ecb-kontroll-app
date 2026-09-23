@@ -95,7 +95,6 @@
 
     <main id="main-container" class="flex-1 max-w-md w-full mx-auto px-4 py-3 space-y-3.5 pb-28">
 
-        <!-- START VIEW -->
         <section id="view-start" class="view-panel space-y-3.5">
             <div class="pt-0.5 flex items-center justify-between">
                 <div>
@@ -224,7 +223,6 @@
             </div>
         </section>
 
-        <!-- DEMIN VIEW -->
         <section id="view-demin" class="view-panel hidden space-y-3.5">
             <div class="flex items-center justify-between">
                 <button onclick="switchView('start')" class="text-xs font-bold text-slate-600 hover:text-slate-900 flex items-center gap-1.5 py-1">
@@ -335,7 +333,6 @@
             </div>
         </section>
 
-        <!-- OUTDOOR VIEW -->
         <section id="view-outdoor" class="view-panel hidden space-y-3.5">
             <div class="flex items-center justify-between">
                 <button onclick="switchView('start')" class="text-xs font-bold text-slate-600 hover:text-slate-900 flex items-center gap-1.5 py-1">
@@ -456,7 +453,6 @@
             </div>
         </section>
 
-        <!-- BREAKROOM VIEW -->
         <section id="view-breakroom" class="view-panel hidden space-y-3.5">
             <div class="flex items-center justify-between">
                 <button onclick="switchView('start')" class="text-xs font-bold text-slate-600 hover:text-slate-900 flex items-center gap-1.5 py-1">
@@ -591,7 +587,6 @@
             </div>
         </section>
 
-        <!-- VEHICLE VIEW -->
         <section id="view-vehicle" class="view-panel hidden space-y-3.5">
             <div class="flex items-center justify-between">
                 <button onclick="switchView('start')" class="text-xs font-bold text-slate-600 hover:text-slate-900 flex items-center gap-1.5 py-1">
@@ -739,7 +734,6 @@
             </div>
         </section>
 
-        <!-- VACATION VIEW -->
         <section id="view-vacation" class="view-panel hidden space-y-3.5">
             <div class="flex items-center justify-between">
                 <div>
@@ -838,7 +832,6 @@
             </div>
         </section>
 
-        <!-- SHIFTS VIEW -->
         <section id="view-shifts" class="view-panel hidden space-y-3.5">
             <div class="flex items-center justify-between">
                 <div>
@@ -895,7 +888,7 @@
 
             <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs space-y-3">
                 <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                    <i class="fa-solid fa-clock text-indigo-600"></i> <span data-i18n="shift_list_title">Aktuelle Schicht-Einträge</span>
+                    <i class="fa-solid fa-clock text-indigo-600"></i> <span data-i18n="shift_list_title">Aktuelle Schicht-Einträge (Klick zum Bearbeiten/Löschen)</span>
                 </h3>
                 <div id="shift-list-container" class="space-y-2">
                     <div class="p-4 text-center text-xs text-slate-400 border-2 border-dashed border-slate-200 rounded-xl" data-i18n="no_shifts">
@@ -905,7 +898,6 @@
             </div>
         </section>
 
-        <!-- HISTORY VIEW -->
         <section id="view-history" class="view-panel hidden space-y-3.5">
             <div class="flex items-center justify-between">
                 <div>
@@ -1062,6 +1054,7 @@
         </div>
     </div>
 
+    <!-- SHIFT EDIT / NEW MODAL -->
     <div id="modal-shift" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-3">
         <div class="bg-white rounded-2xl max-w-sm w-full p-4 shadow-2xl space-y-3 max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between pb-2 border-b border-slate-100">
@@ -1113,9 +1106,14 @@
                     <label for="shift-delivery" class="text-xs font-bold text-slate-800" data-i18n="shift_label_delivery">🚚 Übernimmt LKW / Auslieferung an diesem Tag</label>
                 </div>
 
-                <button type="submit" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-xs shadow-xs flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-floppy-disk"></i> <span data-i18n="shift_btn_save">Schicht speichern</span>
-                </button>
+                <div class="flex gap-2 pt-2">
+                    <button type="submit" class="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-xs shadow-xs flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-floppy-disk"></i> <span data-i18n="shift_btn_save">Schicht speichern</span>
+                    </button>
+                    <button type="button" id="btn-delete-shift-modal" onclick="deleteCurrentModalShift()" class="hidden py-2.5 px-3 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-xl font-bold text-xs transition-colors" title="Schicht löschen">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
             </form>
         </div>
     </div>
@@ -1305,6 +1303,7 @@
         const MANAGER_PASSWORD_HASH = "ECB1688!";
         let isManagerAuthenticated = false;
         let managerTimeoutTimer = null;
+        let activeEditingShiftId = null;
 
         const TEAM_EMPLOYEES = ["Neymar", "Vasi", "Maria", "Livio", "Mario", "Mirel", "Bogdanie"];
 
@@ -1654,7 +1653,7 @@
                 nav_history: "Dosare",
                 direct_send_title: "Trimite imediat la pb@ecb-system.de",
                 badge_recommended: "Recomandat",
-                direct_send_desc: "Trimite <strong>documentul PDF oficial</strong> direct prin e-mail și îl arhivează în folderul Dropbox potrivit.",
+                direct_send_desc: "Trimite <strong>documentul PDF oficial</strong> direct per e-mail și îl arhivează în folderul Dropbox potrivit.",
                 btn_send_now: "Trimite protocolul acum",
                 mail_app_title: "În aplicația de mail cu PDF atașat",
                 btn_open_mail_app: "Deschide în Apple Mail / Gmail",
@@ -1959,9 +1958,11 @@
                 renderShiftList();
             }, (error) => { console.warn("Urlaub Firestore Fehler:", error); });
 
-            db.collection('schichten').orderBy('createdAt', 'desc').onSnapshot((snapshot) => {
+            // ZWEI-WEGE BINDUNG FÜR SCHICHTEN (Realtime Listener)
+            db.collection('schichten').onSnapshot((snapshot) => {
                 const items = [];
                 snapshot.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
+                items.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
                 cloudShifts = items;
                 try { localStorage.setItem('ecb_app_shifts', JSON.stringify(items)); } catch(e){}
                 renderShiftList();
@@ -2190,14 +2191,34 @@
         }
 
         function openNewShiftModal() {
+            activeEditingShiftId = null;
             const form = document.getElementById('form-shift-request');
             if (form) form.reset();
             const todayIso = new Date().toISOString().slice(0, 10);
-            const dateStartInput = document.getElementById('shift-date-start');
-            const dateEndInput = document.getElementById('shift-date-end');
-            if (dateStartInput) dateStartInput.value = todayIso;
-            if (dateEndInput) dateEndInput.value = todayIso;
+            document.getElementById('shift-date-start').value = todayIso;
+            document.getElementById('shift-date-end').value = todayIso;
+            document.getElementById('btn-delete-shift-modal').classList.add('hidden');
             openModal('modal-shift');
+        }
+
+        function editShiftEntry(docId) {
+            const item = cloudShifts.find(i => i.id === docId);
+            if (!item) return;
+            activeEditingShiftId = docId;
+            document.getElementById('shift-date-start').value = item.date;
+            document.getElementById('shift-date-end').value = item.date;
+            document.getElementById('shift-employee').value = item.employee;
+            document.getElementById('shift-type').value = item.shiftType;
+            document.getElementById('shift-delivery').checked = !!item.isDelivery;
+            document.getElementById('btn-delete-shift-modal').classList.remove('hidden');
+            openModal('modal-shift');
+        }
+
+        function deleteCurrentModalShift() {
+            if (activeEditingShiftId) {
+                deleteShiftEntry(activeEditingShiftId);
+                closeModal('modal-shift');
+            }
         }
 
         function submitShift(e) {
@@ -2210,6 +2231,12 @@
 
             if (!startDate || !endDate || startDate > endDate) return;
 
+            if (activeEditingShiftId && startDate === endDate) {
+                if (activeEditingShiftId !== `${startDate}_${employee}` && db) {
+                    db.collection('schichten').doc(activeEditingShiftId).delete().catch(()=>{});
+                }
+            }
+
             const start = new Date(startDate);
             const end = new Date(endDate);
             let cur = new Date(start);
@@ -2219,21 +2246,32 @@
 
             while (cur <= end) {
                 const dateIso = cur.toISOString().slice(0, 10);
+                const uniqueDocId = `${dateIso}_${employee}`;
+                
+                const dCopy = new Date(cur.getTime());
+                dCopy.setHours(0, 0, 0, 0);
+                dCopy.setDate(dCopy.getDate() + 4 - (dCopy.getDay() || 7));
+                const yearStart = new Date(dCopy.getFullYear(), 0, 1);
+                const weekNo = Math.ceil((((dCopy - yearStart) / 86400000) + 1) / 7);
+
                 const rec = {
+                    id: uniqueDocId,
                     date: dateIso,
                     employee: employee,
                     shiftType: shiftType,
                     isDelivery: isDelivery,
+                    weekNumber: weekNo,
                     timestamp: timeFormatted,
                     createdAt: Date.now()
                 };
 
                 if (db) {
-                    db.collection('schichten').add(rec).then(docRef => {
-                        rec.id = docRef.id;
-                        cloudShifts.unshift(rec);
-                        renderShiftList();
-                    }).catch(err => console.warn("Shift save error:", err));
+                    db.collection('schichten').doc(uniqueDocId).set(rec, { merge: true }).catch(err => console.warn("Shift save error:", err));
+                }
+
+                const existingIdx = cloudShifts.findIndex(i => i.id === uniqueDocId);
+                if (existingIdx > -1) {
+                    cloudShifts[existingIdx] = rec;
                 } else {
                     cloudShifts.unshift(rec);
                 }
@@ -2248,7 +2286,7 @@
         }
 
         function deleteShiftEntry(docId) {
-            const idx = cloudShifts.findIndex(i => i.id === docId || cloudShifts.indexOf(i) === parseInt(docId));
+            const idx = cloudShifts.findIndex(i => i.id === docId);
             if (idx > -1) {
                 const item = cloudShifts[idx];
                 if (item.id && db) {
@@ -2266,13 +2304,8 @@
             const calendarGrid = document.getElementById('monthly-shift-calendar-grid');
             if (!container || !calendarGrid) return;
 
-            const list = cloudShifts.length > 0 ? cloudShifts : (function() {
-                try { return JSON.parse(localStorage.getItem('ecb_app_shifts') || '[]'); } catch(e) { return []; }
-            })();
-
-            const vacationList = cloudVacations.length > 0 ? cloudVacations : (function() {
-                try { return JSON.parse(localStorage.getItem('ecb_app_vacations') || '[]'); } catch(e) { return []; }
-            })();
+            const list = cloudShifts;
+            const vacationList = cloudVacations;
 
             const selectedYear = parseInt(document.getElementById('shift-year-select')?.value || new Date().getFullYear());
             const selectedMonth = parseInt(document.getElementById('shift-month-select')?.value || (new Date().getMonth() + 1));
@@ -2385,19 +2418,19 @@
                 return;
             }
 
-            container.innerHTML = monthFiltered.map((item, idx) => {
+            container.innerHTML = monthFiltered.map((item) => {
                 let badgeBg = 'bg-sky-100 text-sky-800';
                 if (item.shiftType === 'Mittagsschicht') badgeBg = 'bg-indigo-100 text-indigo-800';
                 if (item.shiftType === 'Freischicht') badgeBg = 'bg-slate-100 text-slate-800';
                 return `
-                    <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5 text-xs">
+                    <div onclick="editShiftEntry('${item.id}')" class="p-3.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl space-y-1.5 text-xs cursor-pointer transition-colors">
                         <div class="flex items-center justify-between font-bold text-slate-900">
                             <span>${item.employee}</span>
                             <span class="px-2 py-0.5 rounded-full text-[10px] ${badgeBg}">${item.shiftType}</span>
                         </div>
                         <div class="text-[11px] text-slate-600 flex items-center justify-between">
                             <span>📅 ${item.date} ${item.isDelivery ? '• 🚚 <strong>LKW / Auslieferung</strong>' : ''}</span>
-                            <button onclick="deleteShiftEntry('${item.id || idx}')" class="text-rose-500 hover:text-rose-700"><i class="fa-solid fa-trash-can"></i></button>
+                            <button onclick="event.stopPropagation(); deleteShiftEntry('${item.id}')" class="text-rose-500 hover:text-rose-700 p-1"><i class="fa-solid fa-trash-can"></i></button>
                         </div>
                     </div>
                 `;
@@ -2538,9 +2571,7 @@
         function getEmployeeRemainingDays(empName, targetYear) {
             const yr = parseInt(targetYear) || new Date().getFullYear();
             let used = 0;
-            const list = cloudVacations.length > 0 ? cloudVacations : (function() {
-                try { return JSON.parse(localStorage.getItem('ecb_app_vacations') || '[]'); } catch(e) { return []; }
-            })();
+            const list = cloudVacations;
             list.forEach(item => {
                 const d = item.data || item;
                 if ((d.employee === empName || item.inspector === empName) && d.status === 'Genehmigt' && d.startDate) {
@@ -2625,9 +2656,7 @@
             const approvalItemsContainer = document.getElementById('manager-approval-items');
             if (!container || !calendarGrid) return;
 
-            const list = cloudVacations.length > 0 ? cloudVacations : (function() {
-                try { return JSON.parse(localStorage.getItem('ecb_app_vacations') || '[]'); } catch(e) { return []; }
-            })();
+            const list = cloudVacations;
 
             const selectedYear = parseInt(document.getElementById('vacation-year-select')?.value || new Date().getFullYear());
             const selectedMonth = parseInt(document.getElementById('vacation-month-select')?.value || (new Date().getMonth() + 1));
@@ -3567,12 +3596,8 @@
             if (!container) return;
 
             const todayIso = new Date().toISOString().slice(0, 10);
-            const vacationList = cloudVacations.length > 0 ? cloudVacations : (function() {
-                try { return JSON.parse(localStorage.getItem('ecb_app_vacations') || '[]'); } catch(e) { return []; }
-            })();
-            const shiftList = cloudShifts.length > 0 ? cloudShifts : (function() {
-                try { return JSON.parse(localStorage.getItem('ecb_app_shifts') || '[]'); } catch(e) { return []; }
-            })();
+            const vacationList = cloudVacations;
+            const shiftList = cloudShifts;
 
             let html = '';
             TEAM_EMPLOYEES.forEach(emp => {
