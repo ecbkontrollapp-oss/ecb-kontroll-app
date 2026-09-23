@@ -73,20 +73,17 @@
             </div>
             
             <div class="flex items-center gap-2">
-                <!-- CLOUD INDICATOR (COMPACT) -->
-                <button onclick="showCloudDiagnostic()" id="cloud-indicator" class="flex items-center justify-center text-[8px] text-emerald-700 font-semibold bg-emerald-50 px-2 py-2 rounded-xl border border-emerald-200 transition-colors h-10" title="Google Firebase Status">
+                <button onclick="showCloudDiagnostic()" id="cloud-indicator" class="flex items-center justify-center text-[8px] text-emerald-700 font-semibold bg-emerald-50 px-2.5 py-2 rounded-xl border border-emerald-200 transition-colors h-10" title="Google Firebase Status">
                     <i class="fa-solid fa-cloud text-[9px] mr-1"></i> <span id="cloud-indicator-label">Cloud</span>
                 </button>
 
-                <!-- ATTENDANCE BUTTON (PROMINENT & ENLARGED) -->
                 <button onclick="openAttendanceModal()" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-xs font-bold text-emerald-800 transition-colors shadow-2xs h-10" title="Wer ist heute da?">
                     <i class="fa-solid fa-users text-emerald-600 text-sm"></i>
                     <span data-i18n="attendance_btn">Anwesende</span>
                 </button>
 
-                <!-- LANGUAGE SWITCH (ENLARGED FLAG) -->
                 <button onclick="toggleLanguage()" id="lang-btn" class="flex items-center justify-center px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 transition-colors shadow-2xs h-10">
-                    <span id="lang-flag" class="text-4xl leading-none">🇷🇴</span>
+                    <span id="lang-flag" class="text-3xl leading-none">🇷🇴</span>
                 </button>
 
                 <button onclick="openSettingsModal()" class="w-10 h-10 rounded-full flex items-center justify-center text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors" title="Einstellungen">
@@ -109,7 +106,6 @@
                 </div>
             </div>
 
-            <!-- SCHNELLSTART: URLAUBSPLAN VERKNÜPFUNG -->
             <div onclick="switchView('vacation')" class="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl p-4 text-white shadow-md flex items-center justify-between cursor-pointer hover:opacity-95 transition-all">
                 <div class="flex items-center gap-3">
                     <div class="w-11 h-11 rounded-xl bg-white/20 flex items-center justify-center text-xl">
@@ -125,7 +121,6 @@
                 </div>
             </div>
 
-            <!-- SCHNELLSTART: SCHICHTKALENDER VERKNÜPFUNG -->
             <div onclick="switchView('shifts')" class="bg-gradient-to-r from-indigo-500 to-blue-600 rounded-2xl p-4 text-white shadow-md flex items-center justify-between cursor-pointer hover:opacity-95 transition-all">
                 <div class="flex items-center gap-3">
                     <div class="w-11 h-11 rounded-xl bg-white/20 flex items-center justify-center text-xl">
@@ -133,7 +128,7 @@
                     </div>
                     <div>
                         <h3 class="text-sm font-bold tracking-tight" data-i18n="shift_title">Schichtkalender & Auslieferung</h3>
-                        <p class="text-[11px] text-indigo-100 font-medium" data-i18n="shift_sub">Früh-, Mittagsschichten & Freischichten live</p>
+                        <p class="text-[11px] text-indigo-100 font-medium" data-i18n="shift_sub">Früh-, Mittagsschichten, Freischichten & LKW</p>
                     </div>
                 </div>
                 <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-xs">
@@ -141,7 +136,6 @@
                 </div>
             </div>
 
-            <!-- Tagesstatus Pill -->
             <div class="bg-white rounded-2xl p-3 border border-slate-200/90 flex items-center justify-between shadow-xs">
                 <div class="flex items-center gap-2">
                     <span id="daily-status-dot" class="w-2.5 h-2.5 rounded-full bg-slate-300"></span>
@@ -153,10 +147,7 @@
                 </button>
             </div>
 
-            <!-- GRID MIT DEN 4 BEREICHEN -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
-                
-                <!-- CARD 1: Entmineralisierungsanlage -->
                 <div onclick="switchView('demin')" class="bg-white rounded-2xl p-3.5 border border-slate-200 hover:border-sky-300 shadow-xs hover:shadow transition-all cursor-pointer group">
                     <div class="flex items-start justify-between">
                         <div class="w-10 h-10 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center text-base mb-2 shrink-0 group-hover:scale-105 transition-transform">
@@ -164,17 +155,14 @@
                         </div>
                         <span id="card-badge-demin" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500" data-i18n="badge_open">Offen</span>
                     </div>
-                    
                     <h3 class="text-sm font-bold text-slate-900 group-hover:text-sky-600 transition-colors" data-i18n="card_demin_title">1. Entmineralisierungsanlage</h3>
                     <p id="card-sub-demin" class="text-[11px] text-slate-500 mt-0.5 font-normal" data-i18n="card_demin_desc">Tägliche Kontrolle & Messwerte (Einzelversand)</p>
-
                     <div class="mt-2.5 flex items-center text-[11px] font-semibold text-slate-700 group-hover:text-sky-600 transition-colors">
                         <span data-i18n="start_control">Kontrolle starten</span>
                         <i class="fa-solid fa-arrow-right ml-1 text-[10px] transition-transform group-hover:translate-x-1"></i>
                     </div>
                 </div>
 
-                <!-- CARD 2: Außenbereich -->
                 <div onclick="switchView('outdoor')" class="bg-white rounded-2xl p-3.5 border border-slate-200 hover:border-emerald-300 shadow-xs hover:shadow transition-all cursor-pointer group">
                     <div class="flex items-start justify-between">
                         <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-base mb-2 shrink-0 group-hover:scale-105 transition-transform">
@@ -182,17 +170,14 @@
                         </div>
                         <span id="card-badge-outdoor" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500" data-i18n="badge_open">Offen</span>
                     </div>
-                    
                     <h3 class="text-sm font-bold text-slate-900 group-hover:text-emerald-700 transition-colors" data-i18n="card_outdoor_title">2. Außenbereich</h3>
                     <p id="card-sub-outdoor" class="text-[11px] text-slate-500 mt-0.5 font-normal" data-i18n="card_outdoor_desc">Mülleimer, Tische & Sauberkeit mit Foto</p>
-
                     <div class="mt-2.5 flex items-center text-[11px] font-semibold text-slate-700 group-hover:text-emerald-700 transition-colors">
                         <span data-i18n="start_control">Kontrolle starten</span>
                         <i class="fa-solid fa-arrow-right ml-1 text-[10px] transition-transform group-hover:translate-x-1"></i>
                     </div>
                 </div>
 
-                <!-- CARD 3: Pausenraum -->
                 <div onclick="switchView('breakroom')" class="bg-white rounded-2xl p-3.5 border border-slate-200 hover:border-amber-300 shadow-xs hover:shadow transition-all cursor-pointer group">
                     <div class="flex items-start justify-between">
                         <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-base mb-2 shrink-0 group-hover:scale-105 transition-transform">
@@ -200,17 +185,14 @@
                         </div>
                         <span id="card-badge-breakroom" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500" data-i18n="badge_open">Offen</span>
                     </div>
-                    
                     <h3 class="text-sm font-bold text-slate-900 group-hover:text-amber-700 transition-colors" data-i18n="card_breakroom_title">3. Pausenraum</h3>
                     <p id="card-sub-breakroom" class="text-[11px] text-slate-500 mt-0.5 font-normal" data-i18n="card_breakroom_desc">Ordnung, Hygiene & Müllentsorgung</p>
-
                     <div class="mt-2.5 flex items-center text-[11px] font-semibold text-slate-700 group-hover:text-amber-700 transition-colors">
                         <span data-i18n="start_control">Kontrolle starten</span>
                         <i class="fa-solid fa-arrow-right ml-1 text-[10px] transition-transform group-hover:translate-x-1"></i>
                     </div>
                 </div>
 
-                <!-- CARD 4: Fahrzeuge -->
                 <div onclick="switchView('vehicle')" class="bg-white rounded-2xl p-3.5 border border-slate-200 hover:border-indigo-300 shadow-xs hover:shadow transition-all cursor-pointer group">
                     <div class="flex items-start justify-between">
                         <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-base mb-2 shrink-0 group-hover:scale-105 transition-transform">
@@ -218,19 +200,15 @@
                         </div>
                         <span id="card-badge-vehicle" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500" data-i18n="badge_open">Offen</span>
                     </div>
-                    
                     <h3 class="text-sm font-bold text-slate-900 group-hover:text-indigo-700 transition-colors" data-i18n="card_vehicle_title">4. Fahrzeuge</h3>
                     <p id="card-sub-vehicle" class="text-[11px] text-slate-500 mt-0.5 font-normal" data-i18n="card_vehicle_desc">Zustand, Reifendruck & Sauberkeit</p>
-
                     <div class="mt-2.5 flex items-center text-[11px] font-semibold text-slate-700 group-hover:text-indigo-700 transition-colors">
                         <span data-i18n="start_control">Kontrolle starten</span>
                         <i class="fa-solid fa-arrow-right ml-1 text-[10px] transition-transform group-hover:translate-x-1"></i>
                     </div>
                 </div>
-
             </div>
 
-            <!-- Letzte Kontrollen Box -->
             <div class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-xs space-y-2.5">
                 <div class="flex items-center justify-between">
                     <h3 class="text-xs font-bold text-slate-900" data-i18n="latest_controls_title">Letzte Kontrollen (Cloud-Live)</h3>
@@ -238,7 +216,6 @@
                         <i class="fa-solid fa-folder-open text-[11px]"></i> <span data-i18n="btn_folders">Zu den Ordnern</span>
                     </button>
                 </div>
-
                 <div id="latest-control-preview">
                     <div class="py-2 text-center text-xs text-slate-400" data-i18n="no_controls_today">
                         Noch keine Kontrollen heute durchgeführt.
@@ -777,7 +754,6 @@
                 </button>
             </div>
 
-            <!-- LEITUNG / MANAGER COLLAPSIBLE LOGIN BOX -->
             <div class="bg-slate-900 text-white rounded-2xl p-4 shadow-md space-y-3">
                 <div onclick="toggleManagerLogin()" class="flex items-center justify-between cursor-pointer select-none">
                     <div class="flex items-center gap-2.5">
@@ -812,7 +788,6 @@
                 </div>
             </div>
 
-            <!-- MONATSKALENDER & MATRIX ANSICHT (BIS 2050) -->
             <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs space-y-3">
                 <div class="flex items-center justify-between">
                     <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
@@ -840,7 +815,6 @@
                     </div>
                 </div>
 
-                <!-- VERBESSERTE LEGENDE MIT SEPARATEN FARBEN -->
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] text-slate-600 pt-1">
                     <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span> <span data-i18n="legend_approved">Genehmigt</span></span>
                     <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-400 inline-block"></span> <span data-i18n="legend_pending">Beantragt / Offen</span></span>
@@ -848,11 +822,9 @@
                     <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-indigo-500 inline-block"></span> <span data-i18n="legend_sunday">Sonntage</span></span>
                 </div>
 
-                <!-- VERGRÖSSERTER TEAM-KALENDER -->
                 <div id="monthly-calendar-grid" class="overflow-x-auto no-scrollbar pb-1 text-base"></div>
             </div>
 
-            <!-- LISTE DER ANTRÄGE & FREIGABEN -->
             <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs space-y-3">
                 <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
                     <i class="fa-solid fa-list-check text-ecb"></i> <span data-i18n="team_vacation_title">Urlaubsanträge & Status</span>
@@ -873,7 +845,7 @@
                     <h2 class="text-xl font-black text-slate-900 tracking-tight" data-i18n="shift_title">Schichtkalender & Auslieferung</h2>
                     <p class="text-xs text-slate-500 flex items-center gap-1">
                         <i class="fa-solid fa-cloud text-emerald-600"></i>
-                        <span data-i18n="shift_sub">Früh-, Mittagsschichten, Freischichten & Auslieferung</span>
+                        <span data-i18n="shift_sub">Früh-, Mittagsschichten, Freischichten & LKW</span>
                     </p>
                 </div>
                 <div class="flex items-center gap-2">
@@ -886,7 +858,6 @@
                 </div>
             </div>
 
-            <!-- MONATSAUSWAHL FÜR SCHICHTEN -->
             <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs space-y-3">
                 <div class="flex items-center justify-between">
                     <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
@@ -916,13 +887,12 @@
                     <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-indigo-500 inline-block"></span> <span>Mittagsschicht (M)</span></span>
                     <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-slate-400 inline-block"></span> <span>Freischicht (FS)</span></span>
                     <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span> <span>Urlaub (U)</span></span>
-                    <span class="flex items-center gap-1.5 font-bold text-slate-700">🚚 <span>Auslieferung</span></span>
+                    <span class="flex items-center gap-1.5 font-bold text-slate-700">🚚 <span>LKW / Auslieferung</span></span>
                 </div>
 
                 <div id="monthly-shift-calendar-grid" class="overflow-x-auto no-scrollbar pb-1 text-sm"></div>
             </div>
 
-            <!-- SCHICHT-LISTE -->
             <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs space-y-3">
                 <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
                     <i class="fa-solid fa-clock text-indigo-600"></i> <span data-i18n="shift_list_title">Aktuelle Schicht-Einträge</span>
@@ -989,7 +959,6 @@
 
     </main>
 
-    <!-- UNTERE NAVIGATION (ENLARGED ICONS & TEXT) -->
     <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 safe-bottom shadow-lg">
         <div class="max-w-md mx-auto grid grid-cols-5 px-1 pt-3 pb-4 text-center">
             <button onclick="switchView('start')" id="nav-btn-start" class="nav-item flex flex-col items-center justify-center py-1 text-sky-600 transition-colors">
@@ -1015,7 +984,6 @@
         </div>
     </nav>
 
-    <!-- VACATION MODAL -->
     <div id="modal-vacation" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-3">
         <div class="bg-white rounded-2xl max-w-sm w-full p-4 shadow-2xl space-y-3 max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between pb-2 border-b border-slate-100">
@@ -1094,7 +1062,6 @@
         </div>
     </div>
 
-    <!-- SHIFT MODAL -->
     <div id="modal-shift" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-3">
         <div class="bg-white rounded-2xl max-w-sm w-full p-4 shadow-2xl space-y-3 max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between pb-2 border-b border-slate-100">
@@ -1143,7 +1110,7 @@
 
                 <div class="flex items-center gap-2 pt-1">
                     <input type="checkbox" id="shift-delivery" class="w-4 h-4 accent-indigo-600 rounded">
-                    <label for="shift-delivery" class="text-xs font-bold text-slate-800" data-i18n="shift_label_delivery">🚚 Übernimmt Auslieferung an diesem Tag</label>
+                    <label for="shift-delivery" class="text-xs font-bold text-slate-800" data-i18n="shift_label_delivery">🚚 Übernimmt LKW / Auslieferung an diesem Tag</label>
                 </div>
 
                 <button type="submit" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-xs shadow-xs flex items-center justify-center gap-2">
@@ -1153,7 +1120,6 @@
         </div>
     </div>
 
-    <!-- ATTENDANCE MODAL -->
     <div id="modal-attendance" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-3">
         <div class="bg-white rounded-2xl max-w-sm w-full p-4 shadow-2xl space-y-3">
             <div class="flex items-center justify-between pb-2 border-b border-slate-100">
@@ -1171,7 +1137,6 @@
         </div>
     </div>
 
-    <!-- DISPATCH MODAL -->
     <div id="modal-dispatch" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-3">
         <div class="bg-white rounded-2xl max-w-sm w-full p-4 shadow-2xl space-y-3 max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between pb-2 border-b border-slate-100">
@@ -1228,7 +1193,6 @@
         </div>
     </div>
 
-    <!-- PDF PREVIEW MODAL -->
     <div id="modal-pdf" class="fixed inset-0 bg-black/80 z-50 hidden flex flex-col items-center justify-center p-3">
         <div class="bg-white rounded-2xl max-w-lg w-full p-4 shadow-2xl flex flex-col max-h-[92vh]">
             <div class="flex items-center justify-between pb-3 border-b border-slate-200 mb-2">
@@ -1261,7 +1225,6 @@
         </div>
     </div>
 
-    <!-- SETTINGS MODAL -->
     <div id="modal-settings" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-3">
         <div class="bg-white rounded-2xl max-w-sm w-full p-4 shadow-2xl space-y-3">
             <div class="flex items-center justify-between pb-2 border-b border-slate-100">
@@ -1314,7 +1277,6 @@
         </div>
     </div>
 
-    <!-- CLOUD DIAGNOSTIC MODAL -->
     <div id="modal-cloud" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-3">
         <div class="bg-white rounded-2xl max-w-sm w-full p-4 shadow-2xl space-y-3">
             <div class="flex items-center justify-between pb-2 border-b border-slate-100">
@@ -1332,7 +1294,6 @@
         </div>
     </div>
 
-    <!-- TOAST NOTIFICATION -->
     <div id="toast" class="fixed bottom-28 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white px-4 py-2 rounded-full shadow-2xl text-xs font-medium opacity-0 pointer-events-none transition-opacity duration-300 flex items-center gap-2">
         <i class="fa-solid fa-circle-check text-emerald-400"></i>
         <span id="toast-text">Meldung</span>
@@ -1457,7 +1418,7 @@
                 team_vacation_title: "Urlaubsanträge & Status",
                 monthly_calendar_title: "Monatskalender & Team-Übersicht",
                 shift_title: "Schichtkalender & Auslieferung",
-                shift_sub: "Früh-, Mittagsschichten, Freischichten & Auslieferung",
+                shift_sub: "Früh-, Mittagsschichten, Freischichten & LKW",
                 btn_new_shift: "Schicht eintragen",
                 shift_calendar_title: "Schicht-Übersicht & Auslieferung",
                 shift_list_title: "Aktuelle Schicht-Einträge",
@@ -1470,7 +1431,7 @@
                 shift_early: "Frühschicht (F)",
                 shift_mid: "Mittagsschicht (M)",
                 shift_free: "Freischicht (FS)",
-                shift_label_delivery: "🚚 Übernimmt Auslieferung an diesem Tag",
+                shift_label_delivery: "🚚 Übernimmt LKW / Auslieferung an diesem Tag",
                 shift_btn_save: "Schicht speichern",
                 manager_login_title: "Führungskraft-Freigabe",
                 manager_click_unlock: "Klicken zum Entsperren mit Passwort",
@@ -1638,7 +1599,7 @@
                 team_vacation_title: "Cereri & Status Concedii",
                 monthly_calendar_title: "Calendar lunar & Prezentare generală echipă",
                 shift_title: "Calendar Schimente & Livrări",
-                shift_sub: "Tură dimineață, prânz, libere și livrări live",
+                shift_sub: "Tură dimineață, prânz, libere și LKW",
                 btn_new_shift: "Adaugă schim",
                 shift_calendar_title: "Prezentare generală tură & Livrare",
                 shift_list_title: "Înregistrări ture recente",
@@ -1651,7 +1612,7 @@
                 shift_early: "Tură de dimineață (F)",
                 shift_mid: "Tură de la prânz (M)",
                 shift_free: "Tură liberă (FS)",
-                shift_label_delivery: "🚚 Asigură livrarea în această zi",
+                shift_label_delivery: "🚚 Asigură LKW / livrarea în această zi",
                 shift_btn_save: "Salvează tura",
                 manager_login_title: "Aprobare Conducere",
                 manager_click_unlock: "Apăsați pentru deblocare cu parolă",
@@ -1801,7 +1762,6 @@
         let cloudShifts = [];
         let currentHistoryFilter = 'all';
 
-        // DEVICE DETECTION (MOBILE vs LAPTOP/PC)
         function checkDeviceMode() {
             const isDesktop = window.innerWidth >= 768 && !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
             const mainContainer = document.getElementById('main-container');
@@ -1959,7 +1919,7 @@
             if (!db) {
                 firebaseStatus.connected = false;
                 if (indicator) {
-                    indicator.className = 'flex items-center justify-center text-[8px] text-rose-700 font-semibold bg-rose-50 px-2 py-1 rounded-xl border border-rose-200 cursor-pointer h-10';
+                    indicator.className = 'flex items-center justify-center text-[8px] text-rose-700 font-semibold bg-rose-50 px-2.5 py-2 rounded-xl border border-rose-200 transition-colors h-10';
                     if (indicatorLabel) indicatorLabel.innerText = 'Offline';
                 }
                 renderHistoryView();
@@ -1978,14 +1938,14 @@
                 syncTodayControlsFromCloud(items);
 
                 if (indicator) {
-                    indicator.className = 'flex items-center justify-center text-[8px] text-emerald-700 font-semibold bg-emerald-50 px-2.5 py-2 rounded-xl border border-emerald-200 cursor-pointer h-10';
+                    indicator.className = 'flex items-center justify-center text-[8px] text-emerald-700 font-semibold bg-emerald-50 px-2.5 py-2 rounded-xl border border-emerald-200 transition-colors h-10';
                     if (indicatorLabel) indicatorLabel.innerText = 'Live';
                 }
             }, (error) => {
                 firebaseStatus.connected = false; firebaseStatus.error = error.message || String(error);
                 renderHistoryView();
                 if (indicator) {
-                    indicator.className = 'flex items-center justify-center text-[8px] text-rose-700 font-semibold bg-rose-50 px-2.5 py-2 rounded-xl border border-emerald-200 cursor-pointer h-10';
+                    indicator.className = 'flex items-center justify-center text-[8px] text-rose-700 font-semibold bg-rose-50 px-2.5 py-2 rounded-xl border border-rose-200 transition-colors h-10';
                     if (indicatorLabel) indicatorLabel.innerText = 'Fehler';
                 }
             });
@@ -2348,7 +2308,11 @@
                     </td>`;
                 for (let d = 1; d <= daysInMonth; d++) {
                     const dateObj = new Date(selectedYear, selectedMonth - 1, d);
-                    const dateIso = dateObj.toISOString().slice(0, 10);
+                    const yearStr = dateObj.getFullYear();
+                    const monthStr = String(dateObj.getMonth() + 1).padStart(2, '0');
+                    const dayStr = String(dateObj.getDate()).padStart(2, '0');
+                    const dateIso = `${yearStr}-${monthStr}-${dayStr}`;
+
                     const isSunday = (dateObj.getDay() === 0);
                     const holiday = getHolidayName(selectedYear, selectedMonth, d);
 
@@ -2432,7 +2396,7 @@
                             <span class="px-2 py-0.5 rounded-full text-[10px] ${badgeBg}">${item.shiftType}</span>
                         </div>
                         <div class="text-[11px] text-slate-600 flex items-center justify-between">
-                            <span>📅 ${item.date} ${item.isDelivery ? '• 🚚 <strong>Auslieferung</strong>' : ''}</span>
+                            <span>📅 ${item.date} ${item.isDelivery ? '• 🚚 <strong>LKW / Auslieferung</strong>' : ''}</span>
                             <button onclick="deleteShiftEntry('${item.id || idx}')" class="text-rose-500 hover:text-rose-700"><i class="fa-solid fa-trash-can"></i></button>
                         </div>
                     </div>
@@ -2520,7 +2484,7 @@
             let count = 0;
             let cur = new Date(start);
             while (cur <= end) {
-                const dayOfWeek = cur.getDay(); // 0 = Sonntag
+                const dayOfWeek = cur.getDay();
                 if (dayOfWeek !== 0) {
                     count++;
                 }
@@ -2701,7 +2665,11 @@
                     </td>`;
                 for (let d = 1; d <= daysInMonth; d++) {
                     const dateObj = new Date(selectedYear, selectedMonth - 1, d);
-                    const dateIso = dateObj.toISOString().slice(0, 10);
+                    const yearStr = dateObj.getFullYear();
+                    const monthStr = String(dateObj.getMonth() + 1).padStart(2, '0');
+                    const dayStr = String(dateObj.getDate()).padStart(2, '0');
+                    const dateIso = `${yearStr}-${monthStr}-${dayStr}`;
+
                     const isSunday = (dateObj.getDay() === 0);
                     const holiday = getHolidayName(selectedYear, selectedMonth, d);
 
@@ -2710,8 +2678,9 @@
                         const rec = item.data || item;
                         if (rec.employee === emp || item.inspector === emp) {
                             if (rec.startDate && rec.endDate && dateIso >= rec.startDate && dateIso <= rec.endDate) {
-                                if (rec.status === 'Genehmigt') dayStatus = 'approved';
-                                else if (!rec.status || rec.status === 'Ausstehend') dayStatus = 'pending';
+                                const status = rec.status || 'Ausstehend';
+                                if (status === 'Genehmigt') dayStatus = 'approved';
+                                else if (status === 'Ausstehend') dayStatus = 'pending';
                             }
                         }
                     });
@@ -2723,7 +2692,7 @@
                         cellBg = 'bg-emerald-500 text-white font-bold';
                         titleText = `${emp}: Genehmigter Urlaub`;
                     } else if (dayStatus === 'pending') {
-                        cellBg = 'bg-amber-400 text-slate-900';
+                        cellBg = 'bg-amber-400 text-slate-900 font-bold';
                         titleText = `${emp}: Beantragter Urlaub (Ausstehend)`;
                     } else if (holiday) {
                         cellBg = 'bg-rose-400/25';
@@ -2743,7 +2712,8 @@
             if (approvalItemsContainer) {
                 const pendingList = list.filter(item => {
                     const d = item.data || item;
-                    return (!d.status || d.status === 'Ausstehend');
+                    const st = d.status || 'Ausstehend';
+                    return (st === 'Ausstehend');
                 });
                 if (pendingList.length === 0) {
                     approvalItemsContainer.innerHTML = `<div class="text-[11px] text-slate-400 py-1">${currentLang === 'ro' ? 'Nici o cerere în așteptare.' : 'Keine offenen Anträge vorhanden.'}</div>`;
@@ -3161,8 +3131,11 @@
 
                 for (let d = 1; d <= daysInMonth; d++) {
                     const dateObj = new Date(year, month - 1, d);
-                    const dateIso = dateObj.toISOString().slice(0, 10);
-                    
+                    const yearStr = dateObj.getFullYear();
+                    const monthStr = String(dateObj.getMonth() + 1).padStart(2, '0');
+                    const dayStr = String(dateObj.getDate()).padStart(2, '0');
+                    const dateIso = `${yearStr}-${monthStr}-${dayStr}`;
+
                     let isOnLeave = false;
                     vacations.forEach(item => {
                         const rec = item.data || item;
@@ -3196,9 +3169,9 @@
                         doc.setFont('helvetica', 'normal');
                     } else if (shiftCode) {
                         doc.setFont('helvetica', 'bold');
-                        doc.text(shiftCode, cellX + (colWidth / 2), startY + 4, { align: 'center' });
+                        doc.text(shiftCode, cellX + (colWidth / 2), startY + 3.5, { align: 'center' });
                         if (isDelivery) {
-                            doc.setFontSize(5.5);
+                            doc.setFontSize(5);
                             doc.setTextColor(180, 83, 9);
                             doc.text('LKW', cellX + (colWidth / 2), startY + 8, { align: 'center' });
                             doc.setTextColor(15, 23, 42);
@@ -3640,7 +3613,7 @@
                         else if (empShift.shiftType === 'Mittagsschicht') shiftName = 'Mittagsschicht (M)';
                         else if (empShift.shiftType === 'Freischicht') shiftName = 'Freischicht (FS)';
 
-                        const deliveryBadge = empShift.isDelivery ? ' • 🚚 Auslieferung' : '';
+                        const deliveryBadge = empShift.isDelivery ? ' • 🚚 LKW / Auslieferung' : '';
                         shiftBadge = `<div class="text-[10px] text-slate-500 font-mono mt-0.5">${shiftName}${deliveryBadge}</div>`;
                     } else {
                         shiftBadge = `<div class="text-[10px] text-slate-400 font-mono mt-0.5">Keine Schicht eingetragen</div>`;
